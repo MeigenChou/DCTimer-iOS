@@ -21,8 +21,21 @@ typedef enum timerState {
 @interface DCTFirstViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, FPPopoverControllerDelegate> {
     FPPopoverController *popover;
     FPPopoverController *scrPop;
+    int inspState;  //2-观察 2-+2 3-DNF
+    int resTime;
+    int time1;
+    uint64_t timeStart;
     int swipeType;
     bool isChange;
+    bool canStart, isNextScr;
+    int bgcolor, textcolor;
+    bool isExts;
+    double sensity;
+    NSInteger tmSize;
+    bool typeChanged;
+    bool canScr;
+    NSInteger opacity;
+    BOOL monoFont;
 }
 @property (strong, nonatomic) IBOutlet UILabel *scrLabel;
 @property (strong, nonatomic) IBOutlet UILabel *timerLabel;

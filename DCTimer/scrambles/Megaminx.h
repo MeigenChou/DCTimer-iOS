@@ -10,7 +10,7 @@
 
 @interface Megaminx : NSObject
 
-- (NSString *) scrMinx;
-+ (NSMutableArray *)image;
+-(NSString *) scramble;
++(NSMutableArray *) image;
 
 @end

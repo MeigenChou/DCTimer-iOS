@@ -10,10 +10,10 @@
 
 @interface Clock : NSObject
 
-- (NSString *) scramble;
-- (NSString *) scrambleOld:(bool) concise;
-- (NSString *)scrambleEpo;
-+ (NSMutableArray *)image;
-+ (NSMutableArray *)pegs;
+-(NSString *) scramble;
+-(NSString *) scrambleOld:(bool) concise;
+-(NSString *) scrambleEpo;
++(NSMutableArray *) image;
++(NSMutableArray *) pegs;
 
 @end

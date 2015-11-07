@@ -25,7 +25,7 @@
 @property (nonatomic, strong) NSString *extsol;
 @property (nonatomic, strong) DCTScrambleView *scrambleView;
 @property (nonatomic) TimerState timerState;
-@property (nonatomic, strong) NSString *lastScr;
+//@property (nonatomic, strong) NSString *lastScr;
 @property (nonatomic, strong) NSString *nextScr;
 @end
 
@@ -40,36 +40,27 @@
 @synthesize imageView;
 @synthesize scrambleView;
 @synthesize timerState;
-@synthesize lastScr, nextScr;
+@synthesize nextScr;
 
-NSString *currentScr;
-int inspState;  //2-观察 2-+2 3-DNF
+NSString *currentScr;   //extern
 mach_timebase_info_data_t info;
-uint64_t timeStart;
-int time1 = 0;
-int resTime;
+
 NSDateFormatter *formatter;
-bool canStart, isNextScr;
 int fTime;
 BOOL wcaInsp, hideScr, inTime, dropStop, promptTime, showScr;
-extern int timerupd, accuracy;
-extern BOOL clkFormat, showImg;
-extern int cside, cxe, sqshp;
-extern bool tfChanged, imgChanged, svChanged;
-int currentSesIdx;
-int selScrType;
-int bgcolor, textcolor;
-bool isExts;
-NSDictionary *scrType;
-NSArray *types;
-NSArray *subsets;
-bool esChanged = false;
+extern NSInteger timerupd, accuracy, timeForm;
+extern BOOL showImg;
+extern NSInteger cside, cxe, sqshp;
+extern bool tfChanged, imgChanged, svChanged, monoChanged;
+int currentSesIdx;  //extern
+int selScrType; //extern
+NSDictionary *scrType;  //extern
+NSArray *types; //extern
+NSArray *subsets;   //extern
+bool esChanged = false; //extern
 double lowZ = 0.98;
-int opacity;
-double sensity;
-int tmSize;
-bool typeChanged;
-bool canScr;
+NSArray *fonts;
+extern NSInteger tmfont;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -81,6 +72,8 @@ bool canScr;
         mach_timebase_info(&info);
         formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+        fonts = [[NSArray alloc] initWithObjects:@"Arial", @"Courier New", @"Digiface", @"Georgia", @"Helvetica", @"Times New Roman", @"Verdana", nil];
+        time1 = 0;
     }
     return self;
 }
@@ -95,36 +88,43 @@ bool canScr;
     [super viewDidLoad];
     [self loadDefaults];
     isChange = true;
-    if(inTime)timerLabel.text = @"IMPORT";
-    else if(accuracy == 1)timerLabel.text = @"0.00";
-    [self.scrambler getScrString:32];
-    [self.scrambler initSq1];
-    int type = selScrType>>5;
-    int sub = selScrType&31;
+    if(inTime) timerLabel.text = @"IMPORT";
+    else if(accuracy == 1) timerLabel.text = @"0.00";
+    //[self.scrambler getScrString:32];
+    int type = selScrType >> 5;
+    int sub = selScrType & 31;
     isNextScr = false;
     typeChanged = true;
     canScr = true;
-    currentScr = [self.scrambler getScrString:selScrType];
-    [self extraSolve];
-    lastScr = currentScr;
-    NSString *scrList = [NSLocalizedString(@"language", @"") isEqualToString:@"zh_CN"] ? @"scrambleCN" : ([NSLocalizedString(@"language", @"") isEqualToString:@"zh_HK"] ? @"scrambleHK" : @"scramble");
+    //lastScr = currentScr;
+    NSString *lang = NSLocalizedString(@"language", @"");
+    NSLog(@"language %@", lang);
+    NSString *scrList = [lang isEqualToString:@"zh_CN"] ? @"scrambleCN" : ([lang isEqualToString:@"zh_HK"] ? @"scrambleHK" : @"scramble");
     NSURL *plistURL = [[NSBundle mainBundle] URLForResource:scrList withExtension:@"plist"];
     scrType = [NSDictionary dictionaryWithContentsOfURL:plistURL];
     types = [DCTUtils getScrType];
+    if(type >= types.count) type = 1;
     NSString *select = [types objectAtIndex:type];
     subsets = [scrType objectForKey:select];
+    if(sub >= subsets.count) sub = 0;
+    if(type == 2 && sub == 5) sub = 0;
     [btnScrType setTitle:[NSString stringWithFormat:@"%@ - %@", select, [subsets objectAtIndex:sub]] forState:UIControlStateNormal];
+    selScrType = type << 5 | sub;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:selScrType forKey:@"crntscrtype"];
+    currentScr = [scrambler getScrString:selScrType];
     [self setScrLblFont];
+    [self extraSolve];
+    //[self newScramble:true];
+    
     if ([DCTUtils isOS7]) {
-        if ([DCTUtils isPad]) {
-            btnScrType.frame = CGRectMake(20, 40, 728, 37);
+        /*if ([DCTUtils isPad]) {
             scrLabel.frame = CGRectMake(20, 96, 728, 280);
             timerLabel.frame = CGRectMake(20, 430, 728, 200);
         } else {
-            btnScrType.frame = CGRectMake(10, 30, 300, 35);
             scrLabel.frame = CGRectMake(10, 50, 300, 160);
             timerLabel.frame = CGRectMake(10, 186, 300, 100);
-        }
+        }*/
     } else {
         UIImage *btnImageNormal = [UIImage imageNamed:@"whiteButton.png"];
         UIImage *sbtnImageNormal = [btnImageNormal stretchableImageWithLeftCapWidth:12 topCapHeight:0];
@@ -172,6 +172,14 @@ bool canScr;
             }
         }];
     }
+    NSArray *fontl = [[UIFont familyNames] sortedArrayUsingSelector:@selector(compare:)];
+    for (NSString *fname in fontl) {
+        NSLog(@"family: %s\n", [fname UTF8String]);
+//        NSArray *fontn = [UIFont fontNamesForFamilyName:fname];
+//        for(NSString *fn in fontn) {
+//            NSLog(@" font: %s\n", [fn UTF8String]);
+//        }
+    }
 }
 
 - (void)viewDidUnload {
@@ -200,8 +208,8 @@ bool canScr;
     self.scrLabel.textColor = textCol;
     timerLabel.textColor = textCol;
     if([DCTUtils isPad]) {
-        [timerLabel setFont:[UIFont systemFontOfSize:tmSize]];
-    }
+        timerLabel.font = [UIFont fontWithName:[fonts objectAtIndex:tmfont] size:tmSize];
+    } else timerLabel.font = [UIFont fontWithName:[fonts objectAtIndex:tmfont] size:65];
     if(tfChanged) {
         if(inTime) {
             timerLabel.text = @"IMPORT";
@@ -227,7 +235,10 @@ bool canScr;
         svChanged = false;
     }
     if(showImg) [imageView setAlpha:opacity / 100.0];
-    
+    if (monoChanged) {
+        [self setScrLblFont];
+        monoChanged = false;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -263,33 +274,46 @@ bool canScr;
     int sub = selScrType & 31;
     if ([DCTUtils isPad]) {
         if(type==0 || type==7 || type==13 || type==10)
-            [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:30]];
-        else if(type==1 || type==2)
-            [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:28]];
-        else [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:25]];
+            [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:32]];
+        else if(type==1)
+            [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:30]];
+        else if(type==2)
+            [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:28]];
+        else [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:26]];
     }
-    else if(type==0 || type==7 || type==13 || type==10)
-        [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:19]];
-    else if(type==3)
-        [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:15]];
-    else if(type==4)
-        [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:14]];
-    else if(type==5)
-        [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:13]];
-    else if(type==6)
-        [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:12.5]];
-    else if(type==11) {
-        if(sub==0) [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:19]];
-        else if(sub==9 || sub==10) [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:13]];
-        else [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:17]];
-    } else if(type==16 && sub==3)
-        [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:14]];
-    else [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:17]];
+    else if(type==0 || type==7 || type==13 || type==10) //二阶、金字塔、齿轮、斜转
+        [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:20]];
+    else if(type==1 || type==17)    //三阶
+        [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:18]];
+    else if(type==3)    //五阶
+        [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:15]];
+    else if(type==4)    //六阶
+        [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:14]];
+    else if(type==5)    //七阶
+        [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:13]];
+    else if(type==6)    //五魔
+        [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:monoFont ? 11.5 : 13]];
+    else if(type==11) { //MNL
+        if(sub==0) [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:20]];
+        else if (sub==8)
+            [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:16]];
+        else if(sub==9 || sub==10)
+            [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:monoFont ? 12 : 13]];
+        else [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:17]];
+    } else if(type==16) {
+        if (sub==2)
+            [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:16]];
+        else if(sub==3)
+            [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:13]];
+        else [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:17]];
+    }
+    else [self.scrLabel setFont:[UIFont fontWithName:monoFont ? @"Courier" : @"Arial" size:17]];
 }
 
 - (void) newScramble:(bool)tych {
     typeChanged = tych;
-    lastScr = currentScr;
+    if(tych) isNextScr = false;
+    //lastScr = currentScr;
     if(canScr) {
         canScr = false;
         scrLabel.text = NSLocalizedString(@"scrambling", @"");
@@ -307,27 +331,29 @@ bool canScr;
     else currentScr = [self.scrambler getScrString:selScrType];
     if(type==1 && sub<2 && cxe != 0) {
         if(cxe==1)
-            extsol = [self.scrambler solveCross:currentScr side:cside];
+            extsol = [self.scrambler solveCross:currentScr side:(int)cside];
         else if(cxe==2)
-            extsol = [self.scrambler solveXcross:currentScr side:cside];
+            extsol = [self.scrambler solveXcross:currentScr side:(int)cside];
         else if(cxe==3)
-            extsol = [self.scrambler solveEoline:currentScr side:cside];
+            extsol = [self.scrambler solveEoline:currentScr side:(int)cside];
         isExts = true;
         [self performSelectorOnMainThread:@selector(showScramble) withObject:nil waitUntilDone:YES];
     } else if(type==8 && sub<3 && sqshp!=0) {
-        extsol = [self.scrambler solveSqShape:currentScr m:sqshp];
+        extsol = [self.scrambler solveSqShape:currentScr m:(int)sqshp];
         isExts = true;
         [self performSelectorOnMainThread:@selector(showScramble) withObject:nil waitUntilDone:YES];
     } else {
         isExts = false;
         [self performSelectorOnMainThread:@selector(showScramble) withObject:nil waitUntilDone:YES];
     }
-    [self setNextScr];
+    if(type==1 || type==8)
+        [self setNextScr];
 }
 
 - (void)setNextScr {
     isNextScr = false;
     nextScr = [self.scrambler getScrString:selScrType];
+    NSLog(@"next scr: %@", nextScr);
     isNextScr = true;
 }
 
@@ -345,15 +371,15 @@ bool canScr;
     int sub = selScrType & 31;
     if(type==1 && sub<2 && cxe != 0) {
         if(cxe==1)
-            extsol = [self.scrambler solveCross:currentScr side:cside];
+            extsol = [self.scrambler solveCross:currentScr side:(int)cside];
         else if(cxe==2)
-            extsol = [self.scrambler solveXcross:currentScr side:cside];
+            extsol = [self.scrambler solveXcross:currentScr side:(int)cside];
         else if(cxe==3)
-            extsol = [self.scrambler solveEoline:currentScr side:cside];
+            extsol = [self.scrambler solveEoline:currentScr side:(int)cside];
         scrLabel.text = [NSString stringWithFormat:@"%@\n%@", currentScr, extsol];
     }
     else if(type==8 && sqshp!=0) {
-        extsol = [self.scrambler solveSqShape:currentScr m:sqshp];
+        extsol = [self.scrambler solveSqShape:currentScr m:(int)sqshp];
         scrLabel.text = [NSString stringWithFormat:@"%@\n%@", currentScr, extsol];
     }
     else scrLabel.text = currentScr;
@@ -364,32 +390,34 @@ bool canScr;
     fTime = [[defaults objectForKey:@"freezeslide"] intValue];
     wcaInsp = [defaults boolForKey:@"wcainsp"];
     timerupd = [defaults integerForKey:@"timerupd"];
-    clkFormat = [defaults boolForKey:@"clockform"];
+    timeForm = [defaults integerForKey:@"timeform"];
     accuracy = [defaults integerForKey:@"accuracy"];
     hideScr = [defaults boolForKey:@"hidescr"];
     promptTime = [defaults boolForKey:@"prompttime"];
     cxe = [defaults integerForKey:@"cxe"];
     cside = [defaults integerForKey:@"cside"];
     sqshp = [defaults integerForKey:@"sqshape"];
-    currentSesIdx = [defaults integerForKey:@"crntsesidx"];
-    selScrType = [defaults integerForKey:@"crntscrtype"];
-    bgcolor = [defaults integerForKey:@"bgcolor"];
-    textcolor = [defaults integerForKey:@"textcolor"];
+    currentSesIdx = (int)[defaults integerForKey:@"crntsesidx"];
+    selScrType = (int)[defaults integerForKey:@"crntscrtype"];
+    bgcolor = (int)[defaults integerForKey:@"bgcolor"];
+    textcolor = (int)[defaults integerForKey:@"textcolor"];
     inTime = [defaults boolForKey:@"intime"];
     dropStop = [defaults boolForKey:@"drops"];
     showImg = [defaults boolForKey:@"showimg"];
     opacity = [defaults integerForKey:@"opacity"];
-    int sens = [defaults integerForKey:@"sensity"];
+    int sens = (int)[defaults integerForKey:@"sensity"];
     sensity = 0.0176*sens*sens-1.84*sens+50;
     showScr = [defaults boolForKey:@"showscr"];
     tmSize = [defaults integerForKey:@"tmsize"];
+    tmfont = [defaults integerForKey:@"tmfont"];
+    monoFont = [defaults boolForKey:@"monofont"];
 }
 
 - (void)record:(int)time pen:(int)pen {
     NSDate *date = [NSDate date];
     NSString *nowtimeStr = [formatter stringFromDate:date];
-    [[DCTData dbh] addTime:time penalty:pen scramble:lastScr datetime:nowtimeStr];
-    [[DCTData dbh] insertTime:time pen:pen scr:lastScr date:nowtimeStr];
+    [[DCTData dbh] addTime:time penalty:pen scramble:currentScr datetime:nowtimeStr];
+    [[DCTData dbh] insertTime:time pen:pen scr:currentScr date:nowtimeStr];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -424,7 +452,7 @@ bool canScr;
 
 - (void)setScr: (NSString *)scr {
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-    int typeOld = [def integerForKey:@"crntscrtype"];
+    NSInteger typeOld = [def integerForKey:@"crntscrtype"];
     if(selScrType != typeOld) {
         [btnScrType setTitle:scr forState:UIControlStateNormal];
         [self newScramble:true];
@@ -439,6 +467,8 @@ bool canScr;
         case 0:
             if(alertView.tag!=0)
                 inspState = 1;
+            if(alertView.tag == 1)
+                [self newScramble:false];
             break;
         case 1:
             switch (alertView.tag) {
@@ -447,11 +477,13 @@ bool canScr;
                     int time = inspState==2?resTime+2000:resTime;
                     [self record:time pen:0];
                     inspState = 1;
+                    [self newScramble:false];
                     break;
                 }
                 case 2:
                     [self record:resTime pen:2];
                     inspState = 1;
+                    [self newScramble:false];
                     break;
                 case 3:
                     [[DCTData dbh] deleteTimeAtIndex:[[DCTData dbh] numberOfSolves]-1];
@@ -495,6 +527,7 @@ bool canScr;
                 int time = inspState==2?resTime+2000:resTime;
                 [self record:time pen:1];
                 inspState = 1;
+                [self newScramble:false];
             }
             break;
         }
@@ -506,6 +539,7 @@ bool canScr;
                 int time = inspState==2?resTime+2000:resTime;
                 [self record:time pen:2];
                 inspState = 1;
+                [self newScramble:false];
             }
             break;
         }
@@ -524,9 +558,16 @@ bool canScr;
     bool m = i<0;
     if(m)i = -i;
     i/=1000;
-    int sec=clkFormat?i%60:i;
-    int min=clkFormat?(i/60)%60:0;
-    int hour=clkFormat?i/3600:0;
+    int sec = i;
+    int min = 0, hour = 0;
+    if(timeForm < 2) {
+        min = sec / 60;
+        sec %= 60;
+        if(timeForm < 1) {
+            hour = min / 60;
+            min %= 60;
+        }
+    }
     NSMutableString *s = [NSMutableString string];
     if(hour==0) {
         if(min==0) [s appendFormat:@"%d", sec];
@@ -614,13 +655,13 @@ bool canScr;
 }
 
 - (void)confirmSave {
-    [self newScramble:false];
     self.timerState = STOP;
     if(promptTime) {
         int time = (inspState==2)?resTime+2000:resTime;
         if(inspState==3) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@: DNF", NSLocalizedString(@"time", @"")] message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"save", @""), nil];
             [alert setTag:2];
+            [alert show];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"time", @""), [DCTUtils distime:time]] message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"nopen", @""), @"+2", @"DNF", nil];
             [alert setTag:1];
@@ -631,6 +672,7 @@ bool canScr;
         int pen = inspState==3?2:0;
         [self record:time pen:pen];
         inspState = 1;
+        [self newScramble:false];
     }
 }
 

@@ -21,33 +21,12 @@
 #import "Sys/time.h"
 
 @implementation Search
-int move[31];
-
-int corn[20];
-int mid4[20];
-int ud8e[20];
-
+int prun[6];
 int twist[6];
 int flip[6];
 int slice[6];
-
-int corn0[6];
-int ud8e0[6];
-int prun[6];
-
-int f[54];
-
-int urfIdx;
-int depth1;
-int maxDep2;
-int sol;
-int valid1;
-int valid2;
 NSString* solution;
-long timeOut;
-long timeMin;
-int verbose;
-CubieCube *cc = nil;
+CubieCube *cc;
 
 NSArray *move2str;
 int urfMove[6][18] = {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17},
@@ -82,6 +61,14 @@ extern int MEPermPrun[];
 extern int std2ud[18];
 extern int ud2std[];
 extern bool ckmv2[11][10];
+
+- (id)init {
+    if (self = [super init]) {
+        cc = [[CubieCube alloc] init];
+        move2str = [[NSArray alloc] initWithObjects:@"U", @"U2", @"U'", @"R", @"R2", @"R'", @"F", @"F2", @"F'", @"D", @"D2", @"D'", @"L", @"L2", @"L'", @"B", @"B2", @"B'", nil];
+    }
+    return self;
+}
 
 static unsigned long currentTimeMillis() {
     struct timeval time;
@@ -410,10 +397,7 @@ static const int APPEND_LENGTH = 0x4;
  * 		Error 8: Timeout, no solution within given time
  */
 -(NSString *) solutionForFacelets:(NSString *)facelets md:(int)maxDepth nt:(long)newTimeOut tm:(long)newTimeMin v:(int)newVerbose {
-    if (!cc) {
-        cc = [[CubieCube alloc] init];
-    }
-    if(!move2str) move2str = [[NSArray alloc] initWithObjects:@"U", @"U2", @"U'", @"R", @"R2", @"R'", @"F", @"F2", @"F'", @"D", @"D2", @"D'", @"L", @"L2", @"L'", @"B", @"B2", @"B'", nil];
+    //NSLog(@"%@", facelets);
     int check = [self verify:(char*)[facelets UTF8String]];
     if (check != 0) {
         return [NSString stringWithFormat:@"Error %d", ABS(check)];

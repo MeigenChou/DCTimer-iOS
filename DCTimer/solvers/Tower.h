@@ -9,5 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface Tower : NSObject
-- (NSString *) scrTow;
+
+-(NSString *) scramble;
+
 @end

@@ -77,7 +77,7 @@
 "calcing" = "計算中…";
 
 "WCAinsp" = "WCA 觀察";
-"clockformat" = "超過1分鐘的用分鐘顯示";
+"clockformat" = "時間格式";
 "timerupd" = "計時器更新方式";
 "On" = "實時";
 "secondsonly" = "到秒";
@@ -93,6 +93,7 @@
 "scramble" = "轉亂";
 "hide_scr" = "計時中隱藏轉亂";
 "display_scr" = "顯示轉亂後的狀態";
+"mono_font" = "使用等寬字型";
 "newest_top" = "成績列表逆序顯示";
 "subtitle" = "成績列表副標題";
 "stt_stats" = "統計";
@@ -116,7 +117,8 @@
 "bg_image" = "背景圖片";
 "opacity" = "不透明度";
 "show_image" = "显示背景圖片";
-"timer_size" = "計時器字體大小";
+"timer_font" = "計時器字型";
+"timer_size" = "計時器大小";
 "version" = "版本";
 "about" = "關於";
 "gesture" = "手勢說明";

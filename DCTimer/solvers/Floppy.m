@@ -17,7 +17,6 @@
 
 @implementation Floppy
 @synthesize turn;
-char distance[24][16];
 
 - (void) cornMove:(int[])cp m:(int)m {
     switch (m) {
@@ -71,11 +70,11 @@ char distance[24][16];
     return self;
 }
 
-- (NSString *) scrFlopy {
+- (NSString *) scramble {
     for (;;) {
         int cpi = rand()%24;
         int eoi = rand()%16;
-        if (distance[cpi][eoi] > 0) {
+        if (distance[cpi][eoi] > 1) {
             NSMutableString *sb = [NSMutableString string];
             while(distance[cpi][eoi] != 0) {
                 int cp[4];

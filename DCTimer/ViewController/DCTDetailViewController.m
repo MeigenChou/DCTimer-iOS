@@ -189,8 +189,8 @@ int resPen;
         case 2: //+2
         case 3: //DNF
             if(resPen != buttonIndex-1) {
-                [self change:resIdx pen:buttonIndex-1];
-                resPen = buttonIndex-1;
+                [self change:resIdx pen:(int)buttonIndex-1];
+                resPen = (int)buttonIndex-1;
             }
             break;
         case 4: //copy scr

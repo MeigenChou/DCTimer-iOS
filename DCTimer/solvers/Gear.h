@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Gear : NSObject
+@interface Gear : NSObject {
+    char cpm[24][3], epm[24][3], eom[27][3];
+    char pd[3][576];
+}
 
-- (NSString *)scrGear;
+-(NSString *) scramble;
 
 @end

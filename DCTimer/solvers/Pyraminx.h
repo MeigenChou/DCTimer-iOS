@@ -8,9 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Pyraminx : NSObject
+@interface Pyraminx : NSObject {
+    char perm[360];
+    char twst[2592];
+    short permmv[360][4];
+    char twstmv[81][4];
+    char flipmv[32][4];
+}
 
-- (NSString *) scrPyrm;
-+ (NSMutableArray *)imageString:(NSString *)scr;
+-(NSString *) scramble;
++(NSMutableArray *) image:(NSString *)scr;
 
 @end

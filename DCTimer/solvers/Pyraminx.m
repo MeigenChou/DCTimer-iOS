@@ -21,15 +21,9 @@
 
 @implementation Pyraminx
 @synthesize face, suf, tips, sol;
-char pyPerm[360];
-short pyPermmv[360][4];
-char pyTwst[2592];
-char pyTwstmv[81][4];
-char pyFlipmv[32][4];
-
 int colmap[91];
 
-- (int) getprmmv: (int)p m:(int)m  {
+-(int) getprmmv: (int)p m:(int)m  {
     int ps[6];
     [Im idxToEvenPerm:ps i:p l:6];
     if (m == 0) {
@@ -47,7 +41,7 @@ int colmap[91];
     return [Im evenPermToIdx:ps l:6];
 }
 
-- (int)gettwsmv: (int)p m:(int)m {
+-(int) gettwsmv: (int)p m:(int)m {
     int ps[4];
     [Im idxToOri:ps i:p n:3 l:4];
     if (m == 0) {
@@ -65,7 +59,7 @@ int colmap[91];
     return [Im oriToIdx:ps n:3 l:4];
 }
 
-- (int) getflpmv:(int)p m:(int)m {
+-(int) getflpmv:(int)p m:(int)m {
     int a, d=0;
     int ps[6];
     int q = p;
@@ -100,24 +94,24 @@ int colmap[91];
     return q;
 }
 
-- (void) calcperm {
+-(void) calcperm {
     for (int p = 0; p < 360; p++) {
-        pyPerm[p] = -1;
+        perm[p] = -1;
         for (int m = 0; m < 4; m++) {
-            pyPermmv[p][m] = [self getprmmv:p m:m];
+            permmv[p][m] = [self getprmmv:p m:m];
         }
     }
-    pyPerm[0] = 0;
+    perm[0] = 0;
     for (int l = 0; l <= 4; l++) {
         //int n = 0;
         for (int p = 0; p < 360; p++) {
-            if (pyPerm[p] == l) {
+            if (perm[p] == l) {
                 for (int m = 0; m < 4; m++) {
                     int q = p;
                     for (int c = 0; c < 2; c++) {
-                        q = pyPermmv[q][m];
-                        if (pyPerm[q] == -1) {
-                            pyPerm[q] = l + 1;
+                        q = permmv[q][m];
+                        if (perm[q] == -1) {
+                            perm[q] = l + 1;
                             //n++;
                         }
                     }
@@ -128,22 +122,22 @@ int colmap[91];
     }
     for (int p = 0; p < 81; p++) {
         for (int m = 0; m < 4; m++) {
-            pyTwstmv[p][m] = [self gettwsmv:p m:m];
-            if(p<32) pyFlipmv[p][m] = [self getflpmv:p m:m];
+            twstmv[p][m] = [self gettwsmv:p m:m];
+            if(p<32) flipmv[p][m] = [self getflpmv:p m:m];
         }
     }
-    for (int p = 0; p < 2592; p++) pyTwst[p] = -1;
-    pyTwst[0] = 0;
+    for (int p = 0; p < 2592; p++) twst[p] = -1;
+    twst[0] = 0;
     for (int l = 0; l <= 6; l++) {
         //int n = 0;
         for (int p = 0; p < 2592; p++) {
-            if (pyTwst[p] == l) {
+            if (twst[p] == l) {
                 for (int m = 0; m < 4; m++) {
                     int q = p>>5, r = p&31;
                     for (int c = 0; c < 2; c++) {
-                        q = pyTwstmv[q][m]; r = pyFlipmv[r][m];
-                        if (pyTwst[q<<5|r] == -1) {
-                            pyTwst[q<<5|r] = l + 1;
+                        q = twstmv[q][m]; r = flipmv[r][m];
+                        if (twst[q<<5|r] == -1) {
+                            twst[q<<5|r] = l + 1;
                             //n++;
                         }
                     }
@@ -154,7 +148,7 @@ int colmap[91];
     }
 }
 
-- (Pyraminx *)init {
+-(Pyraminx *) init {
     if (self = [super init]) {
         [self calcperm];
         self.face = [[NSArray alloc] initWithObjects:@"U", @"L", @"R", @"B", nil];
@@ -165,16 +159,16 @@ int colmap[91];
     return self;
 }
 
-- (BOOL) search: (int)q t:(int)t l:(int)l lm:(int)lm {
+-(bool) search: (int)q t:(int)t l:(int)l lm:(int)lm {
     if (l == 0) return q == 0 && t == 0;
-    if (pyPerm[q] > l || pyTwst[t] > l) return false;
+    if (perm[q] > l || twst[t] > l) return false;
     int p, s, a, m;
     for (m = 0; m < 4; m++) {
         if (m != lm) {
             p = q; s = t;
             for (a = 0; a < 2; a++) {
-                p = pyPermmv[p][m];
-                s = pyTwstmv[s>>5][m] << 5 | pyFlipmv[s&31][m];
+                p = permmv[p][m];
+                s = twstmv[s>>5][m] << 5 | flipmv[s&31][m];
                 if ([self search:p t:s l:(l-1) lm:m]) {
                     [self.sol appendFormat:@"%@%@ ", [self.face objectAtIndex:m], [self.suf objectAtIndex:a]];
                     return true;
@@ -185,7 +179,7 @@ int colmap[91];
     return false;
 }
 
-- (NSString *)scrPyrm {
+-(NSString *) scramble {
     int t = rand()%2592, q = rand()%360, l;
     self.sol = [NSMutableString string];
     for(l=0; l<12; l++) {
@@ -201,13 +195,13 @@ int colmap[91];
     return @"";
 }
 
-+ (void)rotate3:(int)v1 v2:(int)v2 v3:(int)v3 c:(int)clockwise {
++(void) rotate3:(int)v1 v2:(int)v2 v3:(int)v3 c:(int)clockwise {
     if(clockwise == 2)
         [Im cir3:colmap a:v3 b:v2 c:v1];
     else [Im cir3:colmap a:v1 b:v2 c:v3];
 }
 
-+ (void)picmove:(int)type d:(int)direction {
++(void) picmove:(int)type d:(int)direction {
     switch (type) {
         case 0: //L
             [Pyraminx rotate3:14 v2:58 v3:18 c:direction];
@@ -242,7 +236,7 @@ int colmap[91];
     }
 }
 
-+ (void)init_colors {
++(void)init_colors {
     int tempcol[91] = {1, 1, 1, 1, 1, 0, 2, 0, 3, 3, 3, 3, 3,
         0, 1, 1, 1, 0, 2, 2, 2, 0, 3, 3, 3, 0,
         0, 0, 1, 0, 2, 2, 2, 2, 2, 0, 3, 0, 0,
@@ -253,14 +247,14 @@ int colmap[91];
     for(int i=0; i<91; i++) colmap[i] = tempcol[i];
 }
 
-+ (NSMutableArray *)imageString:(NSString *)scr {
++(NSMutableArray *)image:(NSString *)scr {
     NSString *moveIdx = @"LRBUlrbu";
     NSArray *s = [scr componentsSeparatedByString:@" "];
     [Pyraminx init_colors];
     int turn, suff;
     for(int i=0; i<s.count; i++) {
         NSString *temp = [s objectAtIndex:i];
-        suff = temp.length;
+        suff = (int)temp.length;
         if(suff > 0) {
             char i = [temp characterAtIndex:0];
             turn = [DCTUtils indexOf:moveIdx c:i];

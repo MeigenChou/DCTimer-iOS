@@ -26,6 +26,11 @@
 #import "stdlib.h"
 #import "time.h"
 #import "DCTUtils.h"
+//#import "Center1.h"
+//#import "Center2.h"
+//#import "Center3.h"
+//#import "Edge3.h"
+//#import "Search4.h"
 
 @interface Scrambler()
 @property (nonatomic, strong) Cube222 *cube2;
@@ -44,6 +49,7 @@
 @property (nonatomic, strong) Floppy *floppy;
 @property (nonatomic, strong) RTower *rtow;
 @property (nonatomic, strong) Sq1Shape *sqShape;
+//@property (nonatomic, strong) Search4 *cube4;
 @end
 
 @implementation Scrambler
@@ -53,6 +59,7 @@
 @synthesize tower, skewb, gear;
 @synthesize latch, floppy;
 @synthesize rtow, sqShape;
+//@synthesize cent1;
 int cubeSize;
 int viewType;
 NSMutableArray *scrPosit;
@@ -69,25 +76,26 @@ NSMutableArray *flat2posit;
 - (NSString *)scramble222: (int) type {
     if(!cube2)
         cube2 = [[Cube222 alloc] init];
-    if(type==0) return [cube2 scr222];
-    if(type==1) return [cube2 scrCLL];
-    if(type==2) return [cube2 scrEG1];
-    if(type==3) return [cube2 scrEG2];
-    if(type==4) return [cube2 scrPBL];
-    if(type==5) return [cube2 scrTCLL:1];
-    return [cube2 scrTCLL:2];
+    if(type==0) return [cube2 scramble];
+    if(type==1) return [cube2 scrambleEG:0];
+    if(type==2) return [cube2 scrambleEG:1];
+    if(type==3) return [cube2 scrambleEG:2];
+    if(type==4) return [cube2 scramblePBL];
+    if(type==5) return [cube2 scrambleTCLL:1];
+    if(type==6) return [cube2 scrambleTCLL:2];
+    return @"";
 }
 
 - (NSString *)scramblePyrm {
-    if(!self.pyram)
-        self.pyram = [[Pyraminx alloc] init];
-    return [self.pyram scrPyrm];
+    if(!pyram)
+        pyram = [[Pyraminx alloc] init];
+    return [pyram scramble];
 }
 
 - (NSString *)scrambleMinx {
     if(!minx)
         minx = [[Megaminx alloc] init];
-    return [minx scrMinx];
+    return [minx scramble];
 }
 
 - (NSString *)scrambleClk: (int) type {
@@ -117,19 +125,19 @@ NSMutableArray *flat2posit;
 - (NSString *)solveCross: (NSString *)scr side:(int)side {
     if(!self.cross)
         self.cross = [[Cross alloc] init];
-    return [self.cross cross:scr side:side];
+    return [self.cross solveCross:scr side:side];
 }
 
 - (NSString *)solveXcross:(NSString *)scr side:(int)side {
     if(!self.cross)
         self.cross = [[Cross alloc] init];
-    return [self.cross xcross:scr side:side];
+    return [self.cross solveXcross:scr side:side];
 }
 
 - (NSString *)solveEoline:(NSString *)scr side:(int)side {
     if(!self.eoline)
         self.eoline = [[EOLine alloc] init];
-    return [self.eoline eoLine:scr side:side];
+    return [self.eoline solveEOLine:scr side:side];
 }
 
 - (NSString *)solveSqShape:(NSString *)scr m:(int)metric {
@@ -145,19 +153,23 @@ NSMutableArray *flat2posit;
 
 - (NSString *)scramble333: (int) type {
     if(!cube3) cube3 = [[TwoPhaseScrambler alloc] init];
-    NSString *temp = [cube3 scramble: type];
-    return temp;
+    return [cube3 scramble: type];
 }
+
+/*- (NSString *)scramble444 {
+    if(!cube4) cube4 = [[Search4 alloc] init];
+    return [cube4 randomState];
+}*/
 
 - (NSString *)scrambleGear {
     if(!self.gear) self.gear = [[Gear alloc] init];
-    NSString *scr = [self.gear scrGear];
+    NSString *scr = [self.gear scramble];
     return scr;
 }
 
 - (NSString *)megascramble: (NSArray *)turns len:(int)len suf:(NSArray *)suff sql:(int)sql {
     int donemoves[10];
-    int lastaxis = -1, len2 = turns.count / len, slen = suff.count;
+    int lastaxis = -1, len2 = (int)turns.count / len, slen = (int)suff.count;
     //NSLog(@"%d %d", len2, slen);
     NSMutableString *s = [NSMutableString string];
     for (int j=0; j<sql; j++) {
@@ -181,7 +193,7 @@ NSMutableArray *flat2posit;
 
 - (NSString *)megascramble:(NSArray *)turns suf:(NSArray *)suff sql:(int)len ia:(BOOL)isArray {
     int donemoves[10];
-    int lastaxis = -1, slen = suff.count;
+    int lastaxis = -1, slen = (int)suff.count;
     //NSLog(@"%d %d", len2, slen);
     NSMutableString *s = [NSMutableString string];
     for (int j=0; j<len; j++) {
@@ -205,24 +217,21 @@ NSMutableArray *flat2posit;
     return s;
 }
 
-- (void) initSq1 {
-    if(!self.sq1) self.sq1 = [[Sq12phase alloc] init];
-    [self.sq1 initsq];
-}
-
 - (NSString *)scrambleSq1 {
-    if(!self.sq1) self.sq1 = [[Sq12phase alloc] init];
-    return [self.sq1 scrSq1];
+    if(!sq1)
+        sq1 = [[Sq12phase alloc] init];
+    return [sq1 scramble];
 }
 
 - (NSString *)scrambleSq1:(int)shp {
-    if(!self.sq1) self.sq1 = [[Sq12phase alloc] init];
-    return [self.sq1 scrSq1:1037];
+    if(!sq1)
+        sq1 = [[Sq12phase alloc] init];
+    return [sq1 scramble:1037];
 }
 
 - (NSString *)scrambleTow {
     if(!self.tower) self.tower = [[Tower alloc] init];
-    return [self.tower scrTow];
+    return [self.tower scramble];
 }
 
 - (NSString *)scrambleRTow {
@@ -232,7 +241,7 @@ NSMutableArray *flat2posit;
 
 - (NSString *)scrambleSkb {
     if(!self.skewb) self.skewb = [[Skewb alloc] init];
-    return [self.skewb scrSkb];
+    return [self.skewb scramble];
 }
 
 - (NSString *)scrambleLat {
@@ -241,8 +250,9 @@ NSMutableArray *flat2posit;
 }
 
 - (NSString *)scrambleFlpy {
-    if(!self.floppy) self.floppy = [[Floppy alloc] init];
-    return [self.floppy scrFlopy];
+    if(!floppy)
+        floppy = [[Floppy alloc] init];
+    return [floppy scramble];
 }
 
 - (NSString *)do15puz: (bool) mirrored {
@@ -273,7 +283,7 @@ NSMutableArray *flat2posit;
 - (NSString *)edgeScramble: (NSString *)start end:(NSArray *)end moves:(NSArray *)moves len:(int)len{
     int u=0,d=0;
     int movemis[10];
-    int movelen = moves.count;
+    int movelen = (int)moves.count;
     NSArray *triggers =[[NSArray alloc] initWithObjects:@"R",@"R'",@"R'",@"R",@"L",@"L'",@"L'",@"L",@"F'",@"F",@"F",@"F'",@"B",@"B'",@"B'",@"B", nil];
     NSArray *ud = [[NSArray alloc] initWithObjects:@"U", @"D", nil];
     NSArray *cubesuff = [[NSArray alloc] initWithObjects:@"", @"2", @"'", nil];
@@ -645,6 +655,16 @@ int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
             turn = [[NSArray alloc] initWithObjects:@"U", @"u", @"R", @"r", nil];
             scr = [self megascramble:turn len:2 suf:cubesuff sql:40];
             viewType=4; break;
+        /*case 69:
+            [Center1 initCent1];
+            [Center2 initCent2];
+            [Center3 initCent3];
+            [Edge3 initMvrot];
+            [Edge3 initRaw2Sym];
+            [Edge3 createPrun];
+            scr = [self scramble444];
+            viewType = 0;
+            break;*/
         case 96:   //5x5
             turn = [[NSArray alloc] initWithObjects:@"U", @"Uw", @"Dw", @"D", @"L", @"Lw", @"Rw", @"R", @"F", @"Fw", @"Bw", @"B", nil];
             scr = [self megascramble:turn len:3 suf:cubesuff sql:60];
@@ -789,7 +809,7 @@ int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
             NSArray *turn1 = [[NSArray alloc] initWithObjects:@"R2", @"L2", nil];
             NSArray *turn2 = [[NSArray alloc] initWithObjects:@"F2", @"B2", nil];
             turn = [[NSArray alloc] initWithObjects:[[NSArray alloc] initWithObjects:turn3, turn4, nil], [[NSArray alloc] initWithObjects:turn1, nil], [[NSArray alloc] initWithObjects:turn2, nil], nil];
-            scr = [NSString stringWithFormat:@"%@/ %@", scr = [self megascramble:turn suf:[[NSArray alloc] initWithObjects:@"", nil] sql:25 ia:YES], [self scramble333:0]];
+            scr = [NSString stringWithFormat:@"%@/ %@", [self megascramble:turn suf:[[NSArray alloc] initWithObjects:@"", nil] sql:25 ia:YES], [self scramble333:0]];
             viewType=0; break;
         }
         case 359:   //336
@@ -949,6 +969,7 @@ int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
             scr = [self do15puz:true];
             viewType=0; break;
         default:
+            scr = @"";
             break;
     }
     return scr;
@@ -1078,7 +1099,9 @@ int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
                         case 'F': move = 20; break;
                         case 'b':
                         case 'B': move = 8; break;
-                        default: NSLog(@"%hu", [[s objectAtIndex:i] characterAtIndex:1]); break;
+                        default:
+                            //NSLog(@"%hu", [[s objectAtIndex:i] characterAtIndex:1]);
+                            break;
                     }
                     if([[s objectAtIndex:i] length]>2) {
                         switch ([[s objectAtIndex:i] characterAtIndex:2]) {

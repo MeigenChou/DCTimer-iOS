@@ -8,13 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Cube222 : NSObject
+@interface Cube222 : NSObject {
+    int state[2][8];
+    char perm[5040];
+    char twist[729];
+    short permmv[5040][3];
+    short twstmv[729][3];
+}
 
-- (NSString *) scr222;
-- (NSString *) scrCLL;
-- (NSString *) scrEG1;
-- (NSString *) scrEG2;
-- (NSString *) scrPBL;
-- (NSString *) scrTCLL:(int)twst;
+-(NSString *) scramble;
+-(NSString *) scrambleEG:(int)type;
+-(NSString *) scramblePBL;
+-(NSString *) scrambleTCLL:(int)twst;
 
 @end

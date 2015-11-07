@@ -8,10 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Cross : NSObject
+@interface Cross : NSObject {
+    short pmv[11880][6], fmv[7920][6];
+    char permPrun[11880], flipPrun[7920];
+    char fcm[24][6], fem[24][6];
+    char fecd[4][576];
+    int edd[1568];
+}
 
-- (NSString *) cross:(NSString *)scr side:(int)sd;
-- (NSString *)xcross:(NSString *)scr side:(int)sd;
+- (NSString *)solveCross:(NSString *)scr side:(int)sd;
+- (NSString *)solveXcross:(NSString *)scr side:(int)sd;
 - (void)easyCross;
 
 @end

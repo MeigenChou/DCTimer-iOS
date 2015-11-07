@@ -19,14 +19,9 @@
 
 @implementation Cube222
 @synthesize turn, suf, sol;
-int state2[2][8];
-char p2prun[5040];
-short permmv[5040][3];
-char t2prun[729];
-short twstmv[729][3];
 extern int fact[];
 
-- (void) idxToPrm: (int[])ps p:(int)idx {
+-(void) idxToPrm:(int[])ps p:(int)idx {
     int val = 0x6543210;
     for (int i=0; i<6; i++) {
         int p = fact[6-i];
@@ -40,7 +35,7 @@ extern int fact[];
     ps[6] = val;
 }
 
-- (int) prmToIdx: (int[]) ps {
+-(int) prmToIdx:(int[])ps {
     int idx = 0;
     int val = 0x6543210;
     for (int i=0; i<7; i++) {
@@ -109,20 +104,20 @@ extern int fact[];
 			case 4:	//L
 			case 5:	//B
 				for(int i=0; i<n; i++) {
-					[self permMove:state2[0] m:m];
-					[self twistMove:state2[1] m:m];
+					[self permMove:state[0] m:m];
+					[self twistMove:state[1] m:m];
 				}
 				break;
 			case 6:	//y
 			case 7:	//x
 			case 8:	//z
 				for(int i=0; i<n; i++) {
-					[self permMove:state2[0] m:m-6];
-					[self twistMove:state2[1] m:m-6];
+					[self permMove:state[0] m:m-6];
+					[self twistMove:state[1] m:m-6];
 				}
 				for(int i=0; i<4-n; i++) {
-                    [self permMove:state2[0] m:m-3];
-					[self twistMove:state2[1] m:m-3];
+                    [self permMove:state[0] m:m-3];
+					[self twistMove:state[1] m:m-3];
 				}
 				break;
         }
@@ -134,20 +129,20 @@ extern int fact[];
         return;
     }
     //perm
-    [Im cir:state2[0] a:first b:second];
+    [Im cir:state[0] a:first b:second];
     //twist
-    [Im cir:state2[1] a:first b:second];
+    [Im cir:state[1] a:first b:second];
 }
 
 -(void) twist:(int)corner v:(int)value {
     if (value < 0) return;
-    state2[1][corner] += value;
+    state[1][corner] += value;
 }
 
 -(void) reset {
     for(int i=0; i<8; i++) {
-        state2[0][i] = i;
-        state2[1][i] = 0;
+        state[0][i] = i;
+        state[1][i] = 0;
     }
 }
 
@@ -191,9 +186,9 @@ extern int fact[];
     for(int i=0; i<4; i++)
         [self swap:i s:i+rand()%(4-i)];
     if([olls isEqualToString:@""])
-        [Im idxToZsOri:state2[1] i:(rand()%27) n:3 l:4];
+        [Im idxToZsOri:state[1] i:(rand()%27) n:3 l:4];
     else if([olls isEqualToString:@"X"] || [olls isEqualToString:@"PHUTLSA"])
-        [Im idxToZsOri:state2[1] i:(rand()%26)+1 n:3 l:4];
+        [Im idxToZsOri:state[1] i:(rand()%26)+1 n:3 l:4];
     else {
         char oll = [olls characterAtIndex:rand()%[olls length]];
         switch (oll) {
@@ -223,19 +218,19 @@ extern int fact[];
         }
     }
     [self doMove:0 n:(rand()%4)];
-    while (state2[0][4]!=7 && state2[0][5]!=7 && state2[0][6]!=7 && state2[0][7]!=7) {
+    while (state[0][4]!=7 && state[0][5]!=7 && state[0][6]!=7 && state[0][7]!=7) {
         [self doMove:7 n:1];
     }
-    while (state2[0][7]!=7) {
+    while (state[0][7]!=7) {
         [self doMove:6 n:1];
     }
-    while (state2[1][7]%3 != 0) {
+    while (state[1][7]%3 != 0) {
         [self doMove:7 n:1];
         [self doMove:6 n:1];
     }
 }
 
-- (void) randomTEG: (int)type t:(int)twst {
+-(void) randomTEG:(int)type t:(int)twst {
     [self reset];
     for(int i=0; i<3; i++)
     [self doMove:i+6 n:rand()%4];
@@ -274,23 +269,23 @@ extern int fact[];
     }
     for(int i=0; i<4; i++)
         [self swap:i s:i+rand()%(4-i)];
-    [Im idxToZsOri:state2[1] i:(rand()%27) n:3 l:4];
+    [Im idxToZsOri:state[1] i:(rand()%27) n:3 l:4];
     [self twist:4 v:twst];
     [self twist:(rand()%4) v:(3-twst)];
     [self doMove:0 n:(rand()%4)];
-    while (state2[0][4]!=7 && state2[0][5]!=7 && state2[0][6]!=7 && state2[0][7]!=7) {
+    while (state[0][4]!=7 && state[0][5]!=7 && state[0][6]!=7 && state[0][7]!=7) {
         [self doMove:7 n:1];
     }
-    while (state2[0][7]!=7) {
+    while (state[0][7]!=7) {
         [self doMove:6 n:1];
     }
-    while (state2[1][7]%3 != 0) {
+    while (state[1][7]%3 != 0) {
         [self doMove:7 n:1];
         [self doMove:6 n:1];
     }
 }
 
-- (int) getprmmv: (int)p m:(int)m {
+-(int) getprmmv:(int)p m:(int)m {
     //given position p<5040 and move m<3, return new position number
     //convert number into array;
     int ps[8];
@@ -301,7 +296,7 @@ extern int fact[];
     return [self prmToIdx:ps];
 }
 
-- (int)gettwsmv: (int)p m:(int)m {
+-(int)gettwsmv:(int)p m:(int)m {
     //given orientation p<729 and move m<3, return new orientation number
     //convert number into array;
     int ps[7];
@@ -312,50 +307,50 @@ extern int fact[];
     return [Im zsOriToIdx:ps n:3 l:7];
 }
 
-- (void) calcperm {
+-(void) calcperm {
     //calculate solving arrays
     //first permutation
     for (int p = 0; p < 5040; p++) {
-        p2prun[p] = -1;
+        perm[p] = -1;
         for (int m = 0; m < 3; m++) {
             permmv[p][m] = [self getprmmv:p m:m];
         }
     }
-    p2prun[0] = 0;
+    perm[0] = 0;
     for (int l = 0; l <= 6; l++)
         for (int p = 0; p < 5040; p++) {
-            if (p2prun[p] == l)
+            if (perm[p] == l)
                 for (int m = 0; m < 3; m++) {
                     int q = p;
                     for (int c = 0; c < 3; c++) {
                         q = permmv[q][m];
-                        if (p2prun[q] == -1)
-                            p2prun[q] = l + 1;
+                        if (perm[q] == -1)
+                            perm[q] = l + 1;
                     }
                 }
     }
     //then twist
     for (int p = 0; p < 729; p++) {
-        t2prun[p] = -1;
+        twist[p] = -1;
         for (int m = 0; m < 3; m++) {
             twstmv[p][m] = [self gettwsmv:p m:m];
         }
     }
-    t2prun[0] = 0;
+    twist[0] = 0;
     for (int l = 0; l <= 5; l++)
         for (int p = 0; p < 729; p++)
-            if (t2prun[p] == l)
+            if (twist[p] == l)
                 for (int m = 0; m < 3; m++) {
                     int q = p;
                     for (int c = 0; c < 3; c++) {
                         q = twstmv[q][m];
-                        if (t2prun[q] == -1)
-                            t2prun[q] = l + 1;
+                        if (twist[q] == -1)
+                            twist[q] = l + 1;
                     }
                 }
 }
 
-- (Cube222 *)init {
+-(Cube222 *) init {
     if(self = [super init]) {
         self.turn = [[NSArray alloc] initWithObjects:@"U", @"R", @"F", nil];
         self.suf = [[NSArray alloc] initWithObjects:@"'", @"2", @"", nil];
@@ -365,9 +360,9 @@ extern int fact[];
     return self;
 }
 
-- (BOOL) search: (int)q t:(int)t l:(int)l lm:(int)lm {
+-(bool) search:(int)q t:(int)t l:(int)l lm:(int)lm {
     if (l == 0) return q == 0 && t == 0;
-    if (p2prun[q] > l || t2prun[t] > l) return false;
+    if (perm[q] > l || twist[t] > l) return false;
     int p,s,a,m;
     for (m = 0; m < 3; m++) {
         if (m != lm) {
@@ -385,10 +380,10 @@ extern int fact[];
     return false;
 }
 
--(NSString *)solve:(int)q t:(int)t {
+-(NSString *) solve:(int)q t:(int)t {
     sol = [NSMutableString string];
     
-    for (int l=0; l<12; l++) {
+    for (int l=4; l<12; l++) {
         if ([self search:q t:t l:l lm:-1]) {
             return sol;
         }
@@ -396,7 +391,7 @@ extern int fact[];
     return @"";
 }
 
-- (NSString *)scr222 {
+-(NSString *) scramble {
     int p, o;
     do {
         p = rand() % 5040;
@@ -405,40 +400,36 @@ extern int fact[];
     return [self solve:p t:o];
 }
 
-- (NSString *)scrCLL {
-    [self randomEG:4 o:@"X"];
-    int p = [self prmToIdx:state2[0]];
-    int o = [Im zsOriToIdx:state2[1] n:3 l:7];
+-(NSString *) scrambleEG:(int)type {
+    switch (type) {
+        case 0: //EG0(CLL)
+            [self randomEG:4 o:@"X"];
+            break;
+        case 1: //EG1
+            [self randomEG:2 o:@"X"];
+            break;
+        case 2: //EG2
+            [self randomEG:1 o:@"X"];
+            break;
+    }
+    int p = [self prmToIdx:state[0]];
+    int o = [Im zsOriToIdx:state[1] n:3 l:7];
     return [self solve:p t:o];
 }
 
-- (NSString *)scrEG1 {
-    [self randomEG:2 o:@"X"];
-    int p = [self prmToIdx:state2[0]];
-    int o = [Im zsOriToIdx:state2[1] n:3 l:7];
-    return [self solve:p t:o];
-}
-
-- (NSString *)scrEG2 {
-    [self randomEG:1 o:@"X"];
-    int p = [self prmToIdx:state2[0]];
-    int o = [Im zsOriToIdx:state2[1] n:3 l:7];
-    return [self solve:p t:o];
-}
-
-- (NSString *)scrPBL {
+-(NSString *) scramblePBL {
     [self randomEG:0 o:@"N"];
-    int p = [self prmToIdx:state2[0]];
-    int o = [Im zsOriToIdx:state2[1] n:3 l:7];
+    int p = [self prmToIdx:state[0]];
+    int o = [Im zsOriToIdx:state[1] n:3 l:7];
     return [self solve:p t:o];
 }
     
-- (NSString *) scrTCLL: (int)twst {
+-(NSString *) scrambleTCLL: (int)twst {
     int p, o;
     do {
         [self randomTEG:4 t:twst];
-        p = [self prmToIdx:state2[0]];
-        o = [Im zsOriToIdx:state2[1] n:3 l:7];
+        p = [self prmToIdx:state[0]];
+        o = [Im zsOriToIdx:state[1] n:3 l:7];
     } while (p==0 && o==0);
     return [self solve:p t:o];
 }

@@ -11,12 +11,12 @@
 @implementation Im
 
 int fact[13] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600};
-int Cnk[12][12];
+int Cnk[25][25];
 
 + (void) initCnk {
     static bool iniCnk = false;
     if(!iniCnk) {
-        for (int i=0; i<12; i++) {
+        for (int i=0; i<25; i++) {
             Cnk[i][0] = Cnk[i][i] = 1;
             for (int j=1; j<i; j++) {
                 Cnk[i][j] = Cnk[i-1][j-1] + Cnk[i-1][j];

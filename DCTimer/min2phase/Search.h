@@ -16,6 +16,30 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Search : NSObject
+@interface Search : NSObject {
+    int move[31];
+    
+    int corn[20];
+    int mid4[20];
+    int ud8e[20];
+    
+    int corn0[6];
+    int ud8e0[6];
+    
+    int f[54];
+    
+    int urfIdx;
+    int depth1;
+    int maxDep2;
+    int sol;
+    int valid1;
+    int valid2;
+    
+    long timeOut;
+    long timeMin;
+    int verbose;
+}
+
 -(NSString *) solutionForFacelets:(NSString *)facelets md:(int)maxDepth nt:(long)newTimeOut tm:(long)newTimeMin v:(int)newVerbose;
+
 @end

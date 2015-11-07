@@ -8,9 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Skewb : NSObject
+@interface Skewb : NSObject {
+    short ctm[360][4];
+    char cpm[36][4];
+    short com[2187][4];
+    char ctd[360];
+    char cd[2187][36];
+}
 
-- (NSString *)scrSkb;
-+ (NSMutableArray *)image:(NSString *)scr;
+-(NSString *) scramble;
++(NSMutableArray *) image:(NSString *)scr;
 
 @end

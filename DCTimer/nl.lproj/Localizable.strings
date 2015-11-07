@@ -92,6 +92,7 @@
 "sensitivity" = "Gevoeligheid";
 "scramble" = "Scramble";
 "hide_scr" = "Verberg scramble onder timen";
+"mono_font" = "Use monospaced font";
 "display_scr" = "Display scramble view";
 "stt_stats" = "Statistieken";
 "prompttime" = "Prompt when new time detected";
@@ -117,6 +118,7 @@
 "bg_image" = "Achtergrond";
 "opacity" = "Doorzichtigheid";
 "show_image" = "Show image";
+"timer_font" = "Timer font";
 "timer_size" = "Grootte timer";
 "version" = "Versie";
 "about" = "Over";

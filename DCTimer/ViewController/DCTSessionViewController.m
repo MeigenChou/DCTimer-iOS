@@ -60,7 +60,7 @@ bool isDefSes;
                 NSString *name = tf.text;
                 [session addObject:name];
                 [[DCTData dbh] addSession:name];
-                currentSesIdx = session.count - 1;
+                currentSesIdx = (int)session.count - 1;
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                 [defaults setInteger:currentSesIdx forKey:@"crntsesidx"];
                 [[DCTData dbh] query:currentSesIdx];
@@ -142,7 +142,7 @@ bool isDefSes;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger row = [indexPath row];
     if(row!=currentSesIdx) {
-        currentSesIdx = row;
+        currentSesIdx = (int)row;
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:currentSesIdx forKey:@"crntsesidx"];
         [[DCTData dbh] query:currentSesIdx];
@@ -153,7 +153,7 @@ bool isDefSes;
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     NSUInteger row = [indexPath row];
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    selectedSesIdx = row;
+    selectedSesIdx = (int)row;
     isDefSes = row==0;
     UIActionSheet *actionSheet;
     if(isDefSes) {

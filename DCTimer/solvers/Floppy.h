@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Floppy : NSObject
+@interface Floppy : NSObject {
+    char distance[24][16];
+}
 
-- (NSString *) scrFlopy;
+- (NSString *) scramble;
 
 @end

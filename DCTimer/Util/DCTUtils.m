@@ -11,7 +11,7 @@
 
 @implementation DCTUtils
 extern int accuracy;
-extern BOOL clkFormat;
+extern NSInteger timeForm;
 
 + (NSString *)replace:(NSString *)s str:(NSString *)r with:(NSString *)t {
     NSMutableString *string = [NSMutableString stringWithString:s];
@@ -23,7 +23,7 @@ extern BOOL clkFormat;
 + (int)indexOf:(NSString *)s c:(char)c {
     NSString *idx = [NSString stringWithFormat:@"%c", c];
     NSRange rang = [s rangeOfString:idx];
-    return rang.location;
+    return (int)rang.location;
 }
 
 + (NSString *)substring:(NSString *)s s:(int)start e:(int)end {
@@ -141,13 +141,20 @@ extern BOOL clkFormat;
 }
 
 + (NSString *)distime:(int)i {
-    bool m = i<0;
-    if(m)i = -i;
-    int msec=i%1000;
-    if(accuracy == 1)msec/=10;
-    int sec=clkFormat?(i/1000)%60:i/1000;
-    int min=clkFormat?(i/60000)%60:0;
-    int hour=clkFormat?i/3600000:0;
+    bool m = i < 0;
+    if(m) i = -i;
+    int msec = i % 1000;
+    if(accuracy == 1) msec /= 10;
+    int sec = i/1000;
+    int min = 0, hour = 0;
+    if(timeForm < 2) {
+        min = sec / 60;
+        sec %= 60;
+        if(timeForm < 1) {
+            hour = min / 60;
+            min %= 60;
+        }
+    }
     NSString *time = [[NSString alloc] initWithFormat:@"%@%@", m?@"-":@"", [DCTUtils contime:hour m:min s:sec ms:msec]];
     return time;
 }

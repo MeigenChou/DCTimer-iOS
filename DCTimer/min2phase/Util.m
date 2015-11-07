@@ -2,7 +2,7 @@
 //  Util.m
 //  DCTimer Scramblers
 //
-//  Adapted from Shuang Chen's min2phase implementation of the Kociemba algorithm, as obtained from https://github.com/ChenShuang/min2phase
+//  Adapted from Shuang Chen's min2phase implementation of the Kociemba algorithm, as obtained from https://github.com/cs0x7f/min2phase
 //
 //  Copyright (c) 2013, Shuang Chen
 //  All rights reserved.
@@ -103,7 +103,7 @@ bool ckmv2[11][10];
 int std2ud[18];
 int ud2std[] = {Ux1, Ux2, Ux3, Rx2, Fx2, Dx1, Dx2, Dx3, Lx2, Bx2};
 extern int fact[];
-extern int Cnk[12][12];
+extern int Cnk[25][25];
 int permMult[24][24];
 
 +(void) toCubieCube:(int [])f cc:(CubieCube *)ccRet {

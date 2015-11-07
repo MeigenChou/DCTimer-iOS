@@ -61,14 +61,14 @@ extern int subTitle;
     [self.tableView reloadData];
     [super viewDidAppear:animated];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    int bgcolor = [defaults integerForKey:@"bgcolor"];
+    int bgcolor = (int)[defaults integerForKey:@"bgcolor"];
     int r = (bgcolor>>16)&0xff;
     int g = (bgcolor>>8)&0xff;
     int b = bgcolor&0xff;
     if([DCTUtils isOS7]) self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1];
     else self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1];
     newestTop = [defaults boolForKey:@"newtop"];
-    subTitle = [defaults integerForKey:@"subtitle"];
+    subTitle = (int)[defaults integerForKey:@"subtitle"];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -95,9 +95,9 @@ extern int subTitle;
     }
     NSUInteger row = [indexPath row];
     if(newestTop) row = numberSolves-1-row;
-    cell.textLabel.text = [DCTData distimeAtIndex:row dt:false];
-    if(subTitle == 0) cell.detailTextLabel.text = [[DCTData dbh] getDateAtIndex:row];
-    else if(subTitle == 1) cell.detailTextLabel.text = [[DCTData dbh] getScrambleAtIndex:row];
+    cell.textLabel.text = [DCTData distimeAtIndex:(int)row dt:false];
+    if(subTitle == 0) cell.detailTextLabel.text = [[DCTData dbh] getDateAtIndex:(int)row];
+    else if(subTitle == 1) cell.detailTextLabel.text = [[DCTData dbh] getScrambleAtIndex:(int)row];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 }
@@ -110,13 +110,13 @@ extern int subTitle;
     NSUInteger row = [indexPath row];
     if(row >= numberSolves) row = numberSolves-1;
     if(newestTop) row = numberSolves-1-row;
-    NSString *selectedTime = [DCTData distimeAtIndex:row dt:true];
-    NSString *time = [NSString stringWithFormat:@"(%@)", [[DCTData dbh] getDateAtIndex:row]];
-    NSString *scr = [[DCTData dbh] getScrambleAtIndex:row];
+    NSString *selectedTime = [DCTData distimeAtIndex:(int)row dt:true];
+    NSString *time = [NSString stringWithFormat:@"(%@)", [[DCTData dbh] getDateAtIndex:(int)row]];
+    NSString *scr = [[DCTData dbh] getScrambleAtIndex:(int)row];
     detailController.rest = selectedTime;
     detailController.time = time;
     detailController.scramble = scr;
-    [detailController setDetail:row];
+    [detailController setDetail:(int)row];
     detailController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:detailController animated:YES];
 }
@@ -127,12 +127,11 @@ extern int subTitle;
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if(editingStyle == UITableViewCellEditingStyleDelete) {
-        int row = [indexPath row];
+        NSInteger row = [indexPath row];
         if(row >= numberSolves) row = numberSolves-1;
         if(newestTop) row = numberSolves-1-row;
-        NSLog(@"delete %d", row);
-        [[DCTData dbh] deleteTimeAtIndex:row];
-        [[DCTData dbh] deleteTime:row];
+        [[DCTData dbh] deleteTimeAtIndex:(int)row];
+        [[DCTData dbh] deleteTime:(int)row];
         [self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5];
     }
 }

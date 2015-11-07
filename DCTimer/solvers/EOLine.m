@@ -21,12 +21,9 @@
 
 @implementation EOLine
 @synthesize faceStr, moveIdx, rotIdx, turn, suff, sol;
-short eomEo[2048][6];
-short epmEo[132][6];
-char eodEo[2048];
-char epdEo[132];
 
-- (id)init {
+
+-(id) init {
     if(self = [super init]) {
         faceStr = [[NSArray alloc] initWithObjects:@"DF DB", @"DL DR", @"UF UB", @"UL UR",
                    @"LF LB", @"LU LD", @"RF RB", @"RU RD", @"FU FD", @"FL FR", @"BU BD", @"BL BR", nil];
@@ -41,7 +38,7 @@ char epdEo[132];
     return self;
 }
 
-- (int)getEpm:(int)eci epi:(int)epi k:(int)k {
+-(int) getEpm:(int)eci epi:(int)epi k:(int)k {
     bool comb[12];
     [Im idxToComb:comb i:eci k:2 l:12];;
     int perm[2];
@@ -77,7 +74,7 @@ char epdEo[132];
     return eci * 2 + epi;
 }
 
-- (void)initeo {
+-(void) initeo {
     int arr[12];
     for(int i=0; i<2048; i++){
         for(int j=0; j<6; j++) {
@@ -92,48 +89,48 @@ char epdEo[132];
 				case 5: [Im cir:arr a:4 b:0 c:8 d:3];
 					arr[4]^=1; arr[0]^=1; arr[8]^=1; arr[3]^=1; break;
             }
-            eomEo[i][j] = [Im zsOriToIdx:arr n:2 l:12];
+            eom[i][j] = [Im zsOriToIdx:arr n:2 l:12];
         }
     }
     for(int i=0; i<66; i++){
         for(int j=0; j<2; j++){
             for(int k=0; k<6; k++){
-                epmEo[i*2+j][k] = [self getEpm:i epi:j k:k];
+                epm[i*2+j][k] = [self getEpm:i epi:j k:k];
             }
         }
         
     }
-    for(int i=1; i<2048; i++) eodEo[i] = -1;
-    eodEo[0] = 0;
+    for(int i=1; i<2048; i++) eod[i] = -1;
+    eod[0] = 0;
     int d = 0;
     //int n = 1;
     for(d=0; d<7; d++){
         //n=0;
         for(int i=0; i<2048; i++)
-            if(eodEo[i] == d)
+            if(eod[i] == d)
                 for(int j=0; j<6; j++)
                     for(int y=i,m=0; m<3; m++){
-                        y=eomEo[y][j];
-                        if(eodEo[y]==-1){
-                            eodEo[y]=d+1;
+                        y=eom[y][j];
+                        if(eod[y]==-1){
+                            eod[y]=d+1;
                             //n++;
                         }
                     }
         //System.out.println(d+" "+n);
     }
     
-    for(int i=0; i<132; i++) epdEo[i] = -1;
-    epdEo[106] = 0;
+    for(int i=0; i<132; i++) epd[i] = -1;
+    epd[106] = 0;
     for(d=0; d<4; d++){
         //n=0;
         for(int i=0; i<132; i++)
-            if(epdEo[i] == d)
+            if(epd[i] == d)
                 for(int j=0; j<6; j++){
                     int y=i;
                     for(int m=0; m<3; m++){
-                        y=epmEo[y][j];
-                        if(epdEo[y]==-1){
-                            epdEo[y]=d+1;
+                        y=epm[y][j];
+                        if(epd[y]==-1){
+                            epd[y]=d+1;
                             //n++;
                         }
                     }
@@ -142,15 +139,15 @@ char epdEo[132];
     }
 }
 
-- (bool)search:(int)eo ep:(int)ep d:(int)depth l:(int)l {
+-(bool) search:(int)eo ep:(int)ep d:(int)depth l:(int)l {
     if(depth==0) return eo==0 && ep==106;
-    if(eodEo[eo]>depth || epdEo[ep]>depth) return false;
+    if(eod[eo]>depth || epd[ep]>depth) return false;
     for (int i = 0; i < 6; i++)
         if (i != l) {
             int w = eo, y = ep;
             for (int j = 0; j < 3; j++) {
-                y = epmEo[y][i];
-                w = eomEo[w][i];
+                y = epm[y][i];
+                w = eom[w][i];
                 if ([self search:w ep:y d:depth-1 l:i]) {
                     [self.sol insertString:[NSString stringWithFormat:@" %@%@", [self.turn objectAtIndex:i], [self.suff objectAtIndex:j]] atIndex:0];
                     //sb.insert(0, " " + turn[i] + suff[j]);
@@ -161,20 +158,20 @@ char epdEo[132];
     return false;
 }
 
-- (NSString *)solve:(NSString *)scr side:(int)side {
+-(NSString *) solve:(NSString *)scr side:(int)side {
     NSArray *s = [scr componentsSeparatedByString:@" "];
     int ep = 106, eo = 0;
     for(int d=0; d<s.count; d++) {
         if([[s objectAtIndex:d] length]!=0) {
             char i = [[s objectAtIndex:d] characterAtIndex:0];
             int o = [DCTUtils indexOf:[self.moveIdx objectAtIndex:side] c:i];
-            ep = epmEo[ep][o]; eo = eomEo[eo][o];
+            ep = epm[ep][o]; eo = eom[eo][o];
             if([[s objectAtIndex:d] length]>1) {
                 i = [[s objectAtIndex:d] characterAtIndex:1];
                 if(i == '2') {
-                    eo = eomEo[eo][o]; ep = epmEo[ep][o];
+                    eo = eom[eo][o]; ep = epm[ep][o];
                 } else {
-                    eo = eomEo[eomEo[eo][o]][o]; ep = epmEo[epmEo[ep][o]][o];
+                    eo = eom[eom[eo][o]][o]; ep = epm[epm[ep][o]][o];
                 }
             }
         }
@@ -184,7 +181,7 @@ char epdEo[132];
     return [NSString stringWithFormat:@"%@:%@%@", [faceStr objectAtIndex:side], [self.rotIdx objectAtIndex:side], self.sol];
 }
 
-- (NSString *)eoLine:(NSString *)scr side:(int)side {
+-(NSString *) solveEOLine:(NSString *)scr side:(int)side {
     return [NSString stringWithFormat:@"\n%@\n%@", [self solve:scr side:side*2], [self solve:scr side:side*2+1]];
 }
 @end

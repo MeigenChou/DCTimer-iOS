@@ -27,24 +27,6 @@ static const int N_FLIP_SYM = 336;
 static const int N_PERM_SYM = 2768;
 static const int N_MPERM = 24;
 
-extern int SymInv[];
-extern int permMult[24][24];
-extern unsigned short FlipS2R[];
-extern unsigned short TwistS2R[];
-extern unsigned short EPermS2R[];
-extern int ud2std[];
-extern int SymInv[16];
-extern int SymMult[16][16];
-extern int Sym8Mult[8][8];
-extern int Sym8Move[8][18];
-extern int SymMultInv[8][8];
-extern int SymMoveUD[16][10];
-extern int Sym8MultInv[8][8];
-extern unsigned short SymStateTwist[324];
-extern unsigned short SymStateFlip[336];
-extern unsigned short SymStatePerm[2768];
-extern int e2c[];
-
 //XMove = Move Table
 //XPrun = Pruning Table
 //XConj = Conjugate Table
@@ -65,6 +47,23 @@ unsigned short MPermMove[N_MPERM][N_MOVES2];
 unsigned short MPermConj[N_MPERM][16];
 int MCPermPrun[N_MPERM * N_PERM_SYM / 8];
 int MEPermPrun[N_MPERM * N_PERM_SYM / 8];
+
+extern int permMult[24][24];
+extern unsigned short FlipS2R[];
+extern unsigned short TwistS2R[];
+extern unsigned short EPermS2R[];
+extern int ud2std[];
+extern int SymInv[16];
+extern int SymMult[16][16];
+extern int Sym8Mult[8][8];
+extern int Sym8Move[8][18];
+extern int SymMultInv[8][8];
+extern int SymMoveUD[16][10];
+extern int Sym8MultInv[8][8];
+extern unsigned short SymStateTwist[324];
+extern unsigned short SymStateFlip[336];
+extern unsigned short SymStatePerm[2768];
+extern int e2c[];
 
 +(void) setPruning:(int[])table i:(int)index v:(int)value {
     table[index >> 3] ^= (15 ^ value) << ((index & 7) << 2);

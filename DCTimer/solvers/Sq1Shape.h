@@ -8,7 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Sq1Shape : NSObject
-- (NSString *)solveTrn:(NSString *)scr;
-- (NSString *)solveTws:(NSString *)scr;
+@interface Sq1Shape : NSObject {
+    int shape[3678];
+    char prunTrn[3678];
+    char prunTws[3678];
+    int sol[16];
+    int sollen;
+}
+
+-(NSString *) solveTrn:(NSString *)scr;
+-(NSString *) solveTws:(NSString *)scr;
+
 @end

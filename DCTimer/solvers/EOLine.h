@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface EOLine : NSObject
-- (NSString *)eoLine:(NSString *)scr side:(int)side;
+@interface EOLine : NSObject {
+    short eom[2048][6];
+    short epm[132][6];
+    char eod[2048];
+    char epd[132];
+}
+
+- (NSString *)solveEOLine:(NSString *)scr side:(int)side;
+
 @end

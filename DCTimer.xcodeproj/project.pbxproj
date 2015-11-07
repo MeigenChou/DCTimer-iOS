@@ -81,8 +81,11 @@
 		F5E287C618AE2CA700397D69 /* su.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287BC18AE2CA700397D69 /* su.png */; };
 		F5E287C718AE2CA700397D69 /* su@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287BD18AE2CA700397D69 /* su@2x.png */; };
 		F5E287C918AE2E7B00397D69 /* license.html in Resources */ = {isa = PBXBuildFile; fileRef = F5E287C818AE2E7B00397D69 /* license.html */; };
+		F5E9201118D89CC900D2A901 /* Df.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F5E9200F18D89CC900D2A901 /* Df.ttf */; };
 		F5E98D90187ACDF5006933EE /* DCTAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E98D8F187ACDF5006933EE /* DCTAboutViewController.m */; };
 		F5E98D92187AD915006933EE /* scrambleCN.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5E98D91187AD915006933EE /* scrambleCN.plist */; };
+		F5F00F5119F8B59500BC6B19 /* DCTResultPadControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F00F4F19F8B59500BC6B19 /* DCTResultPadControllerViewController.m */; };
+		F5F00F5219F8B59500BC6B19 /* DCTResultPadControllerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5F00F5019F8B59500BC6B19 /* DCTResultPadControllerViewController.xib */; };
 		F5F50EEE1773EF9A0049AA65 /* CubieCube.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F50EED1773EF9A0049AA65 /* CubieCube.m */; };
 		F5F50EF11773F4EA0049AA65 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F50EF01773F4EA0049AA65 /* Util.m */; };
 		F5F50EF41773FA750049AA65 /* CoordCube.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F50EF31773FA750049AA65 /* CoordCube.m */; };
@@ -211,9 +214,13 @@
 		F5E287BC18AE2CA700397D69 /* su.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = su.png; sourceTree = "<group>"; };
 		F5E287BD18AE2CA700397D69 /* su@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "su@2x.png"; sourceTree = "<group>"; };
 		F5E287C818AE2E7B00397D69 /* license.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = license.html; sourceTree = "<group>"; };
+		F5E9200F18D89CC900D2A901 /* Df.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Df.ttf; path = resource/Df.ttf; sourceTree = "<group>"; };
 		F5E98D8E187ACDF5006933EE /* DCTAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTAboutViewController.h; sourceTree = "<group>"; };
 		F5E98D8F187ACDF5006933EE /* DCTAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTAboutViewController.m; sourceTree = "<group>"; };
 		F5E98D91187AD915006933EE /* scrambleCN.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = scrambleCN.plist; sourceTree = "<group>"; };
+		F5F00F4E19F8B59500BC6B19 /* DCTResultPadControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTResultPadControllerViewController.h; sourceTree = "<group>"; };
+		F5F00F4F19F8B59500BC6B19 /* DCTResultPadControllerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTResultPadControllerViewController.m; sourceTree = "<group>"; };
+		F5F00F5019F8B59500BC6B19 /* DCTResultPadControllerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DCTResultPadControllerViewController.xib; sourceTree = "<group>"; };
 		F5F50EEC1773EF9A0049AA65 /* CubieCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CubieCube.h; sourceTree = "<group>"; };
 		F5F50EED1773EF9A0049AA65 /* CubieCube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CubieCube.m; sourceTree = "<group>"; };
 		F5F50EEF1773F4EA0049AA65 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
@@ -297,6 +304,7 @@
 				F5DC197F18CE072200ABA2C0 /* InfColorPicker */,
 				F5E287C818AE2E7B00397D69 /* license.html */,
 				F5B872F617130EE20065F0D2 /* min2phase */,
+				F5E9200E18D89C5100D2A901 /* resource */,
 				F5B8730817130FDB0065F0D2 /* scramble */,
 				F5AAD6F7171DAF2C001E3F32 /* scramble.plist */,
 				F5E98D91187AD915006933EE /* scrambleCN.plist */,
@@ -418,6 +426,9 @@
 				F5CD77DA18B264CB00180470 /* DCTStatDetailController.m */,
 				F5B8734D171312CF0065F0D2 /* DCTStatsViewController.h */,
 				F5B8734E171312CF0065F0D2 /* DCTStatsViewController.m */,
+				F5F00F4E19F8B59500BC6B19 /* DCTResultPadControllerViewController.h */,
+				F5F00F4F19F8B59500BC6B19 /* DCTResultPadControllerViewController.m */,
+				F5F00F5019F8B59500BC6B19 /* DCTResultPadControllerViewController.xib */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -484,6 +495,14 @@
 			name = InfColorPicker;
 			sourceTree = "<group>";
 		};
+		F5E9200E18D89C5100D2A901 /* resource */ = {
+			isa = PBXGroup;
+			children = (
+				F5E9200F18D89CC900D2A901 /* Df.ttf */,
+			);
+			name = resource;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -511,7 +530,7 @@
 		F59FF53016E1FD7400D7FE65 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0600;
 				TargetAttributes = {
 					F59FF53816E1FD7400D7FE65 = {
 						DevelopmentTeam = 258G8G83YY;
@@ -526,9 +545,7 @@
 				en,
 				"zh-Hans",
 				"en-GB",
-				"zh-Hant-TW",
 				"zh-Hant",
-				"nl-NL",
 				nl,
 			);
 			mainGroup = F59FF52E16E1FD7400D7FE65;
@@ -562,6 +579,7 @@
 				F5E98D92187AD915006933EE /* scrambleCN.plist in Resources */,
 				F5E287C918AE2E7B00397D69 /* license.html in Resources */,
 				F5E287C718AE2CA700397D69 /* su@2x.png in Resources */,
+				F5E9201118D89CC900D2A901 /* Df.ttf in Resources */,
 				F5E287BF18AE2CA700397D69 /* 1hold@2x.png in Resources */,
 				F5D521E0187EC1E0009F452B /* Images.xcassets in Resources */,
 				F5E287C018AE2CA700397D69 /* sd.png in Resources */,
@@ -570,6 +588,7 @@
 				F5E287C118AE2CA700397D69 /* sd@2x.png in Resources */,
 				F5B87373171313E90065F0D2 /* img3.png in Resources */,
 				F5E287C518AE2CA700397D69 /* sr@2x.png in Resources */,
+				F5F00F5219F8B59500BC6B19 /* DCTResultPadControllerViewController.xib in Resources */,
 				F5B87374171313E90065F0D2 /* img3@2x.png in Resources */,
 				F5B87375171313E90065F0D2 /* title_more@2x.png in Resources */,
 				F5B87376171313E90065F0D2 /* whiteButton.png in Resources */,
@@ -617,6 +636,7 @@
 				F5D9EE9E189E1704004CB5F2 /* FPPopoverController.m in Sources */,
 				F5DC199118CE073300ABA2C0 /* InfColorIndicatorView.m in Sources */,
 				F5B8732E171310880065F0D2 /* EOLine.m in Sources */,
+				F5F00F5119F8B59500BC6B19 /* DCTResultPadControllerViewController.m in Sources */,
 				F5DC199618CE073300ABA2C0 /* InfHSBSupport.m in Sources */,
 				F5B8732F171310880065F0D2 /* Floppy.m in Sources */,
 				F5B87330171310880065F0D2 /* Gear.m in Sources */,
@@ -704,10 +724,12 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Meigen Chou (BKGKWZCBC2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Meigen Chou (BKGKWZCBC2)";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -724,7 +746,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -741,10 +763,12 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Ming yuan Zhang (258G8G83YY)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ming yuan Zhang (258G8G83YY)";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -754,7 +778,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -773,7 +797,7 @@
 				GCC_PREFIX_HEADER = "DCTimer/DCTimer-Prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				INFOPLIST_FILE = "DCTimer/DCTimer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -793,7 +817,7 @@
 				GCC_PREFIX_HEADER = "DCTimer/DCTimer-Prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				INFOPLIST_FILE = "DCTimer/DCTimer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";

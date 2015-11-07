@@ -77,7 +77,7 @@
 "calcing" = "Calculating...";
 
 "WCAinsp" = "WCA inspection";
-"clockformat" = "Use clock format (m:ss.ms)";
+"clockformat" = "Time format";
 "timerupd" = "Timer updating";
 "On" = "On";
 "secondsonly" = "Seconds only";
@@ -86,13 +86,14 @@
 "accuracy" = "Timer accuracy";
 "0.001sec" = "0.001 sec";
 "0.01sec" = "0.01 sec";
-"pressingtime" = "Pressing time";
+"pressingtime" = "Timer start delay";
 "input_time" = "Manually enter times";
 "drop_stop" = "Drop to stop";
 "sensitivity" = "Sensitivity";
 "scramble" = "Scramble";
 "hide_scr" = "Hide scramble while timing";
 "display_scr" = "Display scramble view";
+"mono_font" = "Use monospaced font";
 "stt_stats" = "Results and Stats";
 "prompttime" = "Prompt when new time detected";
 "printscr" = "Print scramble(s) in statistics";
@@ -117,6 +118,7 @@
 "bg_image" = "Background image";
 "opacity" = "Opacity";
 "show_image" = "Show image";
+"timer_font" = "Timer font";
 "timer_size" = "Timer size";
 "version" = "Version";
 "about" = "About";

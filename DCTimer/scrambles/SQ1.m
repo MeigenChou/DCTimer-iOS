@@ -171,7 +171,7 @@ int sqPosit[24];
         } else {
             NSString *s = [scr objectAtIndex:i];
             if (s.length != 0) {
-                NSArray *p = [[DCTUtils substring:s s:1 e:s.length-1] componentsSeparatedByString:@","];
+                NSArray *p = [[DCTUtils substring:s s:1 e:(int)s.length-1] componentsSeparatedByString:@","];
                 int top = [[p objectAtIndex:0] intValue];
                 if(top > 0) [SQ1 doMove:top];
                 else if(top < 0) [SQ1 doMove:(top+12)];

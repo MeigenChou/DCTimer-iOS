@@ -43,7 +43,7 @@ extern bool esChanged;
 #pragma mark -
 #pragma mark Table View Delegate Methods
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    int row = [indexPath row];
+    NSInteger row = [indexPath row];
     if(row != [selIndex intValue]) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:row forKey:key];

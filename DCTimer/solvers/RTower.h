@@ -8,6 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RTower : NSObject
-- (NSString *)scramble;
+@interface RTower : NSObject {
+    unsigned short cpm[40320][4];
+    unsigned short epm[40320][4];
+    unsigned short eom[2187][5];
+    char cpd[40320];
+    char epd[40320];
+    char eod[2187];
+    int faces[4];
+    int seq[40];
+    int len1;
+}
+
+-(NSString *) scramble;
+
 @end

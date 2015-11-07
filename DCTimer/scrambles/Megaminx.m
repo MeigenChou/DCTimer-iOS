@@ -22,7 +22,6 @@ short permR2[] = {81, 77, 78, 3, 4, 86, 82, 83, 8, 85, 87, 122, 123, 124, 125, 1
 short permR2i[] = {88, 89, 90, 3, 4, 93, 94, 95, 8, 97, 98, 100, 101, 102, 103, 99, 105, 106, 107, 108, 104, 109, 46, 47, 24, 25, 45, 51, 52, 29, 49, 50, 54, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 81, 77, 78, 48, 85, 86, 82, 83, 53, 87, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 57, 58, 59, 55, 56, 62, 63, 64, 60, 61, 65, 1, 2, 79, 80, 0, 6, 7, 84, 9, 5, 10, 26, 22, 23, 91, 92, 31, 27, 28, 96, 30, 32, 69, 70, 66, 67, 68, 74, 75, 71, 72, 73, 76, 112, 113, 114, 110, 111, 117, 118, 119, 115, 116, 120, 15, 11, 12, 13, 14, 20, 16, 17, 18, 19, 21};
 char mxState[11*12];
 
-
 - (id)init {
     self = [super init];
     if (self) {
@@ -40,7 +39,7 @@ char mxState[11*12];
     }
 }
 
-- (void)applyMove:(char[])state m:(short[])movePerm {
+-(void) applyMove:(char[])state m:(short[])movePerm {
     char stateNew[11*12];
     for (int i = 0; i < 11*12; i++) {
         stateNew[i] = state[movePerm[i]];
@@ -49,7 +48,7 @@ char mxState[11*12];
         state[i] = stateNew[i];
 }
 
--(NSString *) scrMinx {
+-(NSString *) scramble {
     int seq[80];
     for(int i=0; i<linenbr*linelen; i++){
         seq[i] = (int)(rand()%2);
@@ -83,18 +82,18 @@ char mxState[11*12];
             }
         }
         if (seq[(j+1)*linelen - 1]!=0) {
-            [s appendString:@"U "];
+            [s appendString:@"U \n"];
             [self applyMove:mxState m:permU];
         }
         else {
-            [s appendString:@"U' "];
+            [s appendString:@"U'\n"];
             [self applyMove:mxState m:permUi];
         }
     }
     return s;
 }
 
-+ (NSMutableArray *)image {
++(NSMutableArray *) image {
     NSMutableArray *img = [[NSMutableArray alloc] init];
     for(int i=0; i<12*11; i++)
         [img addObject:@(mxState[i])];

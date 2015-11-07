@@ -17,24 +17,22 @@
 -(Sq12phase *) init {
     if(self = [super init]) {
         srand((unsigned)time(0));
+        ul = 0x011233;
+        ur = 0x455677;
+        dl = 0x998bba;
+        dr = 0xddcffe;
+        ml = 0;
+        NSLog(@"init sq");
+        [self initp];
+        [self initq];
+        NSLog(@"sq OK");
     }
     return self;
 }
 
 //Shape
 //1 = corner, 0 = edge.
-int halflayer[] = {0x00, 0x03, 0x06, 0x0c, 0x0f, 0x18, 0x1b, 0x1e, 
-    0x30, 0x33, 0x36, 0x3c, 0x3f};
-int ShapeIdx[3678];
-char ShapePrun[3768 * 2];
-
-int spTopMove[3678 * 2];
-int spBottomMove[3678 * 2];
-int spTwistMove[3678 * 2];
-
-int top;
-int bottom;
-int parity;
+int halflayer[] = {0x00, 0x03, 0x06, 0x0c, 0x0f, 0x18, 0x1b, 0x1e, 0x30, 0x33, 0x36, 0x3c, 0x3f};
 
 - (int)getShape2Idx:(int)shp {
 	int ret = [DCTUtils binarySearch:ShapeIdx ti:3678 key:shp & 0xffffff]<<1 | shp>>24;
@@ -105,11 +103,11 @@ int parity;
 	int i;
 	int count = 0;
 	for (i=0; i<13*13*13*13; i++) {
-		int dr = halflayer[i % 13];
-		int dl = halflayer[i / 13 % 13];
-		int ur = halflayer[i / 13 / 13 % 13];
-		int ul = halflayer[i / 13 / 13 / 13];
-		int value = ul<<18|ur<<12|dl<<6|dr;
+		int tdr = halflayer[i % 13];
+		int tdl = halflayer[i / 13 % 13];
+		int tur = halflayer[i / 13 / 13 % 13];
+		int tul = halflayer[i / 13 / 13 / 13];
+		int value = tul<<18|tur<<12|tdl<<6|tdr;
 		if ([DCTUtils bitCount:value] == 16) {
 			ShapeIdx[count++] = value;
 		}
@@ -179,20 +177,8 @@ int parity;
 }
 
 //Square
-int edgeperm;
-int cornperm;
-bool topEdgeFirst;
-bool botEdgeFirst;
-int qml;
-
-char SquarePrun[40320 * 2];
-unsigned short sqTwistMove[40320];
-unsigned short sqTopMove[40320];
-unsigned short sqBottomMove[40320];
-
 - (void)initq {
 	int i,m;
-    
 	int pos[8];
 	int temp;
 	for(i=0;i<40320;i++){
@@ -227,9 +213,9 @@ unsigned short sqBottomMove[40320];
 		for (int i=0; i<40320*2; i++) {
 			if (SquarePrun[i] == find) {
 				int idx = i >> 1;
-				int ml = i & 1;
+				int tml = i & 1;
 				//try twist
-				int idxx = sqTwistMove[idx]<<1 | (1-ml);
+				int idxx = sqTwistMove[idx]<<1 | (1-tml);
 				if(SquarePrun[idxx] == check) {
 					++done;
 					SquarePrun[inv ? i : idxx] = depth;
@@ -239,9 +225,9 @@ unsigned short sqBottomMove[40320];
 				idxx = idx;
 				for(m=0; m<4; m++) {
 					idxx = sqTopMove[idxx];
-					if(SquarePrun[idxx<<1|ml] == check){
+					if(SquarePrun[idxx<<1|tml] == check){
 						++done;
-						SquarePrun[inv ? i : (idxx<<1|ml)] = depth;
+						SquarePrun[inv ? i : (idxx<<1|tml)] = depth;
 						if (inv) {
 							isBreak=true;
 							break;
@@ -255,9 +241,9 @@ unsigned short sqBottomMove[40320];
 				//try turning bottom layer
 				for(m=0; m<4; m++) {
 					idxx = sqBottomMove[idxx];
-					if(SquarePrun[idxx<<1|ml] == check){
+					if(SquarePrun[idxx<<1|tml] == check){
 						++done;
-						SquarePrun[inv ? i : (idxx<<1|ml)] = depth;
+						SquarePrun[inv ? i : (idxx<<1|tml)] = depth;
 						if (inv) break;
 					}
 				}
@@ -267,13 +253,6 @@ unsigned short sqBottomMove[40320];
 }
 
 //FullCube
-int ul = 0x011233;
-int ur = 0x455677;
-int dl = 0x998bba;
-int dr = 0xddcffe;
-int ml = 0;
-int rul, rur, rdl, rdr, rml;
-
 - (void)doMove:(int)move {
 	move <<= 2;
 	if (move > 24) {
@@ -385,7 +364,7 @@ int prm[8];
 	a = botEdgeFirst ? 14 : 12;
 	for( ; b<8; a+=3, b++) prm[b]=[self pieceAt:a]>>1;
 	edgeperm = [Im get8Perm:prm];
-	qml = ml;
+	sqml = ml;
 }
 
 - (void)randomCube:(int)shape {
@@ -419,23 +398,18 @@ int prm[8];
 }
 
 //Search
-int sqMove[70];
-int sqLength1;
-int sqMaxlen2;
-int sqSol_len;
-
--(bool) sqPhase2:(int)edge c:(int)corner te:(bool)topEdgeFirst be:(bool)botEdgeFirst ml:(int)ml m:(int)maxl d:(int)depth l:(int)lm {
-    if (maxl == 0 && !topEdgeFirst && botEdgeFirst) {
+-(bool) sqPhase2:(int)edge c:(int)corner te:(bool)tef be:(bool)bef ml:(int)tml m:(int)maxl d:(int)depth l:(int)lm {
+    if (maxl == 0 && !tef && bef) {
         return true;
     }
     
     //try each possible move. First twist;
-    if(lm!=0 && topEdgeFirst == botEdgeFirst) {
+    if(lm!=0 && tef == bef) {
         int edgex = sqTwistMove[edge];
         int cornerx = sqTwistMove[corner];
-        if (SquarePrun[edgex<<1|(1-ml)] < maxl && SquarePrun[cornerx<<1|(1-ml)] < maxl) {
+        if (SquarePrun[edgex<<1|(1-tml)] < maxl && SquarePrun[cornerx<<1|(1-tml)] < maxl) {
             sqMove[depth] = 0;
-            if ([self sqPhase2:edgex c:cornerx te:topEdgeFirst be:botEdgeFirst ml:(1-ml) m:(maxl-1) d:(depth+1) l:0]) {
+            if ([self sqPhase2:edgex c:cornerx te:tef be:bef ml:(1-tml) m:(maxl-1) d:(depth+1) l:0]) {
                 return true;
             }
         }
@@ -443,27 +417,27 @@ int sqSol_len;
     
     //Try top layer
     if (lm <= 0){
-        bool topEdgeFirstx = !topEdgeFirst;
+        bool topEdgeFirstx = !tef;
         int edgex = topEdgeFirstx ? sqTopMove[edge] : edge;
         int cornerx = topEdgeFirstx ? corner : sqTopMove[corner];
         int m = topEdgeFirstx ? 1 : 2;
-        int prun1 = SquarePrun[(edgex<<1)|ml];
-        int prun2 = SquarePrun[(cornerx<<1)|ml];
+        int prun1 = SquarePrun[(edgex<<1)|tml];
+        int prun2 = SquarePrun[(cornerx<<1)|tml];
         while (m < 12 && prun1 <= maxl && prun1 <= maxl) {
             if (prun1 < maxl && prun2 < maxl) {
                 sqMove[depth] = m;
-                if ([self sqPhase2:edgex c:cornerx te:topEdgeFirstx be:botEdgeFirst ml:ml m:(maxl-1) d:(depth+1) l:1]) {
+                if ([self sqPhase2:edgex c:cornerx te:topEdgeFirstx be:bef ml:tml m:(maxl-1) d:(depth+1) l:1]) {
                     return true;
                 }
             }
             topEdgeFirstx = !topEdgeFirstx;
             if (topEdgeFirstx) {
                 edgex = sqTopMove[edgex];
-                prun1 = SquarePrun[(edgex<<1)|ml];
+                prun1 = SquarePrun[(edgex<<1)|tml];
                 m += 1;
             } else {
                 cornerx = sqTopMove[cornerx];
-                prun2 = SquarePrun[(cornerx<<1)|ml];
+                prun2 = SquarePrun[(cornerx<<1)|tml];
                 m += 2;
             }
         }
@@ -471,27 +445,27 @@ int sqSol_len;
     
     //Try bottom layer
     if (lm <= 1){
-        bool botEdgeFirstx = !botEdgeFirst;
+        bool botEdgeFirstx = !bef;
         int edgex = botEdgeFirstx ? sqBottomMove[edge] : edge;
         int cornerx = botEdgeFirstx ? corner : sqBottomMove[corner];
         int m = botEdgeFirstx ? 1 : 2;
-        int prun1 = SquarePrun[(edgex<<1)|ml];
-        int prun2 = SquarePrun[(cornerx<<1)|ml];
+        int prun1 = SquarePrun[(edgex<<1)|tml];
+        int prun2 = SquarePrun[(cornerx<<1)|tml];
         while (m < (maxl > 6 ? 6 : 12) && prun1 <= maxl && prun1 <= maxl) {
             if (prun1 < maxl && prun2 < maxl) {
                 sqMove[depth] = -m;
-                if ([self sqPhase2:edgex c:cornerx te:topEdgeFirst be:botEdgeFirstx ml:ml m:(maxl-1) d:(depth+1) l:2]) {
+                if ([self sqPhase2:edgex c:cornerx te:tef be:botEdgeFirstx ml:tml m:(maxl-1) d:(depth+1) l:2]) {
                     return true;
                 }
             }
             botEdgeFirstx = !botEdgeFirstx;
             if (botEdgeFirstx) {
                 edgex = sqBottomMove[edgex];
-                prun1 = SquarePrun[(edgex<<1)|ml];
+                prun1 = SquarePrun[(edgex<<1)|tml];
                 m += 1;
             } else {
                 cornerx = sqBottomMove[cornerx];
-                prun2 = SquarePrun[(cornerx<<1)|ml];
+                prun2 = SquarePrun[(cornerx<<1)|tml];
                 m += 2;
             }
         }
@@ -501,17 +475,17 @@ int sqSol_len;
 
 -(bool)sqInit2 {
     ul=rul; ur=rur; dl=rdl; dr=rdr; ml=rml;
-    for (int i=0; i<sqLength1; i++) {
+    for (int i=0; i<len1; i++) {
         [self doMove:sqMove[i]];
     }
     [self getSquare];
     int edge = edgeperm;
     int corner = cornperm;
-    int ml = qml;
-    int prun = MAX(SquarePrun[edgeperm<<1|ml], SquarePrun[cornperm<<1|ml]);
-    for (int i=prun; i<sqMaxlen2; i++) {
-        if ([self sqPhase2:edge c:corner te:topEdgeFirst be:botEdgeFirst ml:ml m:i d:sqLength1 l:0]) {
-            sqSol_len = i + sqLength1;
+    int tml = sqml;
+    int prun = MAX(SquarePrun[edgeperm<<1|tml], SquarePrun[cornperm<<1|tml]);
+    for (int i=prun; i<maxlen2; i++) {
+        if ([self sqPhase2:edge c:corner te:topEdgeFirst be:botEdgeFirst ml:tml m:i d:len1 l:0]) {
+            sol_len = i + len1;
             return true;
         }
     }
@@ -583,51 +557,44 @@ int sqSol_len;
     return false;
 }
 
--(void) initsq {
-    //NSLog(@"init sq");
-    [self initp];
-    [self initq];
-    //NSLog(@"sq OK");
+- (NSString *) scramble {
+    return [self scramble:(rand()%3678)];
 }
 
-- (NSString *) scrSq1 {
-    return [self scrSq1:(rand()%3678)];
-}
-
-- (NSString *) scrSq1:(int)shp {
+- (NSString *) scramble:(int)shp {
     [self randomCube:shp];
     rul=ul; rur=ur; rdl=dl; rdr=dr; rml=ml;
     int shape = [self getShapeIdx];
     //NSLog(@"%d %d %d %d %d, %d %d", ul, ur, dl, dr, ml, shape, ShapePrun[shape]);
-    for (sqLength1=ShapePrun[shape]; sqLength1<70; sqLength1++) {
-        sqMaxlen2 = MIN(34 - sqLength1, 17);
-        if ([self sqPhase1:shape p:ShapePrun[shape] m:sqLength1 d:0 l:-1]) {
+    for (len1=ShapePrun[shape]; len1<70; len1++) {
+        maxlen2 = MIN(34 - len1, 17);
+        if ([self sqPhase1:shape p:ShapePrun[shape] m:len1 d:0 l:-1]) {
             break;
         }
     }
     //NSLog(@"%d", sqSol_len);
     NSString *s = @"";
-    int top = 0, bottom = 0;
-    for (int i=sqSol_len-1; i>=0; i--) {
+    int t = 0, b = 0;
+    for (int i=sol_len-1; i>=0; i--) {
         int val = sqMove[i];
         if (val > 0) {
             val = 12 - val;
-            top = (val > 6) ? (val-12) : val;
+            t = (val > 6) ? (val-12) : val;
         } else if (val < 0) {
             val = 12 + val;
-            bottom = (val > 6) ? (val-12) : val;
+            b = (val > 6) ? (val-12) : val;
         } else {
-            if (top == 0 && bottom == 0) {
+            if (t == 0 && b == 0) {
                 s = [s stringByAppendingString:@" / "];
             } else {
-                s = [s stringByAppendingFormat:@"(%d,%d) / ", top, bottom];
+                s = [s stringByAppendingFormat:@"(%d,%d) / ", t, b];
             }
-            top = bottom = 0;
+            t = b = 0;
         }
     }
-    if (top == 0 && bottom == 0) {
+    if (t == 0 && b == 0) {
     } else {
-        s = [s stringByAppendingFormat:@"(%d,%d)", top, bottom];
+        s = [s stringByAppendingFormat:@"(%d,%d)", t, b];
     }
     return s;// + " (" + len + "t)";
 }

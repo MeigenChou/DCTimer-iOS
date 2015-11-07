@@ -71,23 +71,9 @@ NSMutableArray *moveCube;
     return moveCube;
 }
 
-+(CubieCube*) urf1 {
-    static CubieCube *urf1 = nil;
-    if (!urf1) {
-        urf1 = [[super allocWithZone:NULL] initCubie:2531 twist:1373 eperm:67026819 flip:1367];
-    }
-    return urf1;
-}
-
-+(CubieCube*) urf2 {
-    static CubieCube *urf2 = nil;
-    if (!urf2) {
-        urf2 = [[super allocWithZone:NULL] initCubie:2089 twist:1906 eperm:322752913 flip:2040];
-    }
-    return urf2;
-}
-
-CubieCube* temps = nil;
+CubieCube *urf1;
+CubieCube *urf2;
+CubieCube *temps = nil;
 
 -(id)init {
     if (self = [super init]) {
@@ -99,6 +85,8 @@ CubieCube* temps = nil;
             self->ep[x] = x;
             self->eo[x] = 0;
         }
+        urf1 = [[CubieCube alloc] initCubie:2531 twist:1373 eperm:67026819 flip:1367];
+        urf2 = [[CubieCube alloc] initCubie:2089 twist:1906 eperm:322752913 flip:2040];
     }
     return self;
 }
@@ -202,10 +190,10 @@ CubieCube* temps = nil;
     if (temps == nil) {
         temps = [[CubieCube alloc] init];
     }
-    [CubieCube CornMult:[CubieCube urf2] cubeB:self cubeProd:temps];
-    [CubieCube CornMult:temps cubeB:[CubieCube urf1] cubeProd:self];
-    [CubieCube EdgeMult:[CubieCube urf2] cubeB:self cubeProd: temps];
-    [CubieCube EdgeMult:temps cubeB:[CubieCube urf1] cubeProd: self];
+    [CubieCube CornMult:urf2 cubeB:self cubeProd:temps];
+    [CubieCube CornMult:temps cubeB:urf1 cubeProd:self];
+    [CubieCube EdgeMult:urf2 cubeB:self cubeProd: temps];
+    [CubieCube EdgeMult:temps cubeB:urf1 cubeProd: self];
 }
 
 // ********************** Get and set coordinates ***********************

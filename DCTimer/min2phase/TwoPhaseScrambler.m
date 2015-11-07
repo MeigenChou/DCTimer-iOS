@@ -12,6 +12,7 @@
 #import "CoordCube.h"
 #import "CubieCube.h"
 #import "Cross.h"
+#import "DCTUtils.h"
 #import "stdlib.h"
 #import "time.h"
 
@@ -20,29 +21,94 @@ int STATE_RANDOM[] = {-2};
 int STATE_SOLVED[] = {-3};
 extern int arrc[2][12];
 
+//extern unsigned short FlipS2R[336];
+//extern unsigned short TwistS2R[324];
+//extern unsigned short EPermS2R[2768];
+//extern unsigned short MtoEPerm[40320];
+extern unsigned short TwistMove[324][18];
+extern unsigned short FlipMove[336][18];
+extern unsigned short UDSliceMove[495][18];
+extern unsigned short UDSliceConj[495][8];
+extern unsigned short CPermMove[2768][18];
+extern unsigned short EPermMove[2768][10];
+extern unsigned short MPermMove[24][10];
+extern unsigned short MPermConj[24][16];
+extern int UDSliceTwistPrun[];
+extern int UDSliceFlipPrun[];
+extern int MCPermPrun[];
+extern int MEPermPrun[];
+
 -(id) init {
     if (self = [super init]) {
-        NSLog(@"init start");
-        [Util setupUtil];
-        [CubieCube initMove];
-        [CubieCube initSym];
-        [CubieCube initFlipSym2Raw];
-        [CubieCube initTwistSym2Raw];
-        [CubieCube initPermSym2Raw];
+        srand((unsigned)time(0));
+        static bool first_run = false;
+        if (!first_run) {
+            [Util setupUtil];
+            [self initTwoPhase];
+            first_run = true;
+        }
+    }
+    return self;
+}
+
+- (void)initTwoPhase {
+    NSLog(@"init 3x3...");
+    [CubieCube initMove];
+    [CubieCube initSym];
+    [CubieCube initFlipSym2Raw];
+    [CubieCube initTwistSym2Raw];
+    [CubieCube initPermSym2Raw];
+    
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    NSString *path = [DCTUtils getFilePath:@"twophase.dat"];
+    if ([fileMgr fileExistsAtPath:path]) {
+        NSData *reader = [NSData dataWithContentsOfFile:path];
+        //[reader getBytes:&FlipS2R length:672];
+        //[reader getBytes:&TwistS2R range:NSMakeRange(672, 648)];
+        //[reader getBytes:&EPermS2R range:NSMakeRange(1320, 5536)];
+        //[reader getBytes:&MtoEPerm range:NSMakeRange(6856, 80640)];
+        [reader getBytes:&TwistMove length:11664];
+        [reader getBytes:&FlipMove range:NSMakeRange(11664, 12096)];
+        [reader getBytes:&UDSliceMove range:NSMakeRange(23760, 17820)];
+        [reader getBytes:&UDSliceConj range:NSMakeRange(41580, 7920)];
+        [reader getBytes:&CPermMove range:NSMakeRange(49500, 99648)];
+        [reader getBytes:&EPermMove range:NSMakeRange(149148, 55360)];
+        [reader getBytes:&MPermMove range:NSMakeRange(204508, 480)];
+        [reader getBytes:&MPermConj range:NSMakeRange(204988, 768)];
+        [reader getBytes:&UDSliceTwistPrun range:NSMakeRange(205756, 80192)];
+        [reader getBytes:&UDSliceFlipPrun range:NSMakeRange(285948, 83160)];
+        [reader getBytes:&MCPermPrun range:NSMakeRange(369108, 33216)];
+        [reader getBytes:&MEPermPrun range:NSMakeRange(402324, 33216)];
+    } else {
+        NSLog(@"init coord...");
         [CoordCube initFlipMove];
         [CoordCube initTwistMove];
         [CoordCube initUDSliceMoveConj];
         [CoordCube initCPermMove];
         [CoordCube initEPermMove];
         [CoordCube initMPermMoveConj];
+        
         [CoordCube initSliceTwistPrun];
         [CoordCube initSliceFlipPrun];
         [CoordCube initMEPermPrun];
         [CoordCube initMCPermPrun];
-        NSLog(@"init OK");
-        srand((unsigned)time(0));
+        
+        NSMutableData *writer = [[NSMutableData alloc] init];
+        [writer appendBytes:&TwistMove length:11664];
+        [writer appendBytes:&FlipMove length:12096];
+        [writer appendBytes:&UDSliceMove length:17820];
+        [writer appendBytes:&UDSliceConj length:7920];
+        [writer appendBytes:&CPermMove length:99648];
+        [writer appendBytes:&EPermMove length:55360];
+        [writer appendBytes:&MPermMove length:480];
+        [writer appendBytes:&MPermConj length:768];
+        [writer appendBytes:&UDSliceTwistPrun length:80192];
+        [writer appendBytes:&UDSliceFlipPrun length:83160];
+        [writer appendBytes:&MCPermPrun length:33216];
+        [writer appendBytes:&MEPermPrun length:33216];
+        [writer writeToFile:path atomically:YES];
     }
-    return self;
+    NSLog(@"init done");
 }
 
 - (int) resolveOri:(int[])arr len:(int)len base:(int)base {
@@ -318,7 +384,7 @@ extern int arrc[2][12];
         default:
             cube = @"";
     }
-    NSLog(@"%@", [cube substringToIndex:54]);
+    //NSLog(@"%@", [cube substringToIndex:54]);
     Search *s = [[Search alloc] init];
     [sol appendFormat:@"%@", [s solutionForFacelets:cube md:21 nt:5000 tm:100 v:2]];
     //NSString *sol = [s solutionForFacelets:cube md:21 nt:5000 tm:100 v:2];

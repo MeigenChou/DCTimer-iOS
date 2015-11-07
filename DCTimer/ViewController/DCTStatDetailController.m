@@ -46,7 +46,7 @@
     //[self.view setBackgroundColor:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0]];
     [textView setEditable:NO];
     [textView setText:sdContent];
-    [textView setBackgroundColor:[UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:1.0]];
+    //[textView setBackgroundColor:[UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:1.0]];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"copy", @"") style:UIBarButtonItemStylePlain target:self action:@selector(copyStats)];
 }
 

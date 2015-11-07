@@ -31,7 +31,7 @@ int numcube=0, solved=0;
 int curAvg[4], bestAvg[4], bestAvgIdx[4];
 int numOfAvg[4] = {5, 12, 50, 100};
 int curMean3, bestMean3, bestMeanIdx;
-extern int accuracy;
+extern NSInteger accuracy;
 extern BOOL prntScr;
 bool issChange = true;
 
@@ -62,23 +62,28 @@ bool issChange = true;
     }
     NSString *createSQL = @"create table if not exists sessiontb (rowid integer, name text)";
     char *errorMsg;
+    int mark = 0;
     if(sqlite3_exec(database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
-        //sqlite3_close(database);
         NSLog(@"failed %s", errorMsg);
-        return @"fctb";
+        mark |= 1;
     }
     createSQL = @"create table if not exists resulttb (id integer, sesid integer, rest integer, resp integer, scr text, date text, note text)";
     if(sqlite3_exec(database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
-        //sqlite3_close(database);
         NSLog(@"failed %s", errorMsg);
-        return @"fctb";
+        mark |= 2;
     }
+    //createSQL = @"create table if not exists sestypetb (id integer, type integer)";
+    //if(sqlite3_exec(database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
+    //    NSLog(@"failed %s", errorMsg);
+    //    mark |= 4;
+    //}
+    if(mark != 0) return @"fctb";
     return @"OK";
 }
 
 - (void)getSessions {
     NSString *msg = [self openDB];
-    if([msg hasPrefix:@"f"]){
+    if([msg hasPrefix:@"f"]) {
         NSLog(@"failed open");
         return;
     }
@@ -99,7 +104,7 @@ bool issChange = true;
 }
 
 - (int)getSessionCount {
-    return sesData.count;
+    return (int)sesData.count;
 }
 
 - (void)getSessionName:(NSMutableArray *)ses {
@@ -134,7 +139,7 @@ bool issChange = true;
             }
         }
         dbLastId = row;
-        NSLog(@"data:%d lastId:%d", self.resultId.count, dbLastId);
+        NSLog(@"data:%d lastId:%d", (int)self.resultId.count, dbLastId);
         sqlite3_finalize(statement);
     }
 }
@@ -176,7 +181,7 @@ bool issChange = true;
     sqlite3_stmt *stmt;
     if(sqlite3_prepare_v2(database, delete, -1, &stmt, nil) == SQLITE_OK) {
         sqlite3_bind_int(stmt, 1, [[self.resultId objectAtIndex:idx] intValue]);
-        NSLog(@"del time %d %d", self.resultId.count, [[self.resultId objectAtIndex:idx] intValue]);
+        NSLog(@"del time %d %d", (int)self.resultId.count, [[self.resultId objectAtIndex:idx] intValue]);
     }
     if(sqlite3_step(stmt) != SQLITE_DONE) {
         NSLog(@"failed delete time");
@@ -277,7 +282,7 @@ bool issChange = true;
 }
 
 - (int)numberOfSolves {
-    return resList.count;
+    return (int)resList.count;
 }
 
 - (NSString *)cubeSolves {
@@ -311,7 +316,7 @@ bool issChange = true;
 }
 
 - (void)getSessionStats {
-    numcube = resList.count;
+    numcube = (int)resList.count;
     maxIdx = minIdx = sessionSD = -1;
     solved = 0;
     if(numcube==0) return;
@@ -489,7 +494,7 @@ bool issChange = true;
                     int p = [[penList objectAtIndex:j] intValue];
                     if(p!=2) [data addObject:@([[resList objectAtIndex:j] intValue]+2000*p)];
                 }
-                [self quickSort:data l:0 h:data.count-1];
+                [self quickSort:data l:0 h:(int)data.count-1];
                 //[data sortUsingSelector:@selector(compare:)];
                 for(int j=trimmed; j<num-trimmed; j++) {
                     sum += [[data objectAtIndex:j] intValue];
@@ -694,7 +699,7 @@ bool issChange = true;
             [ix addObject:@(j)];
         }
     }
-    [self quickSort:ts idx:ix l:0 h:ts.count-1];
+    [self quickSort:ts idx:ix l:0 h:(int)ts.count-1];
     if(n-dnf >= trim) {
         for(int j=0; j<trim; j++) [mix addObject:[ix objectAtIndex:j]];
     } else {

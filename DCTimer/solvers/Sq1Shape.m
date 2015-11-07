@@ -11,14 +11,9 @@
 
 @implementation Sq1Shape
 int halfLayer[] = {0x15, 0x17, 0x1B, 0x1D, 0x1F, 0x2B, 0x2D, 0x2F, 0x35, 0x37, 0x3B, 0x3D, 0x3F};
-int shape[3678];
-char prunTrn[3678];
-char prunTws[3678];
-int sol[16];
-int sollen;
 int goalIdx = 7191405;
 
-- (id)init {
+-(id) init {
     if(self = [super init]) {
         int count = 0;
         for (int i=0; i<28561; i++) {
@@ -31,119 +26,119 @@ int goalIdx = 7191405;
 				shape[count++] = value;
 			}
 		}
-    }
-    for (int i = 0; i < 3678; i++) {
-        prunTrn[i] = -1;
-        prunTws[i] = -1;
-    }
-    prunTrn[[self getShape2Idx:goalIdx]] = 0;
-    for(int d=0; d<14; d++) {
         for (int i = 0; i < 3678; i++) {
-            if (prunTrn[i] == d) {
-                int state = shape[i];
-                // twist
-                if ([self isTwistable:state]) {
-                    int next = [self twist:state];
-                    int temp = [self getShape2Idx:next];
-                    if (prunTrn[temp] == -1) {
-                        prunTrn[temp] = d + 1;
-                    }
-                }
-                // rotate top
-                int nextTop = shape[i];
-                for (int j = 0; j < 11; j++) {
-                    nextTop = [self rotateTop:nextTop];
-                    if([self isTwistable:nextTop]){
-                        int temp = [self getShape2Idx:nextTop];
+            prunTrn[i] = -1;
+            prunTws[i] = -1;
+        }
+        prunTrn[[self getShape2Idx:goalIdx]] = 0;
+        for(int d=0; d<14; d++) {
+            for (int i = 0; i < 3678; i++) {
+                if (prunTrn[i] == d) {
+                    int state = shape[i];
+                    // twist
+                    if ([self isTwistable:state]) {
+                        int next = [self twist:state];
+                        int temp = [self getShape2Idx:next];
                         if (prunTrn[temp] == -1) {
                             prunTrn[temp] = d + 1;
                         }
                     }
-                }
-                // rotate bottom
-                int nextBottom = shape[i];
-                for (int j = 0; j < 11; j++) {
-                    nextBottom = [self rotateBottom:nextBottom];
-                    if([self isTwistable:nextBottom]){
-                        int temp = [self getShape2Idx:nextBottom];
-                        if (prunTrn[temp] == -1) {
-                            prunTrn[temp] = d + 1;
+                    // rotate top
+                    int nextTop = shape[i];
+                    for (int j = 0; j < 11; j++) {
+                        nextTop = [self rotateTop:nextTop];
+                        if([self isTwistable:nextTop]){
+                            int temp = [self getShape2Idx:nextTop];
+                            if (prunTrn[temp] == -1) {
+                                prunTrn[temp] = d + 1;
+                            }
+                        }
+                    }
+                    // rotate bottom
+                    int nextBottom = shape[i];
+                    for (int j = 0; j < 11; j++) {
+                        nextBottom = [self rotateBottom:nextBottom];
+                        if([self isTwistable:nextBottom]){
+                            int temp = [self getShape2Idx:nextBottom];
+                            if (prunTrn[temp] == -1) {
+                                prunTrn[temp] = d + 1;
+                            }
                         }
                     }
                 }
             }
         }
-    }
-    prunTws[1170] = prunTws[1192] = prunTws[2640] = prunTws[2662] = 0;
-    for(int d=0; d<7; d++) {
-        //int count = 0;
-        for(int i=0; i<3678; i++)
-            if(prunTws[i] == d) {
-                int next = [self twist:shape[i]];
-                if(prunTws[[self getShape2Idx:next]] == -1) {
-                    prunTws[[self getShape2Idx:next]] = d+1;
-                    //count++;
-                    for(int a=0; a<13; a++) {
-                        for(int b=0; b<13; b++) {
-                            if([self isTwistable:next]) {
-                                int temp = [self getShape2Idx:next];
-                                if(prunTws[temp] == -1) {
-                                    prunTws[temp] = d+1;
-                                    //count++;
+        prunTws[1170] = prunTws[1192] = prunTws[2640] = prunTws[2662] = 0;
+        for(int d=0; d<7; d++) {
+            //int count = 0;
+            for(int i=0; i<3678; i++)
+                if(prunTws[i] == d) {
+                    int next = [self twist:shape[i]];
+                    if(prunTws[[self getShape2Idx:next]] == -1) {
+                        prunTws[[self getShape2Idx:next]] = d+1;
+                        //count++;
+                        for(int a=0; a<13; a++) {
+                            for(int b=0; b<13; b++) {
+                                if([self isTwistable:next]) {
+                                    int temp = [self getShape2Idx:next];
+                                    if(prunTws[temp] == -1) {
+                                        prunTws[temp] = d+1;
+                                        //count++;
+                                    }
                                 }
+                                next = [self rotateBottom:next];
                             }
-                            next = [self rotateBottom:next];
+                            next = [self rotateTop:next];
                         }
-                        next = [self rotateTop:next];
                     }
                 }
-            }
-        //System.out.println(d+1+" "+count);
+            //System.out.println(d+1+" "+count);
+        }
     }
     return self;
 }
 
-- (int)getShape2Idx:(int)shp {
+-(int) getShape2Idx:(int)shp {
     return [DCTUtils binarySearch:shape ti:3678 key:shp];
 }
 
-- (int)rotate:(int)layer {
+-(int) rotate:(int)layer {
     return ((layer << 1) & 0xFFE) | ((layer >> 11) & 1);
 }
 
-- (int)getTop:(int)index {
+-(int) getTop:(int)index {
     return index & 0xFFF;
 }
 
-- (int)getBottom:(int)index {
+-(int) getBottom:(int)index {
     return (index >> 12) & 0xFFF;
 }
 
-- (int)rotateTop:(int)idx {
+-(int) rotateTop:(int)idx {
     return ([self getBottom:idx] << 12) | [self rotate:[self getTop:idx]];
 }
 
-- (int)rotateBottom:(int)idx {
+-(int) rotateBottom:(int)idx {
     return ([self rotate:[self getBottom:idx]] << 12) | [self getTop:idx];
 }
 
-- (int)twist:(int)idx {
+-(int) twist:(int)idx {
     int newTop = ([self getTop:idx] & 0xF80) | ([self getBottom:idx] & 0x7F);
     int newBottom = ([self getBottom:idx] & 0xF80) | ([self getTop:idx] & 0x7F);
     return (newBottom << 12) | newTop;
 }
 
-- (bool)isTwistable:(int)idx {
+-(bool) isTwistable:(int)idx {
     int top = [self getTop:idx];
     int bottom = [self getBottom:idx];
     return (top & (1 << 0)) != 0 && (top & (1 << 6)) != 0 && (bottom & (1 << 0)) != 0 && (bottom & (1 << 6)) != 0;
 }
 
-- (int)applyMove:(int)state m:(NSString *)move {
+-(int) applyMove:(int)state m:(NSString *)move {
     if([move isEqualToString:@"/"]) {
         state = [self twist:state];
     } else if(move.length != 0) {
-        NSArray *s = [[DCTUtils substring:move s:1 e:move.length-1] componentsSeparatedByString:@","];
+        NSArray *s = [[DCTUtils substring:move s:1 e:(int)move.length-1] componentsSeparatedByString:@","];
         int top = [[s objectAtIndex:0] intValue];
         for(int i=0; i<top+12; i++)
             state = [self rotateTop:state];
@@ -154,7 +149,7 @@ int goalIdx = 7191405;
     return state;
 }
 
-- (int)applySequence:(NSString *)sequence {
+-(int) applySequence:(NSString *)sequence {
     int state = goalIdx;
     NSArray *seq = [sequence componentsSeparatedByString:@" "];
     for(int i=0; i<seq.count; i++) {
@@ -163,9 +158,9 @@ int goalIdx = 7191405;
     return state;
 }
 
-- (bool)searchTws:(int)shape d:(int)d l:(int)lm {
-    if(d==0) return shape == goalIdx;//prunTws[getShape2Idx(shape)] == 0;
-    if(prunTws[[self getShape2Idx:shape]] > d) return false;
+-(bool) searchTws:(int)shp d:(int)d l:(int)lm {
+    if(d==0) return shp == goalIdx;//prunTws[getShape2Idx(shape)] == 0;
+    if(prunTws[[self getShape2Idx:shp]] > d) return false;
     //top move
     for(int i=0; i<12; i++) {
         if(i!=0) sol[sollen++] = i;
@@ -173,8 +168,8 @@ int goalIdx = 7191405;
         for(int j=0; j<12; j++) {
             if(j!=0) sol[sollen++] = -j;
             //twist
-            if((lm!=0 || (i!=0 || j!=0)) && [self isTwistable:shape]) {
-                int next = [self twist:shape];
+            if((lm!=0 || (i!=0 || j!=0)) && [self isTwistable:shp]) {
+                int next = [self twist:shp];
                 sol[sollen++] = 0;
                 if([self searchTws:next d:(d-1) l:0]) {
                     return true;
@@ -182,15 +177,15 @@ int goalIdx = 7191405;
                 sollen--;
             }
             if(j!=0) sollen--;
-            shape = [self rotateBottom:shape];
+            shp = [self rotateBottom:shp];
         }
         if(i!=0) sollen--;
-        shape = [self rotateTop:shape];
+        shp = [self rotateTop:shp];
     }
     return false;
 }
 
-- (NSString *)move2string {
+-(NSString *) move2string {
     NSMutableString *sb = [NSMutableString string];
     int top = 0, bottom = 0;
     for(int i=0; i<sollen; i++) {
@@ -214,7 +209,7 @@ int goalIdx = 7191405;
     return sb;
 }
 
-- (NSString *)solveTrn:(NSString *)scr {
+-(NSString *) solveTrn:(NSString *)scr {
     int state = [self applySequence:scr];
     NSMutableString *seq = [NSMutableString string];
     while (prunTrn[[self getShape2Idx:state]] > 0) {

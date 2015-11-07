@@ -10,6 +10,6 @@
 
 @interface LatchCube : NSObject
 
-- (NSString *) scramble;
+-(NSString *) scramble;
 
 @end

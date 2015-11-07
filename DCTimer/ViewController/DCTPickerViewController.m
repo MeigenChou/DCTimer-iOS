@@ -20,8 +20,8 @@
 
 @implementation DCTPickerViewController
 @synthesize delegate = _delegate;
-int selectedType;
-int selectedSubset;
+NSUInteger selectedType;
+NSUInteger selectedSubset;
 extern int selScrType;
 NSString *selScrName;
 extern NSArray *types;
@@ -106,7 +106,7 @@ extern NSDictionary *scrType;
     }
     selectedType = [pickerView selectedRowInComponent:0];
     selectedSubset = [pickerView selectedRowInComponent:1];
-    selScrType = selectedType<<5|selectedSubset;
+    selScrType = (int)(selectedType << 5 | selectedSubset);
     selScrName = [NSString stringWithFormat:@"%@ - %@", [types objectAtIndex:selectedType], [subsets objectAtIndex:selectedSubset]];
 }
 

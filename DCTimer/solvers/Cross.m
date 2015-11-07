@@ -19,23 +19,18 @@
 
 @implementation Cross
 @synthesize side, moveIdx, rotIdx, turn, suff, sol;
-extern int Cnk[12][12];
-short pmv[11880][6], fmv[7920][6];
-char permPrun[11880], flipPrun[7920];
-char fcm[24][6], fem[24][6];
-char fecd[4][576];
+extern int Cnk[25][25];
 int goalFeo[] = {8, 2, 4, 6};
-int edd[1568];
 bool inie = false;
 int arrc[2][12];
 
-- (Cross *)init {
+-(Cross *) init {
     if(self = [super init]) {
         moveIdx = [[NSArray alloc] initWithObjects:@"UDLRFB", @"DURLFB", @"RLUDFB", @"LRDUFB", @"BFLRUD", @"FBLRDU", nil];
-        self.side = [[NSArray alloc] initWithObjects:@"D:", @"U:", @"L:", @"R:", @"F:", @"B:", nil];
+        side = [[NSArray alloc] initWithObjects:@"D:", @"U:", @"L:", @"R:", @"F:", @"B:", nil];
         rotIdx = [[NSArray alloc] initWithObjects:@"", @" z2", @" z'", @" z", @" x'", @" x", nil];
-        self.turn = [[NSArray alloc] initWithObjects:@"U", @"D", @"L", @"R", @"F", @"B", nil];
-        self.suff = [[NSArray alloc] initWithObjects:@"", @"2", @"'", nil];
+        turn = [[NSArray alloc] initWithObjects:@"U", @"D", @"L", @"R", @"F", @"B", nil];
+        suff = [[NSArray alloc] initWithObjects:@"", @"2", @"'", nil];
         static bool inic = false;
         if(!inic) {
             [self initc];
@@ -45,11 +40,11 @@ int arrc[2][12];
     return self;
 }
 
-- (void)circle:(int[])d f:(int)f h:(int)h l:(int)l n:(int)n s:(int)s {
-    int q=d[f];d[f]=d[n]^s;d[n]=d[l]^s;d[l]=d[h]^s;d[h]=q^s;
+-(void) circle:(int[])d f:(int)f h:(int)h l:(int)l n:(int)n s:(int)s {
+    int q=d[f]; d[f]=d[n]^s; d[n]=d[l]^s; d[l]=d[h]^s; d[h]=q^s;
 }
 
-- (void)idxToPerm:(int[])s p:(int)p {
+-(void) idxToPerm:(int[])s p:(int)p {
     int v;
     for(int q=1; 4>=q; q++){
         int t = p % q;
@@ -59,7 +54,7 @@ int arrc[2][12];
     }
 }
 
-- (int)permToIdx:(int[])s {
+-(int) permToIdx:(int[])s {
     int i=0, v, t;
     for(int q=0; 4>q; q++){
         for(v=t=0; 4>v&&!(s[v]==q); v++)
@@ -69,7 +64,7 @@ int arrc[2][12];
     return i;
 }
 
-- (int)idxToComb:(int[])n s:(int[])s c:(int)c o:(int)o {
+-(int) idxToComb:(int[])n s:(int[])s c:(int)c o:(int)o {
     int q=4;
     for(int t=0; 12>t; t++)
         if(c >= Cnk[11-t][q]) {
@@ -81,7 +76,7 @@ int arrc[2][12];
     return o;
 }
 
-- (int)getmv:(int)c p:(int)p o:(int)o f:(int)f {
+-(int) getmv:(int)c p:(int)p o:(int)o f:(int)f {
     int n[12], s[4];
     int q, t;
     [self idxToPerm:s p:p];
@@ -124,7 +119,7 @@ int arrc[2][12];
     return (24*c+i)<<4|o;
 }
 
-- (void)initc {
+-(void) initc {
     int i,j,D,y,C;
     [Im initCnk];
     for(i=0;495>i;i++)
@@ -202,7 +197,7 @@ int arrc[2][12];
     }
 }
 
--(bool)idacross:(int)ep eo:(int)eo d:(int)d lf:(int)lf {
+-(bool) idacross:(int)ep eo:(int)eo d:(int)d lf:(int)lf {
     if(0==d)return 0==ep && 0==eo;
     if(permPrun[ep]>d || flipPrun[eo]>d)return false;
     int y,s,D;
@@ -221,7 +216,7 @@ int arrc[2][12];
     return false;
 }
 
-- (bool)idaxcross:(int)ep eo:(int)eo co:(int)co feo:(int)feo idx:(int)idx d:(int)depth l:(int)l {
+-(bool) idaxcross:(int)ep eo:(int)eo co:(int)co feo:(int)feo idx:(int)idx d:(int)depth l:(int)l {
     if (depth == 0) return ep == 0 && eo == 0 && co == (idx+4)*3 && feo == goalFeo[idx];
     if (permPrun[ep] > depth || flipPrun[eo] > depth || fecd[idx][feo*24+co] > depth) return false;
     for (int i = 0; i < 6; i++)
@@ -240,7 +235,7 @@ int arrc[2][12];
     return false;
 }
 
--(NSString *) cross:(NSString *)scr side:(int)sd {
+-(NSString *)solveCross:(NSString *)scr side:(int)sd {
     NSArray *s = [scr componentsSeparatedByString:@" "];
     int q,D,C;
     for(q=0,D=0,C=0;C<[s count];C++) {
@@ -265,7 +260,7 @@ int arrc[2][12];
     return solveC;
 }
 
-- (NSString *)xcross:(NSString *)scr side:(int)sd {
+-(NSString *) solveXcross:(NSString *)scr side:(int)sd {
     NSArray *s = [scr componentsSeparatedByString:@" "];
     int q=0, D=0, C;
     int co[4], feo[4];
@@ -304,7 +299,7 @@ int arrc[2][12];
     }
 }
 
-- (void)easyCross {
+-(void) easyCross {
     int i;
     if(!inie) {
         int ed[23760];

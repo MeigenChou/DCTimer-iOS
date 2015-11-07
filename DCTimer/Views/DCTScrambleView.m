@@ -46,7 +46,7 @@ float rotatx[5], rotaty[5];
     switch (viewType) {
         case 13: //pyram
         {
-            scrImg = [Pyraminx imageString:currentScr];
+            scrImg = [Pyraminx image:currentScr];
             b = (wid*3/4-15)/6; a = b*2/sqrt(3); d = (wid-a*6-14)/2;
             NSArray *colpy = [[NSArray alloc] initWithObjects:[UIColor redColor], [UIColor colorWithRed:0 green:0.6 blue:0 alpha:1], [UIColor blueColor], [UIColor yellowColor], nil];
             float arx[3], ary[3];
