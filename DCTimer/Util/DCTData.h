@@ -9,7 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @interface DCTData : NSObject
++ (DCTData *)dbh;
 - (void)getSessions;
+- (int)getSessionCount;
 - (void)getSessionName:(NSMutableArray *)ses;
 - (void)query:(int)sesIdx;
 - (void)insertTime:(int)time pen:(int)pen scr:(NSString *)s date:(NSString *)da;

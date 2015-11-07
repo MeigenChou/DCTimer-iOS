@@ -318,7 +318,7 @@ extern int arrc[2][12];
         default:
             cube = @"";
     }
-    NSLog(@"%@", cube);
+    NSLog(@"%@", [cube substringToIndex:54]);
     Search *s = [[Search alloc] init];
     [sol appendFormat:@"%@", [s solutionForFacelets:cube md:21 nt:5000 tm:100 v:2]];
     //NSString *sol = [s solutionForFacelets:cube md:21 nt:5000 tm:100 v:2];

@@ -310,7 +310,7 @@ int arrc[2][12];
         int ed[23760];
         for(i=0; i<23760; i++) ed[i] = -1;
         [CoordCube setPruning:ed i:0 v:0];
-        int c=1;
+        //int c=1;
         int done = 0;
         for(int d=0; d<3; d++) {
             for(i=0; i<190080; i++)
@@ -325,11 +325,11 @@ int arrc[2][12];
                             if([CoordCube getPruning:ed i:y] == 15) {
                                 [CoordCube setPruning:ed i:y v:d+1];
                                 edd[done++] = y;
-                                c++;
+                                //c++;
                             }
                         }
                     }
-            NSLog(@"%d %d", d+1, c);
+            //NSLog(@"%d %d", d+1, c);
         }
         inie = true;
     }

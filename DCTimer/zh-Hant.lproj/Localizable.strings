@@ -1,0 +1,159 @@
+/* 
+  Localizable.strings
+  DCTimer
+
+  Created by MeigenChou on 13-3-14.
+  Copyright (c) 2013年 MeigenChou. All rights reserved.
+*/
+"language" = "zh_HK";
+"timer" = "計時";
+"results" = "成績";
+"settings" = "設定";
+
+"cancel" = "取消";
+"done" = "完成";
+"ok" = "確認";
+"close" = "關閉";
+"time" = "時間";
+
+"c2" = "二階";
+"c3" = "三階";
+"c4" = "四階";
+"c5" = "五階";
+"c6" = "六階";
+"c7" = "七階";
+"mx" = "五扭計骰";
+"py" = "金字塔";
+"sq" = "Square One";
+"cl" = "魔表";
+"sk" = "Skewb";
+"gr" = "齒輪扭計骰";
+"ot" = "其他";
+"3s" = "三階子集";
+"bd" = "捆綁扭計骰";
+"ms" = "五扭計骰子集";
+
+"scramble_view" = "轉亂狀態";
+"scramble_type" = "轉亂類型";
+"not_support" = "暫不支持的轉亂類型";
+"scrambling" = "轉亂中…";
+"invalid_in" = "無效輸入";
+
+"session" = "分組";
+"stats" = "統計";
+"detail" = "詳情";
+
+"option" = "選項";
+"delete" = "刪除";
+"nopen" = "无懲罰";
+"copyscr" = "複製轉亂";
+"copysuccess" = "已複製到剪貼板";
+"copy" = "複製";
+"save" = "保存";
+"comment" = "註釋";
+"deletelast" = "刪除上一次成績";
+"intime" = "輸入時間";
+"conf_delses" = "刪除分組所有成績";
+"last_solve" = "上一次時間：";
+
+"solve" = "還原";
+"inspect" = "觀察";
+
+"numbercube" = "還原次數/嘗試次數:";
+"besttime" = "最佳單次:";
+"worsttime" = "最差單次:";
+"currentavg5" = "目前5次去尾平均:";
+"bestavg5" = "最佳5次去尾平均:";
+"currentavg12" = "目前12次去尾平均:";
+"bestavg12" = "最佳12次去尾平均:";
+"currentavg50" = "目前50次去尾平均:";
+"bestavg50" = "最佳50次去尾平均:";
+"currentavg100" = "目前100次去尾平均:";
+"bestavg100" = "最佳100次去尾平均:";
+"sesmean" = "總平均:";
+"sesavg" = "去尾平均:";
+"currentmean3" = "目前3次平均:";
+"bestmean3" = "最快3次平均:";
+"calcing" = "計算中…";
+
+"WCAinsp" = "WCA 觀察";
+"clockformat" = "超過1分鐘的用分鐘顯示";
+"timerupd" = "計時器更新方式";
+"On" = "實時";
+"secondsonly" = "到秒";
+"insponly" = "僅觀察";
+"Off" = "隱藏";
+"accuracy" = "計時器精確度";
+"0.001sec" = "0.001秒";
+"0.01sec" = "0.01秒";
+"pressingtime" = "計時器啟動延時";
+"input_time" = "手動輸入成績";
+"drop_stop" = "跌落停止計時";
+"sensitivity" = "靈敏度";
+"scramble" = "轉亂";
+"hide_scr" = "計時中隱藏轉亂";
+"display_scr" = "顯示轉亂後的狀態";
+"newest_top" = "成績列表逆序顯示";
+"subtitle" = "成績列表副標題";
+"stt_stats" = "統計";
+"prompttime" = "有新成績時顯示提示";
+"printscr" = "成績詳情中顯示轉亂";
+"tools" = "工具";
+"3solver" = "三階相關求解";
+"solcolor" = "底色";
+"sq_shape_solver" = "SQ1復形求解";
+"none" = "無";
+"dside" = "D(黄)";
+"uside" = "U(白)";
+"lside" = "L(橙)";
+"rside" = "R(紅)";
+"fside" = "F(緑)";
+"bside" = "B(藍)";
+"more" = "更多";
+"interface" = "界面";
+"bgcolor" = "背景顏色";
+"textcolor" = "文字顏色";
+"bg_image" = "背景圖片";
+"opacity" = "不透明度";
+"show_image" = "显示背景圖片";
+"timer_size" = "計時器字體大小";
+"version" = "版本";
+"about" = "關於";
+"gesture" = "手勢說明";
+"rate_app" = "如果你喜歡，請評分";
+"email_feedback" = "意見反饋";
+"licenses" = "許可證";
+"feedback" = "反饋";
+
+"stat_title" = "統計信息由DCTimer生成于";
+"stat_solve" = "完成次數/嘗試次數：";
+"stat_avg" = "去尾平均：";
+"stat_mean" = "平均：";
+"ses_avg" = "去尾平均：";
+"ses_mean" = "總平均：";
+"stat_best" = "最佳單次：";
+"stat_worst" = "最差單次：";
+"stat_list" = "成績列表：";
+"title_avg" = "詳情：len次去尾平均";
+"title_mean" = "詳情：len次平均";
+"title_ses" = "詳情：本組平均";
+
+"defsession" = "默認分組";
+"selected" = "已選中";
+"newses" = "新建分組";
+"deleteses" = "刪除分組";
+"clearses" = "清空分組成績";
+"rename" = "重命名";
+
+"1fhold" = "單指長按計時界面";
+"sr" = "向右輕掃";
+"sl" = "向左輕掃";
+"1f2t" = "單指雙擊";
+"su" = "向上輕掃";
+"sd" = "向下輕掃";
+"1fholddo" = "啟動計時器";
+"srdo" = "生成新轉亂";
+"sldo" = "刪除上一次成績";
+"1f2tdo" = "無";
+"sudo" = "修改懲罰";
+"sddo" = "清除分組成績";

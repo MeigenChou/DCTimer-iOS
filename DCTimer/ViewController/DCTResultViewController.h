@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface DCTResultViewController : UITableViewController
-@property (nonatomic, strong) NSMutableArray *listData;
+
 @end

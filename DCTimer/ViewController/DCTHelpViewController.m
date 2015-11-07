@@ -68,6 +68,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:sti];
     }
     cell.textLabel.text = [toDos objectAtIndex:indexPath.row];
+    cell.textLabel.numberOfLines = 2;
     cell.detailTextLabel.text = [gests objectAtIndex:indexPath.row];
     cell.imageView.image = [imgs objectAtIndex:indexPath.row];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -123,7 +124,7 @@
 {
     // Return YES for supported orientations
     if ([DCTUtils isPhone]) {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+        return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
     } else {
         return YES;
     }

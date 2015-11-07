@@ -4,89 +4,89 @@
 <dict>
 	<key>二階</key>
 	<array>
-		<string>随机状态</string>
+		<string>隨機狀態</string>
 		<string>3-gen</string>
 		<string>6-gen</string>
-		<string>CLL训练</string>
-		<string>EG1训练</string>
-		<string>EG2训练</string>
-		<string>XLL训练</string>
-		<string>TCLL+训练</string>
-		<string>TCLL-训练</string>
+		<string>CLL訓練</string>
+		<string>EG1訓練</string>
+		<string>EG2訓練</string>
+		<string>PBL訓練</string>
+		<string>TCLL+訓練</string>
+		<string>TCLL-訓練</string>
 	</array>
 	<key>三階</key>
 	<array>
-		<string>随机状态</string>
-		<string>传统</string>
-		<string>F2L训练</string>
-		<string>顶层/OLL训练</string>
-		<string>PLL训练</string>
-		<string>角块训练</string>
-		<string>棱块训练</string>
-		<string>LSLL训练</string>
-		<string>ZBLL训练</string>
-		<string>顶层角块</string>
-		<string>顶层棱块</string>
-		<string>桥式六棱</string>
-		<string>CMLL训练</string>
-		<string>简单十字</string>
-		<string>2GLL训练</string>
+		<string>隨機狀態</string>
+		<string>傳統</string>
+		<string>F2L訓練</string>
+		<string>頂層訓練</string>
+		<string>PLL訓練</string>
+		<string>角塊訓練</string>
+		<string>棱塊訓練</string>
+		<string>LSLL訓練</string>
+		<string>ZBLL訓練</string>
+		<string>頂層角塊</string>
+		<string>頂層棱塊</string>
+		<string>橋式六棱</string>
+		<string>CMLL訓練</string>
+		<string>簡單十字</string>
+		<string>2GLL訓練</string>
 	</array>
 	<key>四階</key>
 	<array>
-		<string>传统</string>
+		<string>傳統</string>
 		<string>SiGN</string>
 		<string>YJ</string>
-		<string>对棱训练</string>
+		<string>對棱訓練</string>
 		<string>R, r, U, u</string>
 	</array>
 	<key>五階</key>
 	<array>
 		<string>WCA</string>
 		<string>SiGN</string>
-		<string>对棱训练</string>
+		<string>對棱訓練</string>
 	</array>
 	<key>六階</key>
 	<array>
 		<string>prefix</string>
 		<string>SiGN</string>
 		<string>suffix</string>
-		<string>对棱训练</string>
+		<string>對棱訓練</string>
 	</array>
 	<key>七階</key>
 	<array>
 		<string>prefix</string>
 		<string>SiGN</string>
 		<string>suffix</string>
-		<string>对棱训练</string>
+		<string>對棱訓練</string>
 	</array>
 	<key>五扭計骰</key>
 	<array>
 		<string>WCA</string>
-		<string>传统</string>
+		<string>傳統</string>
 	</array>
 	<key>金字塔</key>
 	<array>
-		<string>随机状态</string>
-		<string>随机步骤</string>
+		<string>隨機狀態</string>
+		<string>隨機步驟</string>
 	</array>
 	<key>Square One</key>
 	<array>
-		<string>随机状态</string>
+		<string>隨機狀態</string>
 		<string>face turn metric</string>
 		<string>twist metric</string>
-		<string>立方体形状</string>
+		<string>立方體形狀</string>
 	</array>
 	<key>魔表</key>
 	<array>
 		<string>WCA</string>
-		<string>Jaap顺序</string>
+		<string>Jaap順序</string>
 		<string>concise</string>
-		<string>高效顺序</string>
+		<string>高效順序</string>
 	</array>
-	<key>斜轉方塊</key>
+	<key>Skewb</key>
 	<array>
-		<string>随机状态</string>
+		<string>隨機狀態</string>
 		<string>R U L B</string>
 	</array>
 	<key>LxMxN</key>
@@ -110,7 +110,7 @@
 	</array>
 	<key>齒輪扭計骰</key>
 	<array>
-		<string>随机状态</string>
+		<string>隨機狀態</string>
 		<string>3-gen</string>
 	</array>
 	<key>Siamese cube</key>
@@ -126,8 +126,8 @@
 	</array>
 	<key>其他</key>
 	<array>
-		<string>插销魔方</string>
-		<string>直升机</string>
+		<string>插銷扭計骰</string>
+		<string>直升機</string>
 		<string>Square-2</string>
 		<string>Super SQ1</string>
 		<string>UFO</string>

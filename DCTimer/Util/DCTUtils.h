@@ -16,6 +16,7 @@
 + (NSString *)getString:(NSString *)str;
 + (int)binarySearch:(int[])a ti:(int)toIndex key:(int)key;
 + (int)bitCount:(int)i;
++ (void)sort:(double[])ary l:(int)lo h:(int)hi;
 + (BOOL)isPad;
 + (BOOL)isPhone;
 + (BOOL)isOS7;
@@ -26,5 +27,8 @@
 + (NSString *)distime:(int)i;
 + (NSString *)convStr:(NSString *)s;
 + (int)convTime:(NSString *)s;
++ (NSString *)getFilePath:(NSString *)file;
++ (NSString *)getDeviceString;
++ (NSString *)getAppVersion;
 
 @end

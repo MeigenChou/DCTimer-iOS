@@ -11,8 +11,8 @@
 #import "DCTUtils.h"
 
 @interface DCTDetailViewController ()
-@property (nonatomic, strong) DCTData *dbh;
 @property (nonatomic, strong) UILabel *lbResult;
+@property (nonatomic, strong) UITextField *tvComment;
 @end
 
 @implementation DCTDetailViewController
@@ -20,33 +20,33 @@
 @synthesize rest;
 @synthesize time;
 @synthesize scramble;
-@synthesize dbh;
+@synthesize tvComment;
 int resIdx;
 int resPen;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     if (self = [super initWithStyle:style]) {
-        self.dbh = [[DCTData alloc] init];
+        
     }
     return self;
 }
 
-- (void)setDetail:(int)idx penalty:(int)pen {
+- (void)setDetail:(int)idx {
     resIdx = idx;
-    resPen = pen;
+    resPen = [[DCTData dbh] getPenaltyAtIndex:idx];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"title_more.png"] style:UIBarButtonItemStylePlain target:self action:@selector(displayActionSheet)];
+    tvComment = [[UITextField alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
@@ -92,13 +92,20 @@ int resPen;
             cell.detailTextLabel.text = @"";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             break;
+//        case 3:
+//            cell.textLabel.text = [DCTUtils getString:@"penalty"];
+//            cell.textLabel.font = [DCTUtils isOS7] ? [UIFont systemFontOfSize:17] : [UIFont boldSystemFontOfSize:17];
+//            cell.detailTextLabel.text = @"";
+//            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//            break;
         case 3:
-            cell.textLabel.text = NSLocalizedString(@"penalty", @"");
-            cell.textLabel.font = [DCTUtils isOS7] ? [UIFont systemFontOfSize:17] : [UIFont boldSystemFontOfSize:17];
+            cell.textLabel.text = [DCTUtils getString:@"comment"];
+            cell.textLabel.font = [UIFont systemFontOfSize:17];
             cell.detailTextLabel.text = @"";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            break;
+            tvComment.text = @"-";
+            cell.accessoryView = tvComment;
     }
     return cell;
 }
@@ -174,14 +181,13 @@ int resPen;
     //NSLog(@"%d %@", idx, pena);
     switch (buttonIndex) {
         case 0: //delete
-            [self.dbh deleteTimeAtIndex:resIdx];
-            [self.dbh deleteTime:resIdx];
+            [[DCTData dbh] deleteTimeAtIndex:resIdx];
+            [[DCTData dbh] deleteTime:resIdx];
             [self.navigationController popToRootViewControllerAnimated:YES];
             break;
         case 1: //no penalty
         case 2: //+2
         case 3: //DNF
-            NSLog(@"%d %d", resPen, buttonIndex-1);
             if(resPen != buttonIndex-1) {
                 [self change:resIdx pen:buttonIndex-1];
                 resPen = buttonIndex-1;
@@ -201,8 +207,8 @@ int resPen;
 }
 
 - (void) change:(int)idx pen:(int)pen {
-    [self.dbh setPenalty:pen atIndex:idx];
-    [self.dbh updateTime:idx pen:pen];
+    [[DCTData dbh] setPenalty:pen atIndex:idx];
+    [[DCTData dbh] updateTime:idx pen:pen];
     self.lbResult.text = [DCTData distimeAtIndex:idx dt:true];
 }
 
@@ -210,7 +216,7 @@ int resPen;
 {
     // Return YES for supported orientations
     if ([DCTUtils isPhone]) {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+        return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
     } else {
         return YES;
     }

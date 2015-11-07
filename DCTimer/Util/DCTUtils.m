@@ -7,10 +7,11 @@
 //
 
 #import "DCTUtils.h"
+#import "sys/utsname.h"
 
 @implementation DCTUtils
 extern int accuracy;
-extern bool clkFormat;
+extern BOOL clkFormat;
 
 + (NSString *)replace:(NSString *)s str:(NSString *)r with:(NSString *)t {
     NSMutableString *string = [NSMutableString stringWithString:s];
@@ -57,6 +58,20 @@ extern bool clkFormat;
 	i = i + (i >> 8);
 	i = i + (i >> 16);
 	return i & 0x3f;
+}
+
++ (void)sort:(double[])ary l:(int)lo h:(int)hi {
+    if(lo >= hi) return;
+    int pivot = ary[lo], i = lo, j = hi;
+    while (i < j) {
+        while (i<j && ary[j]>=pivot) j--;
+        ary[i] = ary[j];
+        while (i<j && ary[i]<=pivot) i++;
+        ary[j] = ary[i];
+    }
+    ary[i] = pivot;
+    [DCTUtils sort:ary l:lo h:i-1];
+    [DCTUtils sort:ary l:i+1 h:hi];
 }
 
 + (BOOL)isPad {
@@ -182,5 +197,23 @@ extern bool clkFormat;
         else sec = [[time objectAtIndex:2] length]==0 ? 0 : [[time objectAtIndex:2] doubleValue];
     }
     return (int) ((hour*3600 + min*60 + sec) * 1000);
+}
+
++ (NSString *)getFilePath:(NSString *)file {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docDir = [paths objectAtIndex:0];
+    return [docDir stringByAppendingPathComponent:file];
+}
+
++ (NSString *)getDeviceString {
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    return [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+}
+
++ (NSString *)getAppVersion {
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    return [NSString stringWithFormat:@"v%@", version];
 }
 @end

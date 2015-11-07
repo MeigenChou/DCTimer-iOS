@@ -18,52 +18,58 @@
 
 @interface DCTFirstViewController()
 @property (nonatomic, strong) Scrambler *scrambler;
-@property (nonatomic, strong) DCTData *dbh;
 @property (nonatomic, strong) UIColor *textCol;
 @property (nonatomic, strong) NSTimer *dctTimer;
 @property (nonatomic, strong) NSTimer *fTimer;
 @property (nonatomic, strong) NSTimer *inspTimer;
 @property (nonatomic, strong) NSString *extsol;
+@property (nonatomic, strong) DCTScrambleView *scrambleView;
+@property (nonatomic) TimerState timerState;
+@property (nonatomic, strong) NSString *lastScr;
+@property (nonatomic, strong) NSString *nextScr;
 @end
 
 @implementation DCTFirstViewController
 @synthesize scrLabel,timerLabel;
-@synthesize btnScrType, btnScrView;
+@synthesize btnScrType;
 @synthesize scrambler;
-@synthesize dbh;
 @synthesize gestureStartPoint;
 @synthesize textCol;
 @synthesize dctTimer, fTimer, inspTimer;
 @synthesize extsol;
+@synthesize imageView;
+@synthesize scrambleView;
+@synthesize timerState;
+@synthesize lastScr, nextScr;
 
 NSString *currentScr;
-int timerState; //0-停止 1-计时中 2-观察中
 int inspState;  //2-观察 2-+2 3-DNF
 mach_timebase_info_data_t info;
 uint64_t timeStart;
-uint64_t timeEnd;
+int time1 = 0;
 int resTime;
 NSDateFormatter *formatter;
-bool canStart;
+bool canStart, isNextScr;
 int fTime;
-bool wcaInsp, wcaInst;
+BOOL wcaInsp, hideScr, inTime, dropStop, promptTime, showScr;
 extern int timerupd, accuracy;
-extern bool clkFormat, hideScr;
-extern bool promTime;
+extern BOOL clkFormat, showImg;
 extern int cside, cxe, sqshp;
-extern bool prntScr, inTime;
-extern bool tfChanged;
-extern int viewType;
+extern bool tfChanged, imgChanged, svChanged;
 int currentSesIdx;
-NSString *lastScr = @"";
 int selScrType;
 int bgcolor, textcolor;
 bool isExts;
 NSDictionary *scrType;
 NSArray *types;
 NSArray *subsets;
-
 bool esChanged = false;
+double lowZ = 0.98;
+int opacity;
+double sensity;
+int tmSize;
+bool typeChanged;
+bool canScr;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -72,7 +78,6 @@ bool esChanged = false;
         self.title = NSLocalizedString(@"timer", @"");
         self.tabBarItem.image = [UIImage imageNamed:@"img1"];
         self.scrambler = [[Scrambler alloc] init];
-        self.dbh = [[DCTData alloc] init];
         mach_timebase_info(&info);
         formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
@@ -80,19 +85,179 @@ bool esChanged = false;
     return self;
 }
 
-//- (Scrambler *)scrambler {
-//    if(!self.scrambler)
-//        self.scrambler = [[Scrambler alloc] init];
-//    return self.scrambler;
-//}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Release any cached data, images, etc that aren't in use.
 }
 
-#pragma mark - View lifecycle
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self loadDefaults];
+    isChange = true;
+    if(inTime)timerLabel.text = @"IMPORT";
+    else if(accuracy == 1)timerLabel.text = @"0.00";
+    [self.scrambler getScrString:32];
+    [self.scrambler initSq1];
+    int type = selScrType>>5;
+    int sub = selScrType&31;
+    isNextScr = false;
+    typeChanged = true;
+    canScr = true;
+    currentScr = [self.scrambler getScrString:selScrType];
+    [self extraSolve];
+    lastScr = currentScr;
+    NSString *scrList = [NSLocalizedString(@"language", @"") isEqualToString:@"zh_CN"] ? @"scrambleCN" : ([NSLocalizedString(@"language", @"") isEqualToString:@"zh_HK"] ? @"scrambleHK" : @"scramble");
+    NSURL *plistURL = [[NSBundle mainBundle] URLForResource:scrList withExtension:@"plist"];
+    scrType = [NSDictionary dictionaryWithContentsOfURL:plistURL];
+    types = [DCTUtils getScrType];
+    NSString *select = [types objectAtIndex:type];
+    subsets = [scrType objectForKey:select];
+    [btnScrType setTitle:[NSString stringWithFormat:@"%@ - %@", select, [subsets objectAtIndex:sub]] forState:UIControlStateNormal];
+    [self setScrLblFont];
+    if ([DCTUtils isOS7]) {
+        if ([DCTUtils isPad]) {
+            btnScrType.frame = CGRectMake(20, 40, 728, 37);
+            scrLabel.frame = CGRectMake(20, 96, 728, 280);
+            timerLabel.frame = CGRectMake(20, 430, 728, 200);
+        } else {
+            btnScrType.frame = CGRectMake(10, 30, 300, 35);
+            scrLabel.frame = CGRectMake(10, 50, 300, 160);
+            timerLabel.frame = CGRectMake(10, 186, 300, 100);
+        }
+    } else {
+        UIImage *btnImageNormal = [UIImage imageNamed:@"whiteButton.png"];
+        UIImage *sbtnImageNormal = [btnImageNormal stretchableImageWithLeftCapWidth:12 topCapHeight:0];
+        [btnScrType setBackgroundImage:sbtnImageNormal forState:UIControlStateNormal];
+        btnImageNormal = [UIImage imageNamed:@"blueButton.png"];
+        sbtnImageNormal = [btnImageNormal stretchableImageWithLeftCapWidth:12 topCapHeight:0];
+        [btnScrType setBackgroundImage:sbtnImageNormal forState:UIControlStateHighlighted];
+    }
+    //[NSThread detachNewThreadSelector:@selector(setNextScr) toTarget:self withObject:nil];
+    [[DCTData dbh] getSessions];
+    int sesnum = [[DCTData dbh] getSessionCount];
+    NSLog(@"%d %d", [[DCTData dbh] getSessionCount], currentSesIdx);
+    if(currentSesIdx > sesnum) {
+        currentSesIdx = sesnum - 1;
+        [[NSUserDefaults standardUserDefaults] setInteger:currentSesIdx forKey:@"crntsesidx"];
+    }
+    [[DCTData dbh] query:currentSesIdx];
+    int hei, wid, dlt = [DCTUtils isOS7] ? ([DCTUtils isPad] ? 13 : 20) : 0;
+    CGSize frame = [DCTUtils getFrame];
+    hei = frame.height; wid = frame.width;
+    if(wid == 748) {
+        hei = frame.width; wid = frame.height;
+    }
+    if([DCTUtils isPad]) scrambleView = [[DCTScrambleView alloc] initWithFrame:CGRectMake(wid-325, hei-294+dlt, 321, 241)];
+    else scrambleView = [[DCTScrambleView alloc] initWithFrame:CGRectMake(wid-203, hei-201+dlt, 201, 150)];
+    scrambleView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0];
+    [self.view addSubview:scrambleView];
+    [self.imageView setContentMode:UIViewContentModeScaleAspectFill];
+    if(showImg) imgChanged = true;
+    // Do any additional setup after loading the view, typically from a nib.
+    self.motionMag = [[CMMotionManager alloc] init];
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    if(self.motionMag.accelerometerAvailable) {
+        self.motionMag.accelerometerUpdateInterval = 0.1;
+        [self.motionMag startAccelerometerUpdatesToQueue:queue withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
+            if(!error && dropStop) {
+                double az = accelerometerData.acceleration.z;
+                lowZ = lowZ * 0.8 + az * 0.2;
+                double highZ = az - lowZ;
+                if(self.timerState==RUNNING && time1>200 && highZ*100>sensity) {
+                    self.timerState = STOP;
+                    [NSThread detachNewThreadSelector:@selector(stopTimer) toTarget:self withObject:nil];
+                    //[self confirmSave];
+                }
+            }
+        }];
+    }
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+    self.scrLabel = nil;
+    self.timerLabel = nil;
+    self.btnScrType = nil;
+    self.imageView = nil;
+    self.scrambleView = nil;
+    [[DCTData dbh] closeDB];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self loadDefaults];
+    int r = (bgcolor>>16)&0xff;
+    int g = (bgcolor>>8)&0xff;
+    int b = bgcolor&0xff;
+    [self.view setBackgroundColor:[UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1]];
+    r = (textcolor>>16)&0xff;
+    g = (textcolor>>8)&0xff;
+    b = textcolor&0xff;
+    textCol = [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1];
+    self.scrLabel.textColor = textCol;
+    timerLabel.textColor = textCol;
+    if([DCTUtils isPad]) {
+        [timerLabel setFont:[UIFont systemFontOfSize:tmSize]];
+    }
+    if(tfChanged) {
+        if(inTime) {
+            timerLabel.text = @"IMPORT";
+        } else {
+            timerLabel.text = accuracy == 1 ? @"0.00" : @"0.000";
+        }
+        tfChanged = false;
+    }
+    if(esChanged) {
+        [self extraSolve];
+        esChanged = false;
+    }
+    if(!showImg) {
+        if(imgChanged) [imageView setImage:nil];
+    }
+    else if(imgChanged) {
+        UIImage *image = [UIImage imageWithContentsOfFile:[DCTUtils getFilePath:@"bg.png"]];
+        [imageView setImage:image];
+        imgChanged = false;
+    }
+    if(svChanged) {
+        [self.scrambleView setNeedsDisplay];
+        svChanged = false;
+    }
+    if(showImg) [imageView setAlpha:opacity / 100.0];
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+    if(self.timerState == INSPECTING) {
+        [inspTimer invalidate];
+        timerLabel.textColor = textCol;
+    }
+    else if(self.timerState == RUNNING) {
+        [dctTimer invalidate];
+    }
+    self.timerState = STOP;
+    btnScrType.hidden = NO;
+    scrambleView.hidden = NO;
+    if(hideScr) scrLabel.hidden = NO;
+    if([DCTUtils isOS7]) [self.tabBarController.tabBar setHidden:NO];
+    else {
+        [self hideTabBar:NO];
+    }
+    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+	[super viewDidDisappear:animated];
+}
+
 - (void) setScrLblFont {
     int type = selScrType >> 5;
     int sub = selScrType & 31;
@@ -122,16 +287,24 @@ bool esChanged = false;
     else [self.scrLabel setFont:[UIFont fontWithName:@"Arial" size:17]];
 }
 
-- (void) newScramble {
+- (void) newScramble:(bool)tych {
+    typeChanged = tych;
     lastScr = currentScr;
-    scrLabel.text = NSLocalizedString(@"scrambling", @"");
-    [NSThread detachNewThreadSelector:@selector(getScramble) toTarget:self withObject:nil];
+    if(canScr) {
+        canScr = false;
+        scrLabel.text = NSLocalizedString(@"scrambling", @"");
+        [NSThread detachNewThreadSelector:@selector(getScramble) toTarget:self withObject:nil];
+    }
 }
 
 - (void) getScramble {
     int type = selScrType >> 5;
     int sub = selScrType & 31;
-    currentScr = [self.scrambler getScrString:selScrType];
+    if(!typeChanged && isNextScr) {
+        currentScr = nextScr;
+        isNextScr = false;
+    }
+    else currentScr = [self.scrambler getScrString:selScrType];
     if(type==1 && sub<2 && cxe != 0) {
         if(cxe==1)
             extsol = [self.scrambler solveCross:currentScr side:cside];
@@ -141,7 +314,7 @@ bool esChanged = false;
             extsol = [self.scrambler solveEoline:currentScr side:cside];
         isExts = true;
         [self performSelectorOnMainThread:@selector(showScramble) withObject:nil waitUntilDone:YES];
-    } else if(type==8 && sqshp!=0) {
+    } else if(type==8 && sub<3 && sqshp!=0) {
         extsol = [self.scrambler solveSqShape:currentScr m:sqshp];
         isExts = true;
         [self performSelectorOnMainThread:@selector(showScramble) withObject:nil waitUntilDone:YES];
@@ -149,15 +322,23 @@ bool esChanged = false;
         isExts = false;
         [self performSelectorOnMainThread:@selector(showScramble) withObject:nil waitUntilDone:YES];
     }
+    [self setNextScr];
+}
+
+- (void)setNextScr {
+    isNextScr = false;
+    nextScr = [self.scrambler getScrString:selScrType];
+    isNextScr = true;
 }
 
 - (void)showScramble {
+    canScr = true;
     if(isExts) {
         scrLabel.text = [NSString stringWithFormat:@"%@\n%@", currentScr, extsol];
     }
     else scrLabel.text = currentScr;
+    [self.scrambleView setNeedsDisplay];
 }
-
 
 - (void)extraSolve {
     int type = selScrType >> 5;
@@ -181,160 +362,55 @@ bool esChanged = false;
 - (void) loadDefaults {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     fTime = [[defaults objectForKey:@"freezeslide"] intValue];
-    wcaInst = [defaults boolForKey:@"wcainsp"];
-    if(timerState == 0)wcaInsp = wcaInst;
+    wcaInsp = [defaults boolForKey:@"wcainsp"];
     timerupd = [defaults integerForKey:@"timerupd"];
     clkFormat = [defaults boolForKey:@"clockform"];
     accuracy = [defaults integerForKey:@"accuracy"];
     hideScr = [defaults boolForKey:@"hidescr"];
-    promTime = [defaults boolForKey:@"prompttime"];
+    promptTime = [defaults boolForKey:@"prompttime"];
     cxe = [defaults integerForKey:@"cxe"];
     cside = [defaults integerForKey:@"cside"];
     sqshp = [defaults integerForKey:@"sqshape"];
-    prntScr = [defaults boolForKey:@"printscr"];
     currentSesIdx = [defaults integerForKey:@"crntsesidx"];
     selScrType = [defaults integerForKey:@"crntscrtype"];
     bgcolor = [defaults integerForKey:@"bgcolor"];
     textcolor = [defaults integerForKey:@"textcolor"];
     inTime = [defaults boolForKey:@"intime"];
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    [self loadDefaults];
-    isChange = true;
-    if(inTime)timerLabel.text = @"IMPORT";
-    else if(accuracy == 1)timerLabel.text = @"0.00";
-    [btnScrView setTitle:NSLocalizedString(@"scramble_view", @"") forState:UIControlStateNormal];
-    [self.scrambler getScrString:32];
-    [self.scrambler initSq1];
-    int type = selScrType>>5;
-    int sub = selScrType&31;
-    currentScr = [self.scrambler getScrString:selScrType];
-    [self extraSolve];
-    lastScr = currentScr;
-    NSString *scrList = [NSLocalizedString(@"language", @"") isEqualToString:@"zh_CN"] ? @"scrambleCN" : ([NSLocalizedString(@"language", @"") isEqualToString:@"zh_HK"] ? @"scrambleHK" : @"scramble");
-    NSURL *plistURL = [[NSBundle mainBundle] URLForResource:scrList withExtension:@"plist"];
-    scrType = [NSDictionary dictionaryWithContentsOfURL:plistURL];
-    types = [DCTUtils getScrType];
-    NSString *select = [types objectAtIndex:type];
-    subsets = [scrType objectForKey:select];
-    [btnScrType setTitle:[NSString stringWithFormat:@"%@ - %@", select, [subsets objectAtIndex:sub]] forState:UIControlStateNormal];
-    [self setScrLblFont];
-    if ([DCTUtils isOS7]) {
-        if ([DCTUtils isPad]) {
-            btnScrType.frame = CGRectMake(20, 40, 420, 37);
-            btnScrView.frame = CGRectMake(458, 40, 290, 37);
-            scrLabel.frame = CGRectMake(20, 96, 728, 280);
-        } else {
-            btnScrType.frame = CGRectMake(10, 30, 185, 35);
-            btnScrView.frame = CGRectMake(205, 30, 105, 35);
-            scrLabel.frame = CGRectMake(10, 50, 300, 160);
-            timerLabel.frame = CGRectMake(10, 194, 300, 120);
-        }
-    } else {
-        UIImage *btnImageNormal = [UIImage imageNamed:@"whiteButton.png"];
-        UIImage *sbtnImageNormal = [btnImageNormal stretchableImageWithLeftCapWidth:12 topCapHeight:0];
-        [btnScrType setBackgroundImage:sbtnImageNormal forState:UIControlStateNormal];
-        [btnScrView setBackgroundImage:sbtnImageNormal forState:UIControlStateNormal];
-        btnImageNormal = [UIImage imageNamed:@"blueButton.png"];
-        sbtnImageNormal = [btnImageNormal stretchableImageWithLeftCapWidth:12 topCapHeight:0];
-        [btnScrType setBackgroundImage:sbtnImageNormal forState:UIControlStateHighlighted];
-        [btnScrView setBackgroundImage:sbtnImageNormal forState:UIControlStateHighlighted];
-    }
-    [self.dbh getSessions];
-    [self.dbh query:currentSesIdx];
-    // Do any additional setup after loading the view, typically from a nib.
-}
-
-- (void)viewDidUnload
-{
-    [self setScrLabel:nil];
-    [self setBtnScrType:nil];
-    [self setBtnScrView:nil];
-    [self setTimerLabel:nil];
-    [self.dbh closeDB];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self loadDefaults];
-    int r = (bgcolor>>16)&0xff;
-    int g = (bgcolor>>8)&0xff;
-    int b = bgcolor&0xff;
-    [self.view setBackgroundColor:[UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1]];
-    r = (textcolor>>16)&0xff;
-    g = (textcolor>>8)&0xff;
-    b = textcolor&0xff;
-    textCol = [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1];
-    self.scrLabel.textColor = textCol;
-    timerLabel.textColor = textCol;
-    if(tfChanged) {
-        if(inTime) {
-            timerLabel.text = @"IMPORT";
-        } else {
-            timerLabel.text = accuracy == 1 ? @"0.00" : @"0.000";
-        }
-        tfChanged = false;
-    }
-    if(esChanged) {
-        [self extraSolve];
-        esChanged = false;
-    }
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-	[super viewWillDisappear:animated];
-    if(timerState == 2) {
-        [inspTimer invalidate];
-        timerLabel.textColor = textCol;
-    }
-    else if(timerState == 1) {
-        [dctTimer invalidate];
-    }
-    timerState = 0;
-    btnScrType.hidden = NO;
-    btnScrView.hidden = NO;
-    if(hideScr) scrLabel.hidden = NO;
-    if([DCTUtils isOS7]) [self.tabBarController.tabBar setHidden:NO];
-    else {
-        [self hideTabBar:NO];
-    }
-    wcaInsp = wcaInst;
-    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
+    dropStop = [defaults boolForKey:@"drops"];
+    showImg = [defaults boolForKey:@"showimg"];
+    opacity = [defaults integerForKey:@"opacity"];
+    int sens = [defaults integerForKey:@"sensity"];
+    sensity = 0.0176*sens*sens-1.84*sens+50;
+    showScr = [defaults boolForKey:@"showscr"];
+    tmSize = [defaults integerForKey:@"tmsize"];
 }
 
 - (void)record:(int)time pen:(int)pen {
     NSDate *date = [NSDate date];
     NSString *nowtimeStr = [formatter stringFromDate:date];
-    [self.dbh addTime:time penalty:pen scramble:lastScr datetime:nowtimeStr];
-    [self.dbh insertTime:time pen:pen scr:lastScr date:nowtimeStr];
+    [[DCTData dbh] addTime:time penalty:pen scramble:lastScr datetime:nowtimeStr];
+    [[DCTData dbh] insertTime:time pen:pen scr:lastScr date:nowtimeStr];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     if ([DCTUtils isPhone]) {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+        return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
     } else {
         return YES;
     }
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration {
+    int hei, wid, dlt = [DCTUtils isOS7] ? ([DCTUtils isPad] ? 13 : 20) : 0;
+    CGSize frame = [DCTUtils getFrame];
+    hei = frame.height; wid = frame.width;
+    if(wid == 748) {
+        hei = frame.width; wid = frame.height;
+    }
+    if([DCTUtils isPad]) [scrambleView setFrame:CGRectMake(wid-325, hei-294+dlt, 321, 241)];
+    else [scrambleView setFrame:CGRectMake(wid-223, hei-216+dlt, 221, 165)];
 }
 
 - (IBAction)selScrambleType:(id)sender {
@@ -347,38 +423,15 @@ bool esChanged = false;
 }
 
 - (void)setScr: (NSString *)scr {
-    [btnScrType setTitle:scr forState:UIControlStateNormal];
-    [self newScramble];
-    [self setScrLblFont];
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-    [def setInteger:selScrType forKey:@"crntscrtype"];
-    [scrPop dismissPopoverAnimated:YES];
-}
-
-- (IBAction)drawScrView:(id)sender {
-    if(viewType!=0) {
-        UIViewController *viewController = [[UIViewController alloc] init];
-        DCTScrambleView *view;
-        if([DCTUtils isPad]) view = [[DCTScrambleView alloc] initWithFrame:CGRectMake(0, 0, 320, 260)];
-        else view = [[DCTScrambleView alloc] initWithFrame:CGRectMake(0, 0, 240, 200)];
-        view.backgroundColor = [UIColor colorWithRed:0.92 green:0.91 blue:0.84 alpha:0.66];
-        viewController.view = view;
-        SAFE_ARC_RELEASE(popover); popover=nil;
-        popover = [[FPPopoverController alloc] initWithViewController:viewController];
-        if([DCTUtils isPad]) popover.contentSize = CGSizeMake(340, 280);
-        //else if([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortrait)popover.contentSize = CGSizeMake(260, 200);
-        else popover.contentSize = CGSizeMake(261, 220);
-        popover.arrowDirection = FPPopoverArrowDirectionAny;
-        [popover presentPopoverFromView:sender];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc]
-                              initWithTitle:NSLocalizedString(@"scramble_view", @"")
-                              message:NSLocalizedString(@"not_support", @"")
-                              delegate:self
-                              cancelButtonTitle:NSLocalizedString(@"close", @"")
-                              otherButtonTitles:nil];
-        [alert show];
+    int typeOld = [def integerForKey:@"crntscrtype"];
+    if(selScrType != typeOld) {
+        [btnScrType setTitle:scr forState:UIControlStateNormal];
+        [self newScramble:true];
+        [self setScrLblFont];
+        [def setInteger:selScrType forKey:@"crntscrtype"];
     }
+    [scrPop dismissPopoverAnimated:YES];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -401,11 +454,11 @@ bool esChanged = false;
                     inspState = 1;
                     break;
                 case 3:
-                    [self.dbh deleteTimeAtIndex:[self.dbh numberOfSolves]-1];
-                    [self.dbh deleteTime:[self.dbh numberOfSolves]];
+                    [[DCTData dbh] deleteTimeAtIndex:[[DCTData dbh] numberOfSolves]-1];
+                    [[DCTData dbh] deleteTime:[[DCTData dbh] numberOfSolves]];
                     if(!inTime) {
-                        if([self.dbh numberOfSolves] == 0) timerLabel.text = accuracy==0 ? @"0.000" : @"0.00";
-                        else timerLabel.text = [DCTData distimeAtIndex:[self.dbh numberOfSolves]-1 dt:false];
+                        if([[DCTData dbh] numberOfSolves] == 0) timerLabel.text = accuracy==0 ? @"0.000" : @"0.00";
+                        else timerLabel.text = [DCTData distimeAtIndex:[[DCTData dbh] numberOfSolves]-1 dt:false];
                     }
                     break;
                 case 4:
@@ -422,22 +475,22 @@ bool esChanged = false;
                         }
                     }
                     [tf setText:@""];
-                    [self newScramble];
+                    [self newScramble:false];
                     break;
                 }
                 case 5:
-                    [self.dbh clearSession:currentSesIdx];
+                    [[DCTData dbh] clearSession:currentSesIdx];
                     timerLabel.text = accuracy==0 ? @"0.000" : @"0.00";
                     break;
                 case 6:
-                    [self change:[self.dbh numberOfSolves]-1 pen:0];
+                    [self change:[[DCTData dbh] numberOfSolves]-1 pen:0];
                     break;
             }
             break;
         case 2:
         {
             if(alertView.tag==6) {
-                [self change:[self.dbh numberOfSolves]-1 pen:1];
+                [self change:[[DCTData dbh] numberOfSolves]-1 pen:1];
             } else {
                 int time = inspState==2?resTime+2000:resTime;
                 [self record:time pen:1];
@@ -448,7 +501,7 @@ bool esChanged = false;
         case 3:
         {
             if(alertView.tag==6) {
-                [self change:[self.dbh numberOfSolves]-1 pen:2];
+                [self change:[[DCTData dbh] numberOfSolves]-1 pen:2];
             } else {
                 int time = inspState==2?resTime+2000:resTime;
                 [self record:time pen:2];
@@ -462,8 +515,8 @@ bool esChanged = false;
 }
 
 - (void) change:(int)idx pen:(int)pen {
-    [self.dbh setPenalty:pen atIndex:idx];
-    [self.dbh updateTime:idx pen:pen];
+    [[DCTData dbh] setPenalty:pen atIndex:idx];
+    [[DCTData dbh] updateTime:idx pen:pen];
     if(!inTime) self.timerLabel.text = [DCTData distimeAtIndex:idx dt:false];
 }
 
@@ -493,9 +546,9 @@ bool esChanged = false;
 
 - (void)updateTime {
     uint64_t timeNow = mach_absolute_time();
-    int time = (int) ((timeNow - timeStart) * info.numer / info.denom / 1000000);
-    if(timerupd == 0) timerLabel.text = [DCTUtils distime:time];
-    else if(timerupd == 1) timerLabel.text = [self contime:time];
+    time1 = (int) ((timeNow - timeStart) * info.numer / info.denom / 1000000);
+    if(timerupd == 0) timerLabel.text = [DCTUtils distime:time1];
+    else if(timerupd == 1) timerLabel.text = [self contime:time1];
     else timerLabel.text = NSLocalizedString(@"solve", @"");
 }
 
@@ -546,12 +599,47 @@ bool esChanged = false;
     [UIView commitAnimations];
 }
 
+- (void)stopTimer {
+    uint64_t timeEnd = mach_absolute_time();
+    [dctTimer invalidate];
+    resTime = (int) ((timeEnd - timeStart) * info.numer / info.denom / 1000000);
+    timerLabel.text = [DCTUtils distime:resTime];
+    btnScrType.hidden = NO;
+    scrambleView.hidden = NO;
+    if([DCTUtils isOS7]) [self.tabBarController.tabBar setHidden:NO];
+    else [self hideTabBar:NO];
+    if(hideScr) scrLabel.hidden = NO;
+    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+    [self performSelectorOnMainThread:@selector(confirmSave) withObject:nil waitUntilDone:YES];
+}
+
+- (void)confirmSave {
+    [self newScramble:false];
+    self.timerState = STOP;
+    if(promptTime) {
+        int time = (inspState==2)?resTime+2000:resTime;
+        if(inspState==3) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@: DNF", NSLocalizedString(@"time", @"")] message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"save", @""), nil];
+            [alert setTag:2];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"time", @""), [DCTUtils distime:time]] message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"nopen", @""), @"+2", @"DNF", nil];
+            [alert setTag:1];
+            [alert show];
+        }
+    } else {
+        int time = inspState==2?resTime+2000:resTime;
+        int pen = inspState==3?2:0;
+        [self record:time pen:pen];
+        inspState = 1;
+    }
+}
+
 #pragma mark -
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     gestureStartPoint = [touch locationInView:self.view];
-    switch (timerState) {
-        case 0:
+    switch (self.timerState) {
+        case STOP:
             if(inTime) {
                 timerLabel.textColor = [UIColor greenColor];
             }
@@ -564,18 +652,16 @@ bool esChanged = false;
                 fTimer = [NSTimer scheduledTimerWithTimeInterval:fTime*0.05 target:self selector:@selector(setCanStart) userInfo:nil repeats:NO];
             }
             break;
-        case 1:
+        case RUNNING:
         {
-            timeEnd = mach_absolute_time();
+            uint64_t timeEnd = mach_absolute_time();
             [dctTimer invalidate];
             resTime = (int) ((timeEnd - timeStart) * info.numer / info.denom / 1000000);
             timerLabel.text = [DCTUtils distime:resTime];
             btnScrType.hidden = NO;
-            btnScrView.hidden = NO;
+            scrambleView.hidden = NO;
             if([DCTUtils isOS7]) [self.tabBarController.tabBar setHidden:NO];
-            else {
-                [self hideTabBar:NO];
-            }
+            else [self hideTabBar:NO];
             if(hideScr) scrLabel.hidden = NO;
             [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
             break;
@@ -596,44 +682,45 @@ bool esChanged = false;
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     timerLabel.textColor = textCol;
-    timerState = 0;
+    self.timerState = STOP;
     inspState = 1;
     swipeType = 0;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     timerLabel.textColor = textCol;
-    if(swipeType == 1) {
+    if(swipeType > 0) {
         isChange = true;
         [fTimer invalidate];
-    } else if(swipeType == 2) {
-        isChange = true;
-        [fTimer invalidate];
-        if([self.dbh numberOfSolves]>0) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"deletelast", @"") message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"ok", @""), nil];
-            [alert setTag:3];
-            [alert show];
-        }
-    } else if(swipeType == 4) {
-        isChange = true;
-        [fTimer invalidate];
-        if([self.dbh numberOfSolves]>0) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"last_solve", @""), [DCTData distimeAtIndex:[self.dbh numberOfSolves]-1 dt:true]] message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"nopen", @""), @"+2", @"DNF", nil];
-            [alert setTag:6];
-            [alert show];
-        }
-    } else if(swipeType == 3) {
-        isChange = true;
-        [fTimer invalidate];
-        if([self.dbh numberOfSolves]>0) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conf_delses", @"") message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"ok", @""), nil];
-            [alert setTag:5];
-            [alert show];
+        switch (swipeType) {
+            case 2:
+                if([[DCTData dbh] numberOfSolves]>0) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"deletelast", @"") message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"ok", @""), nil];
+                    [alert setTag:3];
+                    [alert show];
+                }
+                break;
+            case 3:
+                if([[DCTData dbh] numberOfSolves]>0) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conf_delses", @"") message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"ok", @""), nil];
+                    [alert setTag:5];
+                    [alert show];
+                }
+                break;
+            case 4:
+                if([[DCTData dbh] numberOfSolves]>0) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"last_solve", @""), [DCTData distimeAtIndex:[[DCTData dbh] numberOfSolves]-1 dt:true]] message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"nopen", @""), @"+2", @"DNF", nil];
+                    [alert setTag:6];
+                    [alert show];
+                }
+                break;
+            default:
+                break;
         }
     }
     else {
-        switch (timerState) {
-            case 0:
+        switch (self.timerState) {
+            case STOP:
                 if(inTime) {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"intime", @"") message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"done", @""), nil];
                     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
@@ -644,57 +731,41 @@ bool esChanged = false;
                     [alert show];
                 }
                 else if(canStart) {
+                    time1 = 0;
                     timeStart = mach_absolute_time();
                     if(wcaInsp) {
                         timerLabel.textColor = [UIColor redColor];
                         inspTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateInspTime) userInfo:nil repeats:YES];
-                        timerState = 2;
+                        self.timerState = INSPECTING;
                     } else {
                         dctTimer = [NSTimer scheduledTimerWithTimeInterval:(timerupd==0 ? 0.017 : 0.1) target:self selector:@selector(updateTime) userInfo:nil repeats:YES];
-                        timerState = 1;
+                        self.timerState = RUNNING;
                     }
                     btnScrType.hidden = YES;
-                    btnScrView.hidden = YES;
+                    scrambleView.hidden = YES;
                     if([DCTUtils isOS7]) [self.tabBarController.tabBar setHidden:YES];
                     else {
                         [self hideTabBar:YES];
                     }
                     if(hideScr) scrLabel.hidden = YES;
-                    [[UIApplication sharedApplication]setIdleTimerDisabled:YES];
+                    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
                 } else {
                     [fTimer invalidate];
                     timerLabel.textColor = textCol;
                 }
                 break;
-            case 1:
+            case RUNNING:
             {
-                [self newScramble];
-                timerState = 0;
-                wcaInsp = wcaInst;
-                if(promTime) {
-                    int time = (inspState==2)?resTime+2000:resTime;
-                    if(inspState==3) {
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@: DNF", NSLocalizedString(@"time", @"")] message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"save", @""), nil];
-                        [alert setTag:2];
-                    } else {
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"time", @""), [DCTUtils distime:time]] message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"nopen", @""), @"+2", @"DNF", nil];
-                        [alert setTag:1];
-                        [alert show];
-                    }
-                } else {
-                    int time = inspState==2?resTime+2000:resTime;
-                    int pen = inspState==3?2:0;
-                    [self record:time pen:pen];
-                    inspState = 1;
-                }
+                [self confirmSave];
                 break;
             }
-            case 2:
+            case INSPECTING:
                 if(canStart) {
+                    time1 = 0;
                     timeStart = mach_absolute_time();
                     [inspTimer invalidate];
                     dctTimer = [NSTimer scheduledTimerWithTimeInterval:0.017 target:self selector:@selector(updateTime) userInfo:nil repeats:YES];
-                    timerState = 1;
+                    self.timerState = RUNNING;
                 } else {
                     [fTimer invalidate];
                     timerLabel.textColor = [UIColor redColor];
@@ -705,8 +776,7 @@ bool esChanged = false;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    //timerLabel.textColor = [UIColor blackColor];
-    if(timerState == 0) {
+    if(timerState == STOP) {
         UITouch *touch = [touches anyObject];
         CGPoint currentPo = [touch locationInView:self.view];
         CGFloat deltaX = currentPo.x - gestureStartPoint.x;
@@ -717,7 +787,7 @@ bool esChanged = false;
                 if(isChange) {
                     timerLabel.textColor = textCol;
                     [fTimer invalidate];
-                    [self newScramble];
+                    [self newScramble:false];
                     isChange = false;
                 }
             }

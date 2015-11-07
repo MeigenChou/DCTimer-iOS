@@ -8,13 +8,13 @@
 
 #import "DCTSettingsViewController.h"
 #import "DCTSecondLevelViewController.h"
-#import "DCTColorPickerViewController.h"
+#import "DCTColorPickerController.h"
 #import "DCTHelpViewController.h"
 #import "DCTAboutViewController.h"
 #import "DCTUtils.h"
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
-#import "sys/utsname.h"
+
 
 @interface DCTSettingsViewController ()
 @property (nonatomic, strong) DCTHelpViewController *helpView;
@@ -25,11 +25,14 @@
 @synthesize helpView;
 int timerupd, accuracy;
 int cside, cxe, sqshp;
-bool wcaInst, clkFormat;
-bool hideScr, inTime;
-bool promTime, prntScr;
+BOOL clkFormat;
 int bgcolor, textcolor;
 bool tfChanged = false;
+bool imgChanged = false;
+bool svChanged = false;
+BOOL showImg = false;
+BOOL prntScr;
+int subTitle;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -55,6 +58,13 @@ bool tfChanged = false;
 - (void)viewWillAppear:(BOOL)animated {
     [self.tableView reloadData];
     [super viewWillAppear:animated];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    int bgcolor = [defaults integerForKey:@"bgcolor"];
+    int r = (bgcolor>>16)&0xff;
+    int g = (bgcolor>>8)&0xff;
+    int b = bgcolor&0xff;
+    if([DCTUtils isOS7]) self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1];
+    else self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1];
 }
 
 #pragma mark -
@@ -87,15 +97,15 @@ bool tfChanged = false;
     // Return the number of rows in the section.
     switch (section) {
         case 0:
-            return 6;
+            return 8;
         case 1:
-            return 1;
-        case 2:
             return 2;
+        case 2:
+            return 4;
         case 3:
             return 3;
         case 4:
-            return 2;
+            return [DCTUtils isPad] ? 6 : 5;
         case 5:
             return 4;
         default:
@@ -113,21 +123,21 @@ bool tfChanged = false;
     else if(cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
-    bool isEn = [DCTUtils isPhone] && [NSLocalizedString(@"language", @"") isEqualToString:@"en"];
+    
+    bool isEn = [DCTUtils isPhone] && [[DCTUtils getString:@"language"] isEqualToString:@"en"];
+    bool isNl = [DCTUtils isPhone] && [[DCTUtils getString:@"language"] isEqualToString:@"nl"];
     switch (indexPath.section) {
         case 0:
             switch (indexPath.row) {
                 case 0:
                 {
                     cell.textLabel.text = NSLocalizedString(@"WCAinsp", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
                     }
                     UISwitch *wcainspSwitch = [[UISwitch alloc] init];
                     [wcainspSwitch setTag:0];
                     wcainspSwitch.on = [defaults boolForKey:@"wcainsp"];
-                    wcaInst = wcainspSwitch.on;
                     [wcainspSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
                     cell.detailTextLabel.text = @"";
                     cell.accessoryView = wcainspSwitch;
@@ -137,9 +147,9 @@ bool tfChanged = false;
                 case 1:
                 {
                     cell.textLabel.text = NSLocalizedString(@"clockformat", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:14];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                        cell.textLabel.numberOfLines = 2;
                     }
                     UISwitch *tformatSwitch = [[UISwitch alloc] init];
                     [tformatSwitch setTag:1];
@@ -154,9 +164,8 @@ bool tfChanged = false;
                 case 2:
                 {
                     cell.textLabel.text = NSLocalizedString(@"timerupd", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
                     }
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"On", @""), NSLocalizedString(@"secondsonly", @""), NSLocalizedString(@"insponly", @""), NSLocalizedString(@"Off", @""), nil];
                     timerupd = [defaults integerForKey:@"timerupd"];
@@ -169,9 +178,8 @@ bool tfChanged = false;
                 case 3:
                 {
                     cell.textLabel.text = NSLocalizedString(@"accuracy", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
                     }
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"0.001sec", @""), NSLocalizedString(@"0.01sec", @""), nil];
                     accuracy = [defaults integerForKey:@"accuracy"];
@@ -184,39 +192,78 @@ bool tfChanged = false;
                 case 4:
                 {
                     cell.textLabel.text = NSLocalizedString(@"pressingtime", @"");
-                    if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    if([DCTUtils isOS7]) {
+                        if(isNl) cell.textLabel.font = [UIFont systemFontOfSize:15];
+                        else cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
                     else if(isEn) {
-                        cell.textLabel.font = [UIFont boldSystemFontOfSize:16];
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    } else if(isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:14];
                     } else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
                     int time = [defaults integerForKey:@"freezeslide"];
                     fTime = cell.detailTextLabel;
                     if([DCTUtils isOS7]) fTime.textColor = [UIColor grayColor];
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     cell.detailTextLabel.text = [NSString stringWithFormat:@"%1.2f s", (double)time*0.05];
-                    UISlider *freezeTime = [[UISlider alloc] init];
+                    UISlider *freezeTime = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, isNl ? 140 : 150, 34)];
                     freezeTime.minimumValue = 0;
                     freezeTime.maximumValue = 20;
+                    freezeTime.tag = 0;
                     [freezeTime addTarget:self action:@selector(sliderChanged:) forControlEvents:UIControlEventValueChanged];
                     freezeTime.value = time;
-                    [freezeTime addTarget:self action:@selector(sliderChanged:) forControlEvents:UIControlEventValueChanged];
                     cell.accessoryView = freezeTime;
                     cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     break;
                 }
                 case 5:
                 {
-                    cell.textLabel.text = NSLocalizedString(@"input_time", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    cell.textLabel.text = [DCTUtils getString:@"input_time"];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                        cell.textLabel.numberOfLines = 2;
                     }
                     UISwitch *inputSwitch = [[UISwitch alloc] init];
                     [inputSwitch setTag:5];
                     inputSwitch.on = [defaults boolForKey:@"intime"];
-                    inTime = inputSwitch.on;
                     [inputSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
                     cell.detailTextLabel.text = @"";
                     cell.accessoryView = inputSwitch;
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    break;
+                }
+                case 6:
+                {
+                    cell.textLabel.text = [DCTUtils getString:@"drop_stop"];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                        cell.textLabel.numberOfLines = 2;
+                    }
+                    UISwitch *dropSwitch = [[UISwitch alloc] init];
+                    [dropSwitch setTag:6];
+                    dropSwitch.on = [defaults boolForKey:@"drops"];
+                    [dropSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryView = dropSwitch;
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    break;
+                }
+                case 7:
+                {
+                    cell.textLabel.text = [DCTUtils getString:@"sensitivity"];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    int sens = [defaults integerForKey:@"sensity"];
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    cell.detailTextLabel.text = @"";
+                    UISlider *senSlide = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, 150, 34)];
+                    senSlide.minimumValue = 0;
+                    senSlide.maximumValue = 50;
+                    senSlide.tag = 2;
+                    [senSlide addTarget:self action:@selector(sliderChanged:) forControlEvents:UIControlEventValueChanged];
+                    senSlide.value = sens;
+                    cell.accessoryView = senSlide;
                     cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     break;
                 }
@@ -227,9 +274,9 @@ bool tfChanged = false;
                 case 0:
                 {
                     cell.textLabel.text = NSLocalizedString(@"hide_scr", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:14];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                        cell.textLabel.numberOfLines = 2;
                     }
                     UISwitch *hideSwitch = [[UISwitch alloc] init];
                     [hideSwitch setTag:4];
@@ -240,6 +287,21 @@ bool tfChanged = false;
                     cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     break;
                 }
+                case 1:
+                {
+                    cell.textLabel.text = NSLocalizedString(@"display_scr", @"");
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    UISwitch *showScr = [[UISwitch alloc] init];
+                    [showScr setTag:8];
+                    showScr.on = [defaults boolForKey:@"showscr"];
+                    [showScr addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryView = showScr;
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    break;
+                }
             }
             break;
         case 2:
@@ -247,14 +309,17 @@ bool tfChanged = false;
                 case 0:
                 {
                     cell.textLabel.text = NSLocalizedString(@"prompttime", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:15];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:12];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                        cell.textLabel.numberOfLines = 2;
                     }
+//                    if(isNl) {
+//                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
+//                        else cell.textLabel.font = [UIFont systemFontOfSize:13];
+//                    }
                     UISwitch *promtSwitch = [[UISwitch alloc] init];
                     [promtSwitch setTag:2];
                     promtSwitch.on = [defaults boolForKey:@"prompttime"];
-                    promTime = promtSwitch.on;
                     [promtSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
                     cell.detailTextLabel.text = @"";
                     cell.accessoryView = promtSwitch;
@@ -265,8 +330,12 @@ bool tfChanged = false;
                 {
                     cell.textLabel.text = NSLocalizedString(@"printscr", @"");
                     if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:13.5];
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                        cell.textLabel.numberOfLines = 2;
+                    }
+                    if(isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:16];
+                        cell.textLabel.numberOfLines = 2;
                     }
                     UISwitch *prnscrSwitch = [[UISwitch alloc] init];
                     [prnscrSwitch setTag:3];
@@ -278,6 +347,39 @@ bool tfChanged = false;
                     cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     break;
                 }
+                case 2:
+                {
+                    cell.textLabel.text = NSLocalizedString(@"newest_top", @"");
+                    if(isEn) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    if(isNl) {
+                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
+                        else cell.textLabel.font = [UIFont systemFontOfSize:16];
+                    }
+                    UISwitch *newtSwitch = [[UISwitch alloc] init];
+                    [newtSwitch setTag:9];
+                    newtSwitch.on = [defaults boolForKey:@"newtop"];
+                    [newtSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryView = newtSwitch;
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    break;
+                }
+                case 3:
+                {
+                    cell.textLabel.text = NSLocalizedString(@"subtitle", @"");
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"time", @""), [DCTUtils getString:@"scramble"], nil];
+                    subTitle = [defaults integerForKey:@"subtitle"];
+                    cell.detailTextLabel.text = [array objectAtIndex:subTitle];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                }
             }
             break;
         case 3:
@@ -285,9 +387,8 @@ bool tfChanged = false;
                 case 0:
                 {
                     cell.textLabel.text = NSLocalizedString(@"3solver", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
                     }
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"none", @""), @"Cross", @"Xcross", @"EOLine", nil];
                     cxe = [defaults integerForKey:@"cxe"];
@@ -300,9 +401,8 @@ bool tfChanged = false;
                 case 1:
                 {
                     cell.textLabel.text = NSLocalizedString(@"solcolor", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
                     }
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"dside", @""), NSLocalizedString(@"uside", @""), NSLocalizedString(@"lside", @""), NSLocalizedString(@"rside", @""), NSLocalizedString(@"fside", @""), NSLocalizedString(@"bside", @""), nil];
                     cside = [defaults integerForKey:@"cside"];
@@ -319,9 +419,8 @@ bool tfChanged = false;
                 case 2:
                 {
                     cell.textLabel.text = NSLocalizedString(@"sq_shape_solver", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:16];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:16];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:16];
                     }
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"none", @""), @"Face turn metric", @"Twist metric", nil];
                     sqshp = [defaults integerForKey:@"sqshape"];
@@ -338,9 +437,8 @@ bool tfChanged = false;
                 case 0:
                 {
                     bgcolor = [defaults integerForKey:@"bgcolor"];
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
                     }
                     cell.textLabel.text = NSLocalizedString(@"bgcolor", @"");
                     cell.detailTextLabel.text = @"";
@@ -352,9 +450,8 @@ bool tfChanged = false;
                 case 1:
                 {
                     textcolor = [defaults integerForKey:@"textcolor"];
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
                     }
                     cell.textLabel.text = NSLocalizedString(@"textcolor", @"");
                     cell.detailTextLabel.text = @"";
@@ -363,15 +460,76 @@ bool tfChanged = false;
                     cell.accessoryView = nil;
                     break;
                 }
+                case 2:
+                {
+                    cell.textLabel.text = NSLocalizedString(@"bg_image", @"image");
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                }
+                case 3:
+                {
+                    cell.textLabel.text = NSLocalizedString(@"opacity", @"image");
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    cell.detailTextLabel.text = @"";
+                    UISlider *opac = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, 150, 34)];
+                    opac.minimumValue = 0;
+                    opac.maximumValue = 100;
+                    opac.tag = 1;
+                    [opac addTarget:self action:@selector(sliderChanged:) forControlEvents:UIControlEventValueChanged];
+                    opac.value = [defaults integerForKey:@"opacity"];
+                    cell.accessoryView = opac;
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    break;
+                }
+                case 4:
+                {
+                    cell.textLabel.text = NSLocalizedString(@"show_image", @"image");
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    UISwitch *imgSwitch = [[UISwitch alloc] init];
+                    [imgSwitch setTag:7];
+                    imgSwitch.on = [defaults boolForKey:@"showimg"];
+                    showImg = imgSwitch.on;
+                    [imgSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    cell.accessoryView = imgSwitch;
+                    break;
+                }
+                case 5:
+                {
+                    cell.textLabel.text = NSLocalizedString(@"timer_size", @"");
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    cell.detailTextLabel.text = @"";
+                    UISlider *tmSize = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, 150, 34)];
+                    tmSize.minimumValue = 80;
+                    tmSize.maximumValue = 180;
+                    tmSize.tag = 3;
+                    [tmSize addTarget:self action:@selector(sliderChanged:) forControlEvents:UIControlEventValueChanged];
+                    tmSize.value = [defaults integerForKey:@"tmsize"];
+                    cell.accessoryView = tmSize;
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    break;
+                }
             }
             break;
         case 5:
             switch (indexPath.row) {
                 case 0:
                     cell.textLabel.text = NSLocalizedString(@"gesture", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
                     }
                     cell.detailTextLabel.text = @"";
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -380,9 +538,8 @@ bool tfChanged = false;
                     break;
                 case 1:
                     cell.textLabel.text = NSLocalizedString(@"rate_app", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
                     }
                     cell.detailTextLabel.text = @"";
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -391,9 +548,8 @@ bool tfChanged = false;
                     break;
                 case 2:
                     cell.textLabel.text = NSLocalizedString(@"email_feedback", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
                     }
                     cell.detailTextLabel.text = @"";
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -402,9 +558,8 @@ bool tfChanged = false;
                     break;
                 case 3:
                     cell.textLabel.text = NSLocalizedString(@"licenses", @"");
-                    if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
                     }
                     cell.detailTextLabel.text = @"";
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -440,6 +595,21 @@ bool tfChanged = false;
                     second.selIndex = [NSNumber numberWithInt:accuracy];
                     second.key = @"accuracy";
                     second.title = NSLocalizedString(@"accuracy", @"");
+                    second.array = array;
+                    [self.navigationController pushViewController:second animated:YES];
+                    break;
+                }
+            }
+            break;
+        case 2:
+            switch (indexPath.row) {
+                case 3:
+                {
+                    NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"time", @""), [DCTUtils getString:@"scramble"], nil];
+                    DCTSecondLevelViewController *second = [[DCTSecondLevelViewController alloc] initWithStyle:UITableViewStyleGrouped];
+                    second.selIndex = [NSNumber numberWithInt:subTitle];
+                    second.key = @"subtitle";
+                    second.title = [DCTUtils getString:@"subtitle"];
                     second.array = array;
                     [self.navigationController pushViewController:second animated:YES];
                     break;
@@ -487,7 +657,7 @@ bool tfChanged = false;
             switch (indexPath.row) {
                 case 0:
                 {
-                    DCTColorPickerViewController *colorView = [[DCTColorPickerViewController alloc] init];
+                    DCTColorPickerController *colorView = [[DCTColorPickerController alloc] init];
                     colorView.title = NSLocalizedString(@"bgcolor", @"");
                     colorView.crntColor = [NSNumber numberWithInt:bgcolor];
                     colorView.defkey = @"bgcolor";
@@ -496,13 +666,16 @@ bool tfChanged = false;
                 }
                 case 1:
                 {
-                    DCTColorPickerViewController *colorView = [[DCTColorPickerViewController alloc] init];
+                    DCTColorPickerController *colorView = [[DCTColorPickerController alloc] init];
                     colorView.title = NSLocalizedString(@"textcolor", @"");
                     colorView.crntColor = [NSNumber numberWithInt:textcolor];
                     colorView.defkey = @"textcolor";
                     [self.navigationController pushViewController:colorView animated:YES];
                     break;
                 }
+                case 2:
+                    [self showPicker];
+                    break;
             }
             break;
         case 5:
@@ -518,8 +691,8 @@ bool tfChanged = false;
                 }
                 case 1:
                 {
-                    NSString *str = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%d", 794870196];
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+                    NSString *url = [DCTUtils isOS7] ? [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%d", 794870196] : [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%d", 794870196];
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
                     break;
                 }
                 case 2:
@@ -542,7 +715,7 @@ bool tfChanged = false;
 {
     // Return YES for supported orientations
     if ([DCTUtils isPhone]) {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+        return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
     } else {
         return YES;
     }
@@ -555,7 +728,6 @@ bool tfChanged = false;
     switch (switchButton.tag) {
         case 0:
             [defaults setBool:switchButton.on forKey:@"wcainsp"];
-            wcaInst = switchButton.on;
             break;
         case 1:
             [defaults setBool:switchButton.on forKey:@"clockform"];
@@ -563,20 +735,31 @@ bool tfChanged = false;
             break;
         case 2:
             [defaults setBool:switchButton.on forKey:@"prompttime"];
-            promTime = switchButton.on;
             break;
         case 3:
             [defaults setBool:switchButton.on forKey:@"printscr"];
-            prntScr = switchButton.on;
             break;
         case 4:
             [defaults setBool:switchButton.on forKey:@"hidescr"];
-            hideScr = switchButton.on;
             break;
         case 5:
             [defaults setBool:switchButton.on forKey:@"intime"];
-            inTime = switchButton.on;
             tfChanged = true;
+            break;
+        case 6:
+            [defaults setBool:switchButton.on forKey:@"drops"];
+            break;
+        case 7:
+            [defaults setBool:switchButton.on forKey:@"showimg"];
+            showImg = switchButton.on;
+            imgChanged = true;
+            break;
+        case 8:
+            [defaults setBool:switchButton.on forKey:@"showscr"];
+            svChanged = true;
+            break;
+        case 9:
+            [defaults setBool:switchButton.on forKey:@"newtop"];
             break;
     }
 }
@@ -584,22 +767,42 @@ bool tfChanged = false;
 - (IBAction)sliderChanged:(id)sender {
     UISlider *slider = (UISlider *)sender;
     int progressAsInt = (int)roundf(slider.value);
-    fTime.text = [NSString stringWithFormat:@"%1.2f s", (double)progressAsInt*0.05];
-    //NSLog(@"%d", progressAsInt);
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:progressAsInt forKey:@"freezeslide"];
+    switch (slider.tag) {
+        case 0:
+            fTime.text = [NSString stringWithFormat:@"%1.2f s", (double)progressAsInt*0.05];
+            //NSLog(@"%d", progressAsInt);
+            [defaults setInteger:progressAsInt forKey:@"freezeslide"];
+            break;
+        case 1:
+            [defaults setInteger:progressAsInt forKey:@"opacity"];
+            break;
+        case 2:
+            [defaults setInteger:progressAsInt forKey:@"sensity"];
+            break;
+        case 3:
+            [defaults setInteger:progressAsInt forKey:@"tmsize"];
+            break;
+        default:
+            break;
+    }
+    
 }
 
-- (NSString *)getDeviceString {
-    struct utsname systemInfo;
-    uname(&systemInfo);
-    return [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+- (void)showPicker {
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.delegate = self;
+    [self presentModalViewController:picker animated:YES];
 }
 
-- (NSString *)getAppVersion {
-    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-    NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    return [NSString stringWithFormat:@"v%@", version];
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)aImage editingInfo:(NSDictionary *)editingInfo
+{
+    if(showImg)imgChanged = true;
+    NSData *imageData = UIImagePNGRepresentation(aImage);
+    if(imageData == nil) imageData = UIImageJPEGRepresentation(aImage, 1);
+    [imageData writeToFile:[DCTUtils getFilePath:@"bg.png"] atomically:NO];
+    [picker dismissModalViewControllerAnimated:YES];
 }
 
 - (void)sendFeedback
@@ -617,19 +820,19 @@ bool tfChanged = false;
     MFMailComposeViewController *mailPicker = [[MFMailComposeViewController alloc] init];
     mailPicker.mailComposeDelegate = self;
     //设置主题
-    [mailPicker setSubject: [NSString stringWithFormat:@"DCTimer %@ %@", [self getAppVersion], NSLocalizedString(@"feedback", @"")]];
+    [mailPicker setSubject: [NSString stringWithFormat:@"DCTimer %@ %@", [DCTUtils getAppVersion], NSLocalizedString(@"feedback", @"")]];
     //添加收件人
     NSArray *toRecipients = [NSArray arrayWithObject: @"meigenchou@foxmail.com"];
     [mailPicker setToRecipients: toRecipients];
-    NSString *emailBody = [NSString stringWithFormat:@"(%@, iOS %@)\n", [self getDeviceString], [[UIDevice currentDevice] systemVersion]];
+    NSString *emailBody = [NSString stringWithFormat:@"(%@, iOS %@)\n", [DCTUtils getDeviceString], [[UIDevice currentDevice] systemVersion]];
     [mailPicker setMessageBody:emailBody isHTML:YES];
     [self presentModalViewController: mailPicker animated:YES];
 }
 
 - (void)launchMailAppOnDevice
 {
-    NSString *subject = [NSString stringWithFormat:@"DCTimer %@ %@", [self getAppVersion], NSLocalizedString(@"feedback", @"")];
-    NSString *body = [NSString stringWithFormat:@"(%@, iOS %@)\n", [self getDeviceString], [[UIDevice currentDevice] systemVersion]];
+    NSString *subject = [NSString stringWithFormat:@"DCTimer %@ %@", [DCTUtils getAppVersion], NSLocalizedString(@"feedback", @"")];
+    NSString *body = [NSString stringWithFormat:@"(%@, iOS %@)\n", [DCTUtils getDeviceString], [[UIDevice currentDevice] systemVersion]];
     NSString *email = [NSString stringWithFormat:@"mailto:meigenchou@foxmail.com?subject=%@&body=%@", subject, body];
     email = [email stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
     [[UIApplication sharedApplication] openURL: [NSURL URLWithString:email]];

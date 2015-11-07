@@ -18,7 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"clockform", [NSNumber numberWithInt:7], @"freezeslide", [NSNumber numberWithBool:YES], @"printscr", [DCTUtils getString:@"defsession"], @"defsesname", [NSNumber numberWithInt:32], @"crntscrtype", [NSNumber numberWithInt:0x66CCFF], @"bgcolor", nil];
+    NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:@(YES), @"clockform", @(7), @"freezeslide", [NSNumber numberWithBool:YES], @"printscr", [DCTUtils getString:@"defsession"], @"defsesname", @(32), @"crntscrtype", @(0x66CCFF), @"bgcolor", @(35), @"opacity", @(25), @"sensity", @(YES), @"showscr", @(97), @"tmsize", @(YES), @"newtop", nil];
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     

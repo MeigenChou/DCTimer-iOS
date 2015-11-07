@@ -15,17 +15,16 @@
 #import "DCTUtils.h"
 
 @interface DCTResultViewController ()
-@property (nonatomic, strong) DCTData *mi;
 @property (nonatomic, strong) DCTDetailViewController *detailController;
 @end
 
 @implementation DCTResultViewController
-@synthesize listData;
-@synthesize mi = _mi;
 @synthesize detailController;
+BOOL newestTop;
+int numberSolves;
+extern int subTitle;
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
+- (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
         self.title = NSLocalizedString(@"results", @"");
@@ -34,30 +33,19 @@
     return self;
 }
 
-- (DCTData *)mi {
-    if(!_mi) 
-        _mi = [[DCTData alloc] init];
-    return _mi;
-}
-
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-    self.listData = [[NSMutableArray alloc] init];
     self.navigationItem.title = NSLocalizedString(@"results", @"");
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"session", @"") style:UIBarButtonItemStylePlain target:self action:@selector(selSessionView)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"stats", @"") style:UIBarButtonItemStylePlain target:self action:@selector(statsView)];
-    
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
-    self.listData = nil;
-    self.mi = nil;
     self.detailController = nil;
+    [[DCTData dbh] closeDB];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -69,22 +57,25 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     //NSLog(@"did appear");
-    int num = [self.mi numberOfSolves];
-    [listData removeAllObjects];
-    if(num!=0) 
-        for(int i = 0; i<num; i++) {
-            [listData insertObject:[DCTData distimeAtIndex:i dt:false] atIndex:0];
-            //[listData addObject:[self.datap getTimeAtIndex:i]];
-        }
+    numberSolves = [[DCTData dbh] numberOfSolves];
     [self.tableView reloadData];
     [super viewDidAppear:animated];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    int bgcolor = [defaults integerForKey:@"bgcolor"];
+    int r = (bgcolor>>16)&0xff;
+    int g = (bgcolor>>8)&0xff;
+    int b = bgcolor&0xff;
+    if([DCTUtils isOS7]) self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1];
+    else self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1];
+    newestTop = [defaults boolForKey:@"newtop"];
+    subTitle = [defaults integerForKey:@"subtitle"];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     if ([DCTUtils isPhone]) {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+        return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
     } else {
         return YES;
     }
@@ -93,7 +84,7 @@
 #pragma mark -
 #pragma mark Table View Data Source Methods
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.listData count];
+    return (numberSolves = [[DCTData dbh] numberOfSolves]);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -103,9 +94,10 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:sti];
     }
     NSUInteger row = [indexPath row];
-    int num = [self.mi numberOfSolves];
-    cell.textLabel.text = [listData objectAtIndex:row];
-    cell.detailTextLabel.text = [self.mi getDateAtIndex:num-1-row];
+    if(newestTop) row = numberSolves-1-row;
+    cell.textLabel.text = [DCTData distimeAtIndex:row dt:false];
+    if(subTitle == 0) cell.detailTextLabel.text = [[DCTData dbh] getDateAtIndex:row];
+    else if(subTitle == 1) cell.detailTextLabel.text = [[DCTData dbh] getScrambleAtIndex:row];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 }
@@ -116,17 +108,33 @@
     detailController = [[DCTDetailViewController alloc] initWithStyle:UITableViewStyleGrouped];
     detailController.title = NSLocalizedString(@"detail", @"");
     NSUInteger row = [indexPath row];
-    int num = [self.mi numberOfSolves];
-    if(row >= num) row = num-1;
-    NSString *selectedTime = [DCTData distimeAtIndex:num-1-row dt:true];
-    NSString *time = [NSString stringWithFormat:@"(%@)", [self.mi getDateAtIndex:num-1-row]];
-    NSString *scr = [self.mi getScrambleAtIndex:num-1-row];
+    if(row >= numberSolves) row = numberSolves-1;
+    if(newestTop) row = numberSolves-1-row;
+    NSString *selectedTime = [DCTData distimeAtIndex:row dt:true];
+    NSString *time = [NSString stringWithFormat:@"(%@)", [[DCTData dbh] getDateAtIndex:row]];
+    NSString *scr = [[DCTData dbh] getScrambleAtIndex:row];
     detailController.rest = selectedTime;
     detailController.time = time;
     detailController.scramble = scr;
-    [detailController setDetail:num-1-row penalty:[self.mi getPenaltyAtIndex:num-1-row]];
+    [detailController setDetail:row];
     detailController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:detailController animated:YES];
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(editingStyle == UITableViewCellEditingStyleDelete) {
+        int row = [indexPath row];
+        if(row >= numberSolves) row = numberSolves-1;
+        if(newestTop) row = numberSolves-1-row;
+        NSLog(@"delete %d", row);
+        [[DCTData dbh] deleteTimeAtIndex:row];
+        [[DCTData dbh] deleteTime:row];
+        [self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5];
+    }
 }
 
 - (void)selSessionView {

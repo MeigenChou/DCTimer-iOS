@@ -11,11 +11,9 @@
 #import "DCTUtils.h"
 
 @interface DCTSessionViewController()
-@property (nonatomic, strong) DCTData *dbh;
 @end
 
 @implementation DCTSessionViewController
-@synthesize dbh;
 NSMutableArray *session;
 extern int currentSesIdx;
 int selectedSesIdx;
@@ -27,7 +25,6 @@ bool isDefSes;
     if (self) {
         self.title = NSLocalizedString(@"session", @"");
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"newses", @"") style:UIBarButtonItemStylePlain target:self action:@selector(newSes)];
-        self.dbh = [[DCTData alloc] init];
     }
     return self;
 }
@@ -36,19 +33,20 @@ bool isDefSes;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *defname = [defaults objectForKey:@"defsesname"];
     session = [[NSMutableArray alloc] initWithObjects:defname, nil];
-    [self.dbh getSessionName:session];
+    [[DCTData dbh] getSessionName:session];
     [super viewWillAppear:animated];
     [self.tableView reloadData];
 }
 
 - (void)viewDidUnload {
-    self.dbh = nil;
     [super viewDidUnload];
 }
 
 - (void)newSes {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"newses", @"") message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"done", @""), nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    UITextField *tf = [alert textFieldAtIndex:0];
+    tf.clearButtonMode = UITextFieldViewModeWhileEditing;
     [alert setTag:0];
     [alert show];
 }
@@ -61,11 +59,11 @@ bool isDefSes;
             {
                 NSString *name = tf.text;
                 [session addObject:name];
-                [self.dbh addSession:name];
+                [[DCTData dbh] addSession:name];
                 currentSesIdx = session.count - 1;
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                 [defaults setInteger:currentSesIdx forKey:@"crntsesidx"];
-                [self.dbh query:currentSesIdx];
+                [[DCTData dbh] query:currentSesIdx];
                 [self.tableView reloadData];
                 break;
             }
@@ -77,7 +75,7 @@ bool isDefSes;
                     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                     [defaults setObject:name forKey:@"defsesname"];
                 }
-                else [self.dbh updateSession:selectedSesIdx name:name];
+                else [[DCTData dbh] updateSession:selectedSesIdx name:name];
                 [self.tableView reloadData];
                 break;
             }
@@ -91,14 +89,14 @@ bool isDefSes;
     switch (actionSheet.tag + buttonIndex) {
         case 0:
         {
-            [self.dbh clearSession:selectedSesIdx];
-            [self.dbh deleteSession:selectedSesIdx];
+            [[DCTData dbh] clearSession:selectedSesIdx];
+            [[DCTData dbh] deleteSession:selectedSesIdx];
             [session removeObjectAtIndex:selectedSesIdx];
             if(selectedSesIdx == currentSesIdx) {
                 currentSesIdx = 0;
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                 [defaults setInteger:0 forKey:@"crntsesidx"];
-                [self.dbh query:currentSesIdx];
+                [[DCTData dbh] query:currentSesIdx];
             }
             [self.tableView reloadData];
             break;
@@ -107,13 +105,15 @@ bool isDefSes;
         {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"rename", @"") message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"done", @""), nil];
             alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-            [[alert textFieldAtIndex:0] setText:[session objectAtIndex:selectedSesIdx]];
+            UITextField *tf = [alert textFieldAtIndex:0];
+            tf.clearButtonMode = UITextFieldViewModeWhileEditing;
+            [tf setText:[session objectAtIndex:selectedSesIdx]];
             [alert setTag:1];
             [alert show];
             break;
         }
         case 2:
-            [self.dbh clearSession:selectedSesIdx];
+            [[DCTData dbh] clearSession:selectedSesIdx];
             break;
     }
 }
@@ -145,7 +145,7 @@ bool isDefSes;
         currentSesIdx = row;
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:currentSesIdx forKey:@"crntsesidx"];
-        [self.dbh query:currentSesIdx];
+        [[DCTData dbh] query:currentSesIdx];
     }
     [self.tableView reloadData];
 }
@@ -176,7 +176,7 @@ bool isDefSes;
 {
     // Return YES for supported orientations
     if ([DCTUtils isPhone]) {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+        return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
     } else {
         return YES;
     }

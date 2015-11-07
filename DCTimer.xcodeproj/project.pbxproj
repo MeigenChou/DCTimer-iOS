@@ -50,18 +50,24 @@
 		F5B87374171313E90065F0D2 /* img3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B8736B171313E90065F0D2 /* img3@2x.png */; };
 		F5B87375171313E90065F0D2 /* title_more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B8736C171313E90065F0D2 /* title_more@2x.png */; };
 		F5B87376171313E90065F0D2 /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B8736D171313E90065F0D2 /* whiteButton.png */; };
-		F5B87397171327C00065F0D2 /* DCTColorPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B87395171327BF0065F0D2 /* DCTColorPickerViewController.m */; };
-		F5B87398171327C00065F0D2 /* DCTColorPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5B87396171327BF0065F0D2 /* DCTColorPickerViewController.xib */; };
+		F5CC233A18B8F778005503A6 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5CC233918B8F778005503A6 /* CoreMotion.framework */; };
+		F5CD77DB18B264CB00180470 /* DCTStatDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5CD77DA18B264CB00180470 /* DCTStatDetailController.m */; };
 		F5D0570618AA88C2002E9746 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D0570518AA88C2002E9746 /* MessageUI.framework */; };
 		F5D40C89188ACAE100169650 /* DCTData.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D40C88188ACAE100169650 /* DCTData.m */; };
 		F5D47B581874478600EA90B7 /* DCTPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D47B571874478600EA90B7 /* DCTPickerViewController.m */; };
 		F5D521E0187EC1E0009F452B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5D521DF187EC1E0009F452B /* Images.xcassets */; };
+		F5D8F9EA18CC9D560051BEC5 /* scrambleHK.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5D8F9E918CC9D560051BEC5 /* scrambleHK.plist */; };
 		F5D97DC81872F06800E1872F /* DCTUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D97DC71872F06800E1872F /* DCTUtils.m */; };
 		F5D9ED37187D6D34003AFF8C /* DCTDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D9ED36187D6D34003AFF8C /* DCTDetailViewController.m */; };
 		F5D9EE9E189E1704004CB5F2 /* FPPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D9EE99189E1704004CB5F2 /* FPPopoverController.m */; };
 		F5D9EE9F189E1704004CB5F2 /* FPPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D9EE9B189E1704004CB5F2 /* FPPopoverView.m */; };
 		F5D9EEA0189E1704004CB5F2 /* FPTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D9EE9D189E1704004CB5F2 /* FPTouchView.m */; };
 		F5D9EEA3189E1756004CB5F2 /* Scrambler.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D9EEA2189E1756004CB5F2 /* Scrambler.m */; };
+		F5DC199018CE073300ABA2C0 /* InfColorBarPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC198118CE073300ABA2C0 /* InfColorBarPicker.m */; };
+		F5DC199118CE073300ABA2C0 /* InfColorIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC198318CE073300ABA2C0 /* InfColorIndicatorView.m */; };
+		F5DC199518CE073300ABA2C0 /* InfColorSquarePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC198B18CE073300ABA2C0 /* InfColorSquarePicker.m */; };
+		F5DC199618CE073300ABA2C0 /* InfHSBSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC198D18CE073300ABA2C0 /* InfHSBSupport.m */; };
+		F5DC199A18CE082100ABA2C0 /* DCTColorPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC199918CE082100ABA2C0 /* DCTColorPickerController.m */; };
 		F5DE322B18ABBF57004A78D5 /* DCTHelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DE322A18ABBF57004A78D5 /* DCTHelpViewController.m */; };
 		F5E253D31882E03100EBC520 /* Sq1Shape.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E253D21882E03100EBC520 /* Sq1Shape.m */; };
 		F5E287BE18AE2CA700397D69 /* 1hold.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B418AE2CA700397D69 /* 1hold.png */; };
@@ -155,15 +161,18 @@
 		F5B8736B171313E90065F0D2 /* img3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img3@2x.png"; sourceTree = "<group>"; };
 		F5B8736C171313E90065F0D2 /* title_more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "title_more@2x.png"; sourceTree = "<group>"; };
 		F5B8736D171313E90065F0D2 /* whiteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteButton.png; sourceTree = "<group>"; };
-		F5B87394171327BF0065F0D2 /* DCTColorPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTColorPickerViewController.h; sourceTree = "<group>"; };
-		F5B87395171327BF0065F0D2 /* DCTColorPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTColorPickerViewController.m; sourceTree = "<group>"; };
-		F5B87396171327BF0065F0D2 /* DCTColorPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DCTColorPickerViewController.xib; sourceTree = "<group>"; };
+		F5CC233918B8F778005503A6 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		F5CD77D918B264CB00180470 /* DCTStatDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTStatDetailController.h; sourceTree = "<group>"; };
+		F5CD77DA18B264CB00180470 /* DCTStatDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTStatDetailController.m; sourceTree = "<group>"; };
 		F5D0570518AA88C2002E9746 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		F5D40C87188ACAE100169650 /* DCTData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTData.h; sourceTree = "<group>"; };
 		F5D40C88188ACAE100169650 /* DCTData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTData.m; sourceTree = "<group>"; };
 		F5D47B561874478600EA90B7 /* DCTPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTPickerViewController.h; sourceTree = "<group>"; };
 		F5D47B571874478600EA90B7 /* DCTPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTPickerViewController.m; sourceTree = "<group>"; };
 		F5D521DF187EC1E0009F452B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		F5D8F9E718CC8CEA0051BEC5 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F5D8F9E818CC94520051BEC5 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		F5D8F9E918CC9D560051BEC5 /* scrambleHK.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = scrambleHK.plist; sourceTree = "<group>"; };
 		F5D97DC61872F06800E1872F /* DCTUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTUtils.h; sourceTree = "<group>"; };
 		F5D97DC71872F06800E1872F /* DCTUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTUtils.m; sourceTree = "<group>"; };
 		F5D9ED35187D6D34003AFF8C /* DCTDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTDetailViewController.h; sourceTree = "<group>"; };
@@ -177,6 +186,16 @@
 		F5D9EE9D189E1704004CB5F2 /* FPTouchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FPTouchView.m; path = FPPopover/FPTouchView.m; sourceTree = "<group>"; };
 		F5D9EEA1189E1756004CB5F2 /* Scrambler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scrambler.h; sourceTree = "<group>"; };
 		F5D9EEA2189E1756004CB5F2 /* Scrambler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scrambler.m; sourceTree = "<group>"; };
+		F5DC198018CE073300ABA2C0 /* InfColorBarPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InfColorBarPicker.h; path = InfColorPicker/InfColorBarPicker.h; sourceTree = "<group>"; };
+		F5DC198118CE073300ABA2C0 /* InfColorBarPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InfColorBarPicker.m; path = InfColorPicker/InfColorBarPicker.m; sourceTree = "<group>"; };
+		F5DC198218CE073300ABA2C0 /* InfColorIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InfColorIndicatorView.h; path = InfColorPicker/InfColorIndicatorView.h; sourceTree = "<group>"; };
+		F5DC198318CE073300ABA2C0 /* InfColorIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InfColorIndicatorView.m; path = InfColorPicker/InfColorIndicatorView.m; sourceTree = "<group>"; };
+		F5DC198A18CE073300ABA2C0 /* InfColorSquarePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InfColorSquarePicker.h; path = InfColorPicker/InfColorSquarePicker.h; sourceTree = "<group>"; };
+		F5DC198B18CE073300ABA2C0 /* InfColorSquarePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InfColorSquarePicker.m; path = InfColorPicker/InfColorSquarePicker.m; sourceTree = "<group>"; };
+		F5DC198C18CE073300ABA2C0 /* InfHSBSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InfHSBSupport.h; path = InfColorPicker/InfHSBSupport.h; sourceTree = "<group>"; };
+		F5DC198D18CE073300ABA2C0 /* InfHSBSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InfHSBSupport.m; path = InfColorPicker/InfHSBSupport.m; sourceTree = "<group>"; };
+		F5DC199818CE082100ABA2C0 /* DCTColorPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTColorPickerController.h; sourceTree = "<group>"; };
+		F5DC199918CE082100ABA2C0 /* DCTColorPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTColorPickerController.m; sourceTree = "<group>"; };
 		F5DE322918ABBF57004A78D5 /* DCTHelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTHelpViewController.h; sourceTree = "<group>"; };
 		F5DE322A18ABBF57004A78D5 /* DCTHelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTHelpViewController.m; sourceTree = "<group>"; };
 		F5E253D11882E03100EBC520 /* Sq1Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sq1Shape.h; sourceTree = "<group>"; };
@@ -211,6 +230,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5CC233A18B8F778005503A6 /* CoreMotion.framework in Frameworks */,
 				F5D0570618AA88C2002E9746 /* MessageUI.framework in Frameworks */,
 				F58371F71704DB9E0011FB0A /* libsqlite3.0.dylib in Frameworks */,
 				F59FF53E16E1FD7400D7FE65 /* UIKit.framework in Frameworks */,
@@ -256,6 +276,7 @@
 		F59FF53C16E1FD7400D7FE65 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F5CC233918B8F778005503A6 /* CoreMotion.framework */,
 				F5D0570518AA88C2002E9746 /* MessageUI.framework */,
 				F58371F31704DB2C0011FB0A /* libsqlite3.0.dylib */,
 				F59FF53D16E1FD7400D7FE65 /* UIKit.framework */,
@@ -273,11 +294,13 @@
 				F5B87364171313E90065F0D2 /* drawable */,
 				F504B048181E96AE003BC2EF /* FPPopover */,
 				F5D521DF187EC1E0009F452B /* Images.xcassets */,
+				F5DC197F18CE072200ABA2C0 /* InfColorPicker */,
 				F5E287C818AE2E7B00397D69 /* license.html */,
 				F5B872F617130EE20065F0D2 /* min2phase */,
 				F5B8730817130FDB0065F0D2 /* scramble */,
 				F5AAD6F7171DAF2C001E3F32 /* scramble.plist */,
 				F5E98D91187AD915006933EE /* scrambleCN.plist */,
+				F5D8F9E918CC9D560051BEC5 /* scrambleHK.plist */,
 				F5B87315171310880065F0D2 /* solver */,
 				F59FF54416E1FD7400D7FE65 /* Supporting Files */,
 				F5B87380171315E90065F0D2 /* Util */,
@@ -371,15 +394,16 @@
 			children = (
 				F5E98D8E187ACDF5006933EE /* DCTAboutViewController.h */,
 				F5E98D8F187ACDF5006933EE /* DCTAboutViewController.m */,
-				F5B87394171327BF0065F0D2 /* DCTColorPickerViewController.h */,
-				F5B87395171327BF0065F0D2 /* DCTColorPickerViewController.m */,
-				F5B87396171327BF0065F0D2 /* DCTColorPickerViewController.xib */,
+				F5DC199818CE082100ABA2C0 /* DCTColorPickerController.h */,
+				F5DC199918CE082100ABA2C0 /* DCTColorPickerController.m */,
 				F5D9ED35187D6D34003AFF8C /* DCTDetailViewController.h */,
 				F5D9ED36187D6D34003AFF8C /* DCTDetailViewController.m */,
 				F5B8733F171312CF0065F0D2 /* DCTFirstViewController.h */,
 				F5B87340171312CF0065F0D2 /* DCTFirstViewController.m */,
 				F59FF56016E1FD7500D7FE65 /* DCTFirstViewController_iPad.xib */,
 				F59FF55D16E1FD7500D7FE65 /* DCTFirstViewController_iPhone.xib */,
+				F5DE322918ABBF57004A78D5 /* DCTHelpViewController.h */,
+				F5DE322A18ABBF57004A78D5 /* DCTHelpViewController.m */,
 				F5D47B561874478600EA90B7 /* DCTPickerViewController.h */,
 				F5D47B571874478600EA90B7 /* DCTPickerViewController.m */,
 				F5B87343171312CF0065F0D2 /* DCTResultViewController.h */,
@@ -390,10 +414,10 @@
 				F5B8734A171312CF0065F0D2 /* DCTSessionViewController.m */,
 				F5B8734B171312CF0065F0D2 /* DCTSettingsViewController.h */,
 				F5B8734C171312CF0065F0D2 /* DCTSettingsViewController.m */,
+				F5CD77D918B264CB00180470 /* DCTStatDetailController.h */,
+				F5CD77DA18B264CB00180470 /* DCTStatDetailController.m */,
 				F5B8734D171312CF0065F0D2 /* DCTStatsViewController.h */,
 				F5B8734E171312CF0065F0D2 /* DCTStatsViewController.m */,
-				F5DE322918ABBF57004A78D5 /* DCTHelpViewController.h */,
-				F5DE322A18ABBF57004A78D5 /* DCTHelpViewController.m */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -445,6 +469,21 @@
 			path = Util;
 			sourceTree = "<group>";
 		};
+		F5DC197F18CE072200ABA2C0 /* InfColorPicker */ = {
+			isa = PBXGroup;
+			children = (
+				F5DC198018CE073300ABA2C0 /* InfColorBarPicker.h */,
+				F5DC198118CE073300ABA2C0 /* InfColorBarPicker.m */,
+				F5DC198218CE073300ABA2C0 /* InfColorIndicatorView.h */,
+				F5DC198318CE073300ABA2C0 /* InfColorIndicatorView.m */,
+				F5DC198A18CE073300ABA2C0 /* InfColorSquarePicker.h */,
+				F5DC198B18CE073300ABA2C0 /* InfColorSquarePicker.m */,
+				F5DC198C18CE073300ABA2C0 /* InfHSBSupport.h */,
+				F5DC198D18CE073300ABA2C0 /* InfHSBSupport.m */,
+			);
+			name = InfColorPicker;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -489,6 +528,8 @@
 				"en-GB",
 				"zh-Hant-TW",
 				"zh-Hant",
+				"nl-NL",
+				nl,
 			);
 			mainGroup = F59FF52E16E1FD7400D7FE65;
 			productRefGroup = F59FF53A16E1FD7400D7FE65 /* Products */;
@@ -525,13 +566,13 @@
 				F5D521E0187EC1E0009F452B /* Images.xcassets in Resources */,
 				F5E287C018AE2CA700397D69 /* sd.png in Resources */,
 				F5B87372171313E90065F0D2 /* img2@2x.png in Resources */,
+				F5D8F9EA18CC9D560051BEC5 /* scrambleHK.plist in Resources */,
 				F5E287C118AE2CA700397D69 /* sd@2x.png in Resources */,
 				F5B87373171313E90065F0D2 /* img3.png in Resources */,
 				F5E287C518AE2CA700397D69 /* sr@2x.png in Resources */,
 				F5B87374171313E90065F0D2 /* img3@2x.png in Resources */,
 				F5B87375171313E90065F0D2 /* title_more@2x.png in Resources */,
 				F5B87376171313E90065F0D2 /* whiteButton.png in Resources */,
-				F5B87398171327C00065F0D2 /* DCTColorPickerViewController.xib in Resources */,
 				F5AAD6F8171DAF2C001E3F32 /* scramble.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -564,6 +605,7 @@
 				F5D9EEA3189E1756004CB5F2 /* Scrambler.m in Sources */,
 				F59FF54E16E1FD7400D7FE65 /* DCTAppDelegate.m in Sources */,
 				F5D47B581874478600EA90B7 /* DCTPickerViewController.m in Sources */,
+				F5CD77DB18B264CB00180470 /* DCTStatDetailController.m in Sources */,
 				F5B8731117130FDB0065F0D2 /* Clock.m in Sources */,
 				F5B8731217130FDB0065F0D2 /* LatchCube.m in Sources */,
 				F5D9EE9F189E1704004CB5F2 /* FPPopoverView.m in Sources */,
@@ -573,7 +615,9 @@
 				F5D40C89188ACAE100169650 /* DCTData.m in Sources */,
 				F5B8732D171310880065F0D2 /* Cube222.m in Sources */,
 				F5D9EE9E189E1704004CB5F2 /* FPPopoverController.m in Sources */,
+				F5DC199118CE073300ABA2C0 /* InfColorIndicatorView.m in Sources */,
 				F5B8732E171310880065F0D2 /* EOLine.m in Sources */,
+				F5DC199618CE073300ABA2C0 /* InfHSBSupport.m in Sources */,
 				F5B8732F171310880065F0D2 /* Floppy.m in Sources */,
 				F5B87330171310880065F0D2 /* Gear.m in Sources */,
 				F5B87331171310880065F0D2 /* Im.m in Sources */,
@@ -590,11 +634,13 @@
 				F5B8735A171312CF0065F0D2 /* DCTSettingsViewController.m in Sources */,
 				F5B8735B171312CF0065F0D2 /* DCTStatsViewController.m in Sources */,
 				F5DE322B18ABBF57004A78D5 /* DCTHelpViewController.m in Sources */,
+				F5DC199A18CE082100ABA2C0 /* DCTColorPickerController.m in Sources */,
 				F5D97DC81872F06800E1872F /* DCTUtils.m in Sources */,
 				F5B87363171313680065F0D2 /* DCTScrambleView.m in Sources */,
 				F5D9ED37187D6D34003AFF8C /* DCTDetailViewController.m in Sources */,
 				F5E253D31882E03100EBC520 /* Sq1Shape.m in Sources */,
-				F5B87397171327C00065F0D2 /* DCTColorPickerViewController.m in Sources */,
+				F5DC199518CE073300ABA2C0 /* InfColorSquarePicker.m in Sources */,
+				F5DC199018CE073300ABA2C0 /* InfColorBarPicker.m in Sources */,
 				F5AB569A171C309100BF231E /* TwoPhaseScrambler.m in Sources */,
 				F5F50EEE1773EF9A0049AA65 /* CubieCube.m in Sources */,
 				F5D9EEA0189E1704004CB5F2 /* FPTouchView.m in Sources */,
@@ -613,6 +659,8 @@
 				F590468216F21649001B71F5 /* en */,
 				F590468416F2164F001B71F5 /* zh-Hans */,
 				F5FEA86C18A28BC900117983 /* en-GB */,
+				F5D8F9E718CC8CEA0051BEC5 /* nl */,
+				F5D8F9E818CC94520051BEC5 /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

@@ -50,6 +50,7 @@
 "copysuccess" = "已复制到剪贴板";
 "copy" = "复制";
 "save" = "保存";
+"comment" = "注释";
 "deletelast" = "删除上一次成绩";
 "intime" = "输入时间";
 "conf_delses" = "删除分组所有成绩";
@@ -87,8 +88,13 @@
 "0.01sec" = "0.01秒";
 "pressingtime" = "计时器启动延时";
 "input_time" = "手动输入成绩";
+"drop_stop" = "拍桌子停表";
+"sensitivity" = "灵敏度";
 "scramble" = "打乱";
 "hide_scr" = "计时中隐藏打乱";
+"display_scr" = "显示打乱后的状态";
+"newest_top" = "成绩列表逆序显示";
+"subtitle" = "成绩列表副标题";
 "stt_stats" = "统计";
 "prompttime" = "提示对每次成绩的操作";
 "printscr" = "详细成绩中显示打乱";
@@ -108,6 +114,10 @@
 "interface" = "界面";
 "bgcolor" = "背景颜色";
 "textcolor" = "文字颜色";
+"bg_image" = "背景图片";
+"opacity" = "不透明度";
+"show_image" = "显示图片";
+"timer_size" = "计时器字体大小";
 "version" = "版本";
 "about" = "关于";
 "gesture" = "手势说明";
@@ -125,9 +135,9 @@
 "stat_best" = "最快单次：";
 "stat_worst" = "最慢单次：";
 "stat_list" = "成绩列表：";
-"title_avg" = "详细成绩：len次去尾平均";
-"title_mean" = "详细成绩：len次平均";
-"title_ses" = "详细成绩：本组平均";
+"title_avg" = "详情：len次去尾平均";
+"title_mean" = "详情：len次平均";
+"title_ses" = "详情：本组平均";
 
 "defsession" = "默认分组";
 "selected" = "已选中";

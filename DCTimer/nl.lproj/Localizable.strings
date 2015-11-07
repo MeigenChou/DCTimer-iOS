@@ -1,0 +1,160 @@
+/*
+ Localizable.strings
+ DCTimer
+ 
+ Created by MeigenChou on 13-3-14.
+ Copyright (c) 2013年 MeigenChou. All rights reserved.
+ */
+"language" = "nl";
+"timer" = "Timer";
+"results" = "Resultaten";
+"settings" = "Instellingen";
+
+"cancel" = "Annuleer";
+"done" = "Klaar";
+"ok" = "OK";
+"close" = "Sluit";
+"time" = "Tijd";
+
+"c2" = "2x2";
+"c3" = "3x3";
+"c4" = "4x4";
+"c5" = "5x5";
+"c6" = "6x6";
+"c7" = "7x7";
+"mx" = "Megaminx";
+"py" = "Pyraminx";
+"sq" = "Square-1";
+"cl" = "Clock";
+"sk" = "Skewb";
+"gr" = "Gear cube";
+"ot" = "Other";
+"3s" = "3x3 subsets";
+"bd" = "Bandaged cube";
+"ms" = "Megaminx subsets";
+
+"scramble_view" = "Scramble view";
+"scramble_type" = "Scramble type";
+"not_support" = "Niet mogelijk voor dit scramble type";
+"scrambling" = "scrambling...";
+"invalid_in" = "Ongeldige input.";
+
+"session" = "Sessie";
+"stats" = "Stats";
+"detail" = "Detail";
+
+"option" = "Opties";
+"delete" = "Verwijder";
+"nopen" = "Geen strafpunten";
+"copyscr" = "Kopieer scramble";
+"copysuccess" = "Kopie naar klipbord geslaagd.";
+"copy" = "Kopieer";
+"save" = "Opslaan";
+"comment" = "Commentaar";
+"deletelast" = "Verwijder laatste solve";
+"intime" = "Input tijd";
+"conf_delses" = "Wis sessie?";
+"last_solve" = "Laatste solve: ";
+
+"solve" = "OPLOSSEN";
+"inspect" = "INSPECTEREN";
+
+"numbercube" = "Cube opgelost:";
+"besttime" = "Beste tijd:";
+"worsttime" = "Slechtste tijd:";
+"currentavg5" = "Huidige avg van 5:";
+"bestavg5" = "Beste avg van 5:";
+"currentavg12" = "Huidige avg van 12:";
+"bestavg12" = "Beste avg van 12:";
+"currentavg50" = "Huidige avg van 50:";
+"bestavg50" = "Beste avg van 50:";
+"currentavg100" = "Huidige avg van 100:";
+"bestavg100" = "Beste avg van 100:";
+"sesmean" = "Sessie mean:";
+"sesavg" = "Sessie avg:";
+"currentmean3" = "Huidig-mean van 3:";
+"bestmean3" = "Beste mean van 3:";
+"calcing" = "Uitrekenen...";
+
+"WCAinsp" = "WCA inspectie";
+"clockformat" = "Gebruik klok formaat (m:ss.ms)";
+"timerupd" = "Timer updaten";
+"On" = "Aan";
+"secondsonly" = "Alleen seconden";
+"insponly" = "Alleen inspectie";
+"Off" = "Uit";
+"accuracy" = "Timer accuratie";
+"0.001sec" = "0.001 sec";
+"0.01sec" = "0.01 sec";
+"pressingtime" = "Timer start vertraging";
+"input_time" = "Handmatig tijden toevoegen";
+"drop_stop" = "Laat vallen om te stoppen";
+"sensitivity" = "Gevoeligheid";
+"scramble" = "Scramble";
+"hide_scr" = "Verberg scramble onder timen";
+"display_scr" = "Display scramble view";
+"stt_stats" = "Statistieken";
+"prompttime" = "Prompt when new time detected";
+"printscr" = "Laat scramble(s) in statistieken zien";
+"newest_top" = "Nieuwste tijden bovenaan";
+"subtitle" = "Subtitel";
+"tools" = "Tools";
+"cross" = "Solve 3x3 cross";
+"3solver" = "3x3 solvers";
+"solcolor" = "Kant van kleur";
+"sq_shape_solver" = "Square-1 shape solver";
+"none" = "Geen";
+"dside" = "D(geel)";
+"uside" = "U(wit)";
+"lside" = "L(oranje)";
+"rside" = "R(rood)";
+"fside" = "F(groen)";
+"bside" = "B(blauw)";
+"more" = "Meer";
+"interface" = "Interface";
+"bgcolor" = "Achtergrond kleur";
+"textcolor" = "Tekst kleur";
+"bg_image" = "Achtergrond";
+"opacity" = "Doorzichtigheid";
+"show_image" = "Show image";
+"timer_size" = "Grootte timer";
+"version" = "Versie";
+"about" = "Over";
+"gesture" = "Help gebaren";
+"rate_app" = "Rate app";
+"email_feedback" = "Email feedback";
+"licenses" = "Licensies";
+"feedback" = "Feedback";
+
+"stat_title" = "Gegenereerd door DCTimer op ";
+"stat_solve" = "Cubes Opgelost: ";
+"stat_avg" = "Gemiddelde: ";
+"stat_mean" = "Mean: ";
+"ses_avg" = "Sessie gemiddelde: ";
+"ses_mean" = "Session mean: ";
+"stat_best" = "Beste tijd: ";
+"stat_worst" = "Slechtste tijd: ";
+"stat_list" = "Individuele Tijden: ";
+"title_avg" = "Detail: avg of len";
+"title_mean" = "Detail: mean of len";
+"title_ses" = "Detail: session mean";
+
+"defsession" = "Standaard sessie";
+"selected" = "Geselecteerd";
+"newses" = "Nieuwe sessie";
+"deleteses" = "Verwijder sessie";
+"clearses" = "Wis sessie";
+"rename" = "Hernoem";
+
+"1fhold" = "Één vinger lang indrukken";
+"sr" = "Veeg naar rechts";
+"sl" = "Veeg naar links";
+"1f2t" = "Één vinger 2 keer tikken";
+"su" = "Veeg omhoog";
+"sd" = "Veeg naar beneden";
+"1fholddo" = "Start timer";
+"srdo" = "Verwijder scramble";
+"sldo" = "Verwijder laatste solve";
+"1f2tdo" = "Kies penalty";
+"sudo" = "Wijzig penalty van laatste solve";
+"sddo" = "Wis sessie";

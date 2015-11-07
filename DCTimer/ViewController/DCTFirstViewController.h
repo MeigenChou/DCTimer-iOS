@@ -7,9 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreMotion/CoreMotion.h>
 #import "FPPopoverController.h"
 #import "ARCMacros.h"
 #import "FPPopoverController.h"
+
+typedef enum timerState {
+    STOP = 0,
+    RUNNING = 1,
+    INSPECTING = 2,
+} TimerState;
 
 @interface DCTFirstViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, FPPopoverControllerDelegate> {
     FPPopoverController *popover;
@@ -17,14 +24,13 @@
     int swipeType;
     bool isChange;
 }
-@property (strong, nonatomic) IBOutlet UIButton *btnScrView;
 @property (strong, nonatomic) IBOutlet UILabel *scrLabel;
 @property (strong, nonatomic) IBOutlet UILabel *timerLabel;
 @property (strong, nonatomic) IBOutlet UIButton *btnScrType;
+@property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property CGPoint gestureStartPoint;
-
+@property (strong, nonatomic) CMMotionManager *motionMag;
 - (IBAction)selScrambleType:(id)sender;
-- (IBAction)drawScrView:(id)sender;
 
 //- (void)selectedTableRow: (NSUInteger)rowNum;
 - (void)setScr: (NSString *)scr;

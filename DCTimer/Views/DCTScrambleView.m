@@ -21,12 +21,12 @@
 NSMutableArray *scrImg;
 extern NSString *currentScr;
 extern int viewType;
+extern BOOL showScr;
 float rotatx[5], rotaty[5];
 
 - (id)initWithCoder:(NSCoder *)coder
 {
     if(self = [super initWithCoder:coder]) {
-        
         
     }
     return self;
@@ -40,8 +40,8 @@ float rotatx[5], rotaty[5];
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetLineWidth(context, 1.0);
     CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
-    
-    int wid = [DCTUtils isPad] ? 320 : 240;
+    if(!showScr) return;
+    int wid = [DCTUtils isPad] ? 320 : 200;
     int a, b, d, i, j;
     switch (viewType) {
         case 13: //pyram
