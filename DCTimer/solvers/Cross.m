@@ -304,7 +304,7 @@ int arrc[2][12];
     }
 }
 
-- (void)easyCross:(int)depth {
+- (void)easyCross {
     int i;
     if(!inie) {
         int ed[23760];

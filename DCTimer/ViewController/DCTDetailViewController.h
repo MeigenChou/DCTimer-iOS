@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface DCTDetailViewController : UITableViewController <UIActionSheetDelegate>
+
 @property (copy, nonatomic) NSString *rest, *time, *scramble;
-@property (copy, nonatomic) NSArray *resi;
+
+- (void)setDetail:(int)idx penalty:(int)pen;
+
 @end

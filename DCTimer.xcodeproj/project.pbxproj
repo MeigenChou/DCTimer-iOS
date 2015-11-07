@@ -52,6 +52,7 @@
 		F5B87376171313E90065F0D2 /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B8736D171313E90065F0D2 /* whiteButton.png */; };
 		F5B87397171327C00065F0D2 /* DCTColorPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B87395171327BF0065F0D2 /* DCTColorPickerViewController.m */; };
 		F5B87398171327C00065F0D2 /* DCTColorPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5B87396171327BF0065F0D2 /* DCTColorPickerViewController.xib */; };
+		F5D0570618AA88C2002E9746 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D0570518AA88C2002E9746 /* MessageUI.framework */; };
 		F5D40C89188ACAE100169650 /* DCTData.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D40C88188ACAE100169650 /* DCTData.m */; };
 		F5D47B581874478600EA90B7 /* DCTPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D47B571874478600EA90B7 /* DCTPickerViewController.m */; };
 		F5D521E0187EC1E0009F452B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5D521DF187EC1E0009F452B /* Images.xcassets */; };
@@ -61,7 +62,19 @@
 		F5D9EE9F189E1704004CB5F2 /* FPPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D9EE9B189E1704004CB5F2 /* FPPopoverView.m */; };
 		F5D9EEA0189E1704004CB5F2 /* FPTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D9EE9D189E1704004CB5F2 /* FPTouchView.m */; };
 		F5D9EEA3189E1756004CB5F2 /* Scrambler.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D9EEA2189E1756004CB5F2 /* Scrambler.m */; };
+		F5DE322B18ABBF57004A78D5 /* DCTHelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DE322A18ABBF57004A78D5 /* DCTHelpViewController.m */; };
 		F5E253D31882E03100EBC520 /* Sq1Shape.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E253D21882E03100EBC520 /* Sq1Shape.m */; };
+		F5E287BE18AE2CA700397D69 /* 1hold.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B418AE2CA700397D69 /* 1hold.png */; };
+		F5E287BF18AE2CA700397D69 /* 1hold@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B518AE2CA700397D69 /* 1hold@2x.png */; };
+		F5E287C018AE2CA700397D69 /* sd.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B618AE2CA700397D69 /* sd.png */; };
+		F5E287C118AE2CA700397D69 /* sd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B718AE2CA700397D69 /* sd@2x.png */; };
+		F5E287C218AE2CA700397D69 /* sl.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B818AE2CA700397D69 /* sl.png */; };
+		F5E287C318AE2CA700397D69 /* sl@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B918AE2CA700397D69 /* sl@2x.png */; };
+		F5E287C418AE2CA700397D69 /* sr.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287BA18AE2CA700397D69 /* sr.png */; };
+		F5E287C518AE2CA700397D69 /* sr@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287BB18AE2CA700397D69 /* sr@2x.png */; };
+		F5E287C618AE2CA700397D69 /* su.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287BC18AE2CA700397D69 /* su.png */; };
+		F5E287C718AE2CA700397D69 /* su@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287BD18AE2CA700397D69 /* su@2x.png */; };
+		F5E287C918AE2E7B00397D69 /* license.html in Resources */ = {isa = PBXBuildFile; fileRef = F5E287C818AE2E7B00397D69 /* license.html */; };
 		F5E98D90187ACDF5006933EE /* DCTAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E98D8F187ACDF5006933EE /* DCTAboutViewController.m */; };
 		F5E98D92187AD915006933EE /* scrambleCN.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5E98D91187AD915006933EE /* scrambleCN.plist */; };
 		F5F50EEE1773EF9A0049AA65 /* CubieCube.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F50EED1773EF9A0049AA65 /* CubieCube.m */; };
@@ -145,6 +158,7 @@
 		F5B87394171327BF0065F0D2 /* DCTColorPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTColorPickerViewController.h; sourceTree = "<group>"; };
 		F5B87395171327BF0065F0D2 /* DCTColorPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTColorPickerViewController.m; sourceTree = "<group>"; };
 		F5B87396171327BF0065F0D2 /* DCTColorPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DCTColorPickerViewController.xib; sourceTree = "<group>"; };
+		F5D0570518AA88C2002E9746 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		F5D40C87188ACAE100169650 /* DCTData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTData.h; sourceTree = "<group>"; };
 		F5D40C88188ACAE100169650 /* DCTData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTData.m; sourceTree = "<group>"; };
 		F5D47B561874478600EA90B7 /* DCTPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTPickerViewController.h; sourceTree = "<group>"; };
@@ -163,8 +177,21 @@
 		F5D9EE9D189E1704004CB5F2 /* FPTouchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FPTouchView.m; path = FPPopover/FPTouchView.m; sourceTree = "<group>"; };
 		F5D9EEA1189E1756004CB5F2 /* Scrambler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scrambler.h; sourceTree = "<group>"; };
 		F5D9EEA2189E1756004CB5F2 /* Scrambler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scrambler.m; sourceTree = "<group>"; };
+		F5DE322918ABBF57004A78D5 /* DCTHelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTHelpViewController.h; sourceTree = "<group>"; };
+		F5DE322A18ABBF57004A78D5 /* DCTHelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTHelpViewController.m; sourceTree = "<group>"; };
 		F5E253D11882E03100EBC520 /* Sq1Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sq1Shape.h; sourceTree = "<group>"; };
 		F5E253D21882E03100EBC520 /* Sq1Shape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sq1Shape.m; sourceTree = "<group>"; };
+		F5E287B418AE2CA700397D69 /* 1hold.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1hold.png; sourceTree = "<group>"; };
+		F5E287B518AE2CA700397D69 /* 1hold@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1hold@2x.png"; sourceTree = "<group>"; };
+		F5E287B618AE2CA700397D69 /* sd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sd.png; sourceTree = "<group>"; };
+		F5E287B718AE2CA700397D69 /* sd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sd@2x.png"; sourceTree = "<group>"; };
+		F5E287B818AE2CA700397D69 /* sl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sl.png; sourceTree = "<group>"; };
+		F5E287B918AE2CA700397D69 /* sl@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sl@2x.png"; sourceTree = "<group>"; };
+		F5E287BA18AE2CA700397D69 /* sr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sr.png; sourceTree = "<group>"; };
+		F5E287BB18AE2CA700397D69 /* sr@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sr@2x.png"; sourceTree = "<group>"; };
+		F5E287BC18AE2CA700397D69 /* su.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = su.png; sourceTree = "<group>"; };
+		F5E287BD18AE2CA700397D69 /* su@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "su@2x.png"; sourceTree = "<group>"; };
+		F5E287C818AE2E7B00397D69 /* license.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = license.html; sourceTree = "<group>"; };
 		F5E98D8E187ACDF5006933EE /* DCTAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTAboutViewController.h; sourceTree = "<group>"; };
 		F5E98D8F187ACDF5006933EE /* DCTAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTAboutViewController.m; sourceTree = "<group>"; };
 		F5E98D91187AD915006933EE /* scrambleCN.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = scrambleCN.plist; sourceTree = "<group>"; };
@@ -176,6 +203,7 @@
 		F5F50EF31773FA750049AA65 /* CoordCube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoordCube.m; sourceTree = "<group>"; };
 		F5F50EF5177404280049AA65 /* Search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Search.h; sourceTree = "<group>"; };
 		F5F50EF6177404280049AA65 /* Search.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Search.m; sourceTree = "<group>"; };
+		F5FEA86C18A28BC900117983 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +211,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5D0570618AA88C2002E9746 /* MessageUI.framework in Frameworks */,
 				F58371F71704DB9E0011FB0A /* libsqlite3.0.dylib in Frameworks */,
 				F59FF53E16E1FD7400D7FE65 /* UIKit.framework in Frameworks */,
 				F59FF54016E1FD7400D7FE65 /* Foundation.framework in Frameworks */,
@@ -227,6 +256,7 @@
 		F59FF53C16E1FD7400D7FE65 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F5D0570518AA88C2002E9746 /* MessageUI.framework */,
 				F58371F31704DB2C0011FB0A /* libsqlite3.0.dylib */,
 				F59FF53D16E1FD7400D7FE65 /* UIKit.framework */,
 				F59FF53F16E1FD7400D7FE65 /* Foundation.framework */,
@@ -242,6 +272,8 @@
 				F59FF54D16E1FD7400D7FE65 /* DCTAppDelegate.m */,
 				F5B87364171313E90065F0D2 /* drawable */,
 				F504B048181E96AE003BC2EF /* FPPopover */,
+				F5D521DF187EC1E0009F452B /* Images.xcassets */,
+				F5E287C818AE2E7B00397D69 /* license.html */,
 				F5B872F617130EE20065F0D2 /* min2phase */,
 				F5B8730817130FDB0065F0D2 /* scramble */,
 				F5AAD6F7171DAF2C001E3F32 /* scramble.plist */,
@@ -251,7 +283,6 @@
 				F5B87380171315E90065F0D2 /* Util */,
 				F5B8735D171313680065F0D2 /* View */,
 				F5B87337171312CF0065F0D2 /* ViewController */,
-				F5D521DF187EC1E0009F452B /* Images.xcassets */,
 			);
 			path = DCTimer;
 			sourceTree = "<group>";
@@ -361,6 +392,8 @@
 				F5B8734C171312CF0065F0D2 /* DCTSettingsViewController.m */,
 				F5B8734D171312CF0065F0D2 /* DCTStatsViewController.h */,
 				F5B8734E171312CF0065F0D2 /* DCTStatsViewController.m */,
+				F5DE322918ABBF57004A78D5 /* DCTHelpViewController.h */,
+				F5DE322A18ABBF57004A78D5 /* DCTHelpViewController.m */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -378,6 +411,16 @@
 		F5B87364171313E90065F0D2 /* drawable */ = {
 			isa = PBXGroup;
 			children = (
+				F5E287B418AE2CA700397D69 /* 1hold.png */,
+				F5E287B518AE2CA700397D69 /* 1hold@2x.png */,
+				F5E287B618AE2CA700397D69 /* sd.png */,
+				F5E287B718AE2CA700397D69 /* sd@2x.png */,
+				F5E287B818AE2CA700397D69 /* sl.png */,
+				F5E287B918AE2CA700397D69 /* sl@2x.png */,
+				F5E287BA18AE2CA700397D69 /* sr.png */,
+				F5E287BB18AE2CA700397D69 /* sr@2x.png */,
+				F5E287BC18AE2CA700397D69 /* su.png */,
+				F5E287BD18AE2CA700397D69 /* su@2x.png */,
 				F5B87365171313E90065F0D2 /* blueButton.png */,
 				F5B87366171313E90065F0D2 /* img1.png */,
 				F5B87367171313E90065F0D2 /* img1@2x.png */,
@@ -443,6 +486,9 @@
 			knownRegions = (
 				en,
 				"zh-Hans",
+				"en-GB",
+				"zh-Hant-TW",
+				"zh-Hant",
 			);
 			mainGroup = F59FF52E16E1FD7400D7FE65;
 			productRefGroup = F59FF53A16E1FD7400D7FE65 /* Products */;
@@ -459,6 +505,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5E287C418AE2CA700397D69 /* sr.png in Resources */,
+				F5E287C618AE2CA700397D69 /* su.png in Resources */,
+				F5E287BE18AE2CA700397D69 /* 1hold.png in Resources */,
 				F59FF54816E1FD7400D7FE65 /* InfoPlist.strings in Resources */,
 				F59FF55F16E1FD7500D7FE65 /* DCTFirstViewController_iPhone.xib in Resources */,
 				F59FF56216E1FD7500D7FE65 /* DCTFirstViewController_iPad.xib in Resources */,
@@ -466,11 +515,19 @@
 				F5B8736E171313E90065F0D2 /* blueButton.png in Resources */,
 				F5B8736F171313E90065F0D2 /* img1.png in Resources */,
 				F5B87370171313E90065F0D2 /* img1@2x.png in Resources */,
+				F5E287C218AE2CA700397D69 /* sl.png in Resources */,
+				F5E287C318AE2CA700397D69 /* sl@2x.png in Resources */,
 				F5B87371171313E90065F0D2 /* img2.png in Resources */,
 				F5E98D92187AD915006933EE /* scrambleCN.plist in Resources */,
+				F5E287C918AE2E7B00397D69 /* license.html in Resources */,
+				F5E287C718AE2CA700397D69 /* su@2x.png in Resources */,
+				F5E287BF18AE2CA700397D69 /* 1hold@2x.png in Resources */,
 				F5D521E0187EC1E0009F452B /* Images.xcassets in Resources */,
+				F5E287C018AE2CA700397D69 /* sd.png in Resources */,
 				F5B87372171313E90065F0D2 /* img2@2x.png in Resources */,
+				F5E287C118AE2CA700397D69 /* sd@2x.png in Resources */,
 				F5B87373171313E90065F0D2 /* img3.png in Resources */,
+				F5E287C518AE2CA700397D69 /* sr@2x.png in Resources */,
 				F5B87374171313E90065F0D2 /* img3@2x.png in Resources */,
 				F5B87375171313E90065F0D2 /* title_more@2x.png in Resources */,
 				F5B87376171313E90065F0D2 /* whiteButton.png in Resources */,
@@ -532,6 +589,7 @@
 				F5B87359171312CF0065F0D2 /* DCTSessionViewController.m in Sources */,
 				F5B8735A171312CF0065F0D2 /* DCTSettingsViewController.m in Sources */,
 				F5B8735B171312CF0065F0D2 /* DCTStatsViewController.m in Sources */,
+				F5DE322B18ABBF57004A78D5 /* DCTHelpViewController.m in Sources */,
 				F5D97DC81872F06800E1872F /* DCTUtils.m in Sources */,
 				F5B87363171313680065F0D2 /* DCTScrambleView.m in Sources */,
 				F5D9ED37187D6D34003AFF8C /* DCTDetailViewController.m in Sources */,
@@ -554,6 +612,7 @@
 			children = (
 				F590468216F21649001B71F5 /* en */,
 				F590468416F2164F001B71F5 /* zh-Hans */,
+				F5FEA86C18A28BC900117983 /* en-GB */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

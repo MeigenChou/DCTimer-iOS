@@ -22,10 +22,10 @@
 char geCpm[24][3], geEpm[24][3], geEom[27][3];
 char gePd[3][576];
 
-- (void) iniGear {
+- (void) initGear {
     int arr[4];
-    for(int i = 0; i < 24; i++){
-        for(int j = 0; j < 3; j++){
+    for(int i = 0; i < 24; i++) {
+        for(int j = 0; j < 3; j++) {
             [Im idxToPerm:arr i:i l:4];
             [Im cir:arr a:3 b:j];
             geCpm[i][j] = [Im permToIdx:arr l:4];
@@ -81,7 +81,7 @@ char gePd[3][576];
     if(self = [super init]) {
         self.turn = [[NSArray alloc] initWithObjects:@"U", @"R", @"F", nil];
         self.suff = [[NSArray alloc] initWithObjects:@"'", @"2'", @"3'", @"4'", @"5'", @"6", @"5", @"4", @"3", @"2", @"", nil];
-        [self iniGear];
+        [self initGear];
         srand((unsigned)time(0));
     }
     return self;

@@ -124,9 +124,7 @@
     detailController.rest = selectedTime;
     detailController.time = time;
     detailController.scramble = scr;
-    NSArray *penalty = [[NSArray alloc] initWithObjects:@"n", @"p", @"d", nil];
-    NSArray *resInfo = [[NSArray alloc]initWithObjects:[NSNumber numberWithInt:num-1-row], [penalty objectAtIndex:[self.mi getPenaltyAtIndex:num-1-row]], nil];
-    detailController.resi = resInfo;
+    [detailController setDetail:num-1-row penalty:[self.mi getPenaltyAtIndex:num-1-row]];
     detailController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:detailController animated:YES];
 }

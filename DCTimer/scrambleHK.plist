@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>二階</key>
+	<array>
+		<string>随机状态</string>
+		<string>3-gen</string>
+		<string>6-gen</string>
+		<string>CLL训练</string>
+		<string>EG1训练</string>
+		<string>EG2训练</string>
+		<string>XLL训练</string>
+		<string>TCLL+训练</string>
+		<string>TCLL-训练</string>
+	</array>
+	<key>三階</key>
+	<array>
+		<string>随机状态</string>
+		<string>传统</string>
+		<string>F2L训练</string>
+		<string>顶层/OLL训练</string>
+		<string>PLL训练</string>
+		<string>角块训练</string>
+		<string>棱块训练</string>
+		<string>LSLL训练</string>
+		<string>ZBLL训练</string>
+		<string>顶层角块</string>
+		<string>顶层棱块</string>
+		<string>桥式六棱</string>
+		<string>CMLL训练</string>
+		<string>简单十字</string>
+		<string>2GLL训练</string>
+	</array>
+	<key>四階</key>
+	<array>
+		<string>传统</string>
+		<string>SiGN</string>
+		<string>YJ</string>
+		<string>对棱训练</string>
+		<string>R, r, U, u</string>
+	</array>
+	<key>五階</key>
+	<array>
+		<string>WCA</string>
+		<string>SiGN</string>
+		<string>对棱训练</string>
+	</array>
+	<key>六階</key>
+	<array>
+		<string>prefix</string>
+		<string>SiGN</string>
+		<string>suffix</string>
+		<string>对棱训练</string>
+	</array>
+	<key>七階</key>
+	<array>
+		<string>prefix</string>
+		<string>SiGN</string>
+		<string>suffix</string>
+		<string>对棱训练</string>
+	</array>
+	<key>五扭計骰</key>
+	<array>
+		<string>WCA</string>
+		<string>传统</string>
+	</array>
+	<key>金字塔</key>
+	<array>
+		<string>随机状态</string>
+		<string>随机步骤</string>
+	</array>
+	<key>Square One</key>
+	<array>
+		<string>随机状态</string>
+		<string>face turn metric</string>
+		<string>twist metric</string>
+		<string>立方体形状</string>
+	</array>
+	<key>魔表</key>
+	<array>
+		<string>WCA</string>
+		<string>Jaap顺序</string>
+		<string>concise</string>
+		<string>高效顺序</string>
+	</array>
+	<key>斜轉方塊</key>
+	<array>
+		<string>随机状态</string>
+		<string>R U L B</string>
+	</array>
+	<key>LxMxN</key>
+	<array>
+		<string>1x3x3(Floppy)</string>
+		<string>Super 1x3x3</string>
+		<string>2x3x3(Domino)</string>
+		<string>2x2x3</string>
+		<string>2x2x4</string>
+		<string>3x3x4</string>
+		<string>3x3x5</string>
+		<string>3x3x6</string>
+		<string>3x3x7</string>
+		<string>8x8x8</string>
+		<string>9x9x9</string>
+	</array>
+	<key>Cmetrick</key>
+	<array>
+		<string>normal</string>
+		<string>mini</string>
+	</array>
+	<key>齒輪扭計骰</key>
+	<array>
+		<string>随机状态</string>
+		<string>3-gen</string>
+	</array>
+	<key>Siamese cube</key>
+	<array>
+		<string>1x1x3 block</string>
+		<string>1x2x3 block</string>
+		<string>2x2x2 block</string>
+	</array>
+	<key>15 puzzle</key>
+	<array>
+		<string>piece moves</string>
+		<string>blank moves</string>
+	</array>
+	<key>其他</key>
+	<array>
+		<string>插销魔方</string>
+		<string>直升机</string>
+		<string>Square-2</string>
+		<string>Super SQ1</string>
+		<string>UFO</string>
+		<string>FTO</string>
+	</array>
+	<key>三階子集</key>
+	<array>
+		<string>2-gen R, U</string>
+		<string>2-gen L, U</string>
+		<string>Roux-gen M, U</string>
+		<string>3-gen F, R, U</string>
+		<string>3-gen R, U, L</string>
+		<string>3-gen R, r, U</string>
+		<string>half turns only</string>
+		<string>LSLL(old)</string>
+	</array>
+	<key>捆綁扭計骰</key>
+	<array>
+		<string>Bicube</string>
+		<string>SQ1 /,(1,0)</string>
+	</array>
+	<key>五扭計骰子集</key>
+	<array>
+		<string>2-gen R, U</string>
+		<string>LSLL</string>
+	</array>
+</dict>
+</plist>

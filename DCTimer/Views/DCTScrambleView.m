@@ -22,7 +22,6 @@ NSMutableArray *scrImg;
 extern NSString *currentScr;
 extern int viewType;
 float rotatx[5], rotaty[5];
-extern bool sqMi;
 
 - (id)initWithCoder:(NSCoder *)coder
 {
@@ -194,6 +193,7 @@ extern bool sqMi;
                 [a2 appendString:@"xxxxxxxxxxxxxxxx"];
             }
             float h = [self sin1:1 ag:ag rd:rd]*w*z - [self sin1:1 ag:ag rd:rd]*z;
+            BOOL sqMi = [[scrImg objectAtIndex:24] boolValue];
             if(sqMi) {
                 for(int i=0; i<4; i++) {
                     arrx[i] = cx+[self cos1:1+i*3 ag:ag rd:rd]*w*z;

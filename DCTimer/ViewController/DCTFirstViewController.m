@@ -53,6 +53,7 @@ extern bool promTime;
 extern int cside, cxe, sqshp;
 extern bool prntScr, inTime;
 extern bool tfChanged;
+extern int viewType;
 int currentSesIdx;
 NSString *lastScr = @"";
 int selScrType;
@@ -213,7 +214,7 @@ bool esChanged = false;
     currentScr = [self.scrambler getScrString:selScrType];
     [self extraSolve];
     lastScr = currentScr;
-    NSString *scrList = [NSLocalizedString(@"language", @"") isEqualToString:@"zh_CN"] ? @"scrambleCN" : @"scramble";
+    NSString *scrList = [NSLocalizedString(@"language", @"") isEqualToString:@"zh_CN"] ? @"scrambleCN" : ([NSLocalizedString(@"language", @"") isEqualToString:@"zh_HK"] ? @"scrambleHK" : @"scramble");
     NSURL *plistURL = [[NSBundle mainBundle] URLForResource:scrList withExtension:@"plist"];
     scrType = [NSDictionary dictionaryWithContentsOfURL:plistURL];
     types = [DCTUtils getScrType];
@@ -355,8 +356,7 @@ bool esChanged = false;
 }
 
 - (IBAction)drawScrView:(id)sender {
-    int vt = self.scrambler.viewType;
-    if(vt!=0) {
+    if(viewType!=0) {
         UIViewController *viewController = [[UIViewController alloc] init];
         DCTScrambleView *view;
         if([DCTUtils isPad]) view = [[DCTScrambleView alloc] initWithFrame:CGRectMake(0, 0, 320, 260)];

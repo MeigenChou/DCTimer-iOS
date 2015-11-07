@@ -53,7 +53,7 @@ int segSel;
     [c2slider setValue:gcolor/255.0];
     [c3slider setValue:bcolor/255.0];
     [self setLabelText];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"done", @"") style:UIBarButtonItemStylePlain target:self action:@selector(changeColor)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:[DCTUtils getString:@"done"] style:UIBarButtonItemStylePlain target:self action:@selector(changeColor)];
     // Do any additional setup after loading the view from its nib.
     
 }

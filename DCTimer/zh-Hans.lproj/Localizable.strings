@@ -110,6 +110,11 @@
 "textcolor" = "文字颜色";
 "version" = "版本";
 "about" = "关于";
+"gesture" = "手势说明";
+"rate_app" = "如果你喜欢，请评分";
+"email_feedback" = "意见反馈";
+"licenses" = "许可证";
+"feedback" = "反馈";
 
 "stat_title" = "统计信息由DCTimer生成于";
 "stat_solve" = "完成次数/尝试次数：";
@@ -130,3 +135,16 @@
 "deleteses" = "删除分组";
 "clearses" = "清空分组成绩";
 "rename" = "重命名";
+
+"1fhold" = "单指长按计时界面";
+"sr" = "向右轻扫";
+"sl" = "向左轻扫";
+"1f2t" = "单指双击";
+"su" = "向上轻扫";
+"sd" = "向下轻扫";
+"1fholddo" = "启动计时器";
+"srdo" = "生成新打乱";
+"sldo" = "删除上一次成绩";
+"1f2tdo" = "无";
+"sudo" = "修改惩罚";
+"sddo" = "清除分组成绩";

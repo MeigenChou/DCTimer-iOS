@@ -42,10 +42,9 @@ int movesOld[][18] = {
     {1,1,1,1,1,1,1,1,1,  -1, 0,-1, 0, 0, 0,-1, 0,-1},//UUUU
     {1,0,1,0,0,0,1,0,1,  -1,-1,-1,-1,-1,-1,-1,-1,-1},//dddd
 };
-int clkIdx[] = {1, 3, 2, 0};
+
 int posit[18];
 int pegs[4];
-int epoIdx[] = {12, 8, 1, 5, 11, 0, 4, 10, 3, 7, 9, 2, 6, 13};
 
 - (id) init {
     if(self = [super init]) {
@@ -89,6 +88,7 @@ int epoIdx[] = {12, 8, 1, 5, 11, 0, 4, 10, 3, 7, 9, 2, 6, 13};
         while( posit[j]<=0 ) posit[j]+=12;
     }
     bool isFirst = true;
+    int clkIdx[] = {1, 3, 2, 0};
     for(x=0; x<4; x++) {
         pegs[clkIdx[x]] = rand()%2;
         if (pegs[clkIdx[x]] == 0) {
@@ -149,6 +149,7 @@ int epoIdx[] = {12, 8, 1, 5, 11, 0, 4, 10, 3, 7, 9, 2, 6, 13};
     for(i=0; i<14; i++){
         seq[i] = rand()%12-5;
     }
+    int epoIdx[] = {12, 8, 1, 5, 11, 0, 4, 10, 3, 7, 9, 2, 6, 13};
     for( i=0; i<14; i++){
         for( j=0; j<18; j++){
             posit[j]+=seq[i]*movesOld[epoIdx[i]][j];

@@ -15,17 +15,11 @@
 @end
 
 @implementation DCTSessionViewController
-@synthesize dbh = _dbh;
+@synthesize dbh;
 NSMutableArray *session;
 extern int currentSesIdx;
 int selectedSesIdx;
 bool isDefSes;
-
-- (DCTData *)dbh {
-    if(!_dbh)
-        _dbh = [[DCTData alloc] init];
-    return _dbh;
-}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -33,6 +27,7 @@ bool isDefSes;
     if (self) {
         self.title = NSLocalizedString(@"session", @"");
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"newses", @"") style:UIBarButtonItemStylePlain target:self action:@selector(newSes)];
+        self.dbh = [[DCTData alloc] init];
     }
     return self;
 }
@@ -99,10 +94,12 @@ bool isDefSes;
             [self.dbh clearSession:selectedSesIdx];
             [self.dbh deleteSession:selectedSesIdx];
             [session removeObjectAtIndex:selectedSesIdx];
-            currentSesIdx = 0;
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setInteger:0 forKey:@"crntsesidx"];
-            [self.dbh query:0];
+            if(selectedSesIdx == currentSesIdx) {
+                currentSesIdx = 0;
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                [defaults setInteger:0 forKey:@"crntsesidx"];
+                [self.dbh query:currentSesIdx];
+            }
             [self.tableView reloadData];
             break;
         }

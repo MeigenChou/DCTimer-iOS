@@ -9,11 +9,20 @@
 #import "DCTSettingsViewController.h"
 #import "DCTSecondLevelViewController.h"
 #import "DCTColorPickerViewController.h"
+#import "DCTHelpViewController.h"
 #import "DCTAboutViewController.h"
 #import "DCTUtils.h"
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h>
+#import "sys/utsname.h"
+
+@interface DCTSettingsViewController ()
+@property (nonatomic, strong) DCTHelpViewController *helpView;
+@end
 
 @implementation DCTSettingsViewController
 @synthesize fTime;
+@synthesize helpView;
 int timerupd, accuracy;
 int cside, cxe, sqshp;
 bool wcaInst, clkFormat;
@@ -53,7 +62,7 @@ bool tfChanged = false;
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     //#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 5;
+    return 6;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -88,7 +97,7 @@ bool tfChanged = false;
         case 4:
             return 2;
         case 5:
-            return 1;
+            return 4;
         default:
             return 0;
     }
@@ -311,7 +320,7 @@ bool tfChanged = false;
                 {
                     cell.textLabel.text = NSLocalizedString(@"sq_shape_solver", @"");
                     if(isEn) {
-                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
+                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:16];
                         else cell.textLabel.font = [UIFont boldSystemFontOfSize:16];
                     }
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"none", @""), @"Face turn metric", @"Twist metric", nil];
@@ -359,7 +368,40 @@ bool tfChanged = false;
         case 5:
             switch (indexPath.row) {
                 case 0:
-                    cell.textLabel.text = NSLocalizedString(@"about", @"");
+                    cell.textLabel.text = NSLocalizedString(@"gesture", @"");
+                    if(isEn) {
+                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
+                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    }
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                case 1:
+                    cell.textLabel.text = NSLocalizedString(@"rate_app", @"");
+                    if(isEn) {
+                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
+                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    }
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                case 2:
+                    cell.textLabel.text = NSLocalizedString(@"email_feedback", @"");
+                    if(isEn) {
+                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
+                        else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+                    }
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                case 3:
+                    cell.textLabel.text = NSLocalizedString(@"licenses", @"");
                     if(isEn) {
                         if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
                         else cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
@@ -467,6 +509,24 @@ bool tfChanged = false;
             switch (indexPath.row) {
                 case 0:
                 {
+                    if(!helpView) {
+                        helpView = [[DCTHelpViewController alloc] initWithStyle:UITableViewStyleGrouped];
+                    }
+                    helpView.title = NSLocalizedString(@"gesture", @"");
+                    [self.navigationController pushViewController:helpView animated:YES];
+                    break;
+                }
+                case 1:
+                {
+                    NSString *str = [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%d", 794870196];
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+                    break;
+                }
+                case 2:
+                    [self sendFeedback];
+                    break;
+                case 3:
+                {
                     DCTAboutViewController *aboutView = [[DCTAboutViewController alloc] init];
                     //aboutView.title = NSLocalizedString(@"", @"");
                     [self.navigationController pushViewController:aboutView animated:YES];
@@ -528,5 +588,79 @@ bool tfChanged = false;
     //NSLog(@"%d", progressAsInt);
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setInteger:progressAsInt forKey:@"freezeslide"];
+}
+
+- (NSString *)getDeviceString {
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    return [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+}
+
+- (NSString *)getAppVersion {
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    return [NSString stringWithFormat:@"v%@", version];
+}
+
+- (void)sendFeedback
+{
+    Class mailClass = (NSClassFromString(@"MFMailComposeViewController"));
+    if (mailClass != nil) {
+        if ([mailClass canSendMail]) [self displayMailPicker];
+        else [self launchMailAppOnDevice];
+    } else [self launchMailAppOnDevice];
+}
+
+//调出邮件发送窗口
+- (void)displayMailPicker
+{
+    MFMailComposeViewController *mailPicker = [[MFMailComposeViewController alloc] init];
+    mailPicker.mailComposeDelegate = self;
+    //设置主题
+    [mailPicker setSubject: [NSString stringWithFormat:@"DCTimer %@ %@", [self getAppVersion], NSLocalizedString(@"feedback", @"")]];
+    //添加收件人
+    NSArray *toRecipients = [NSArray arrayWithObject: @"meigenchou@foxmail.com"];
+    [mailPicker setToRecipients: toRecipients];
+    NSString *emailBody = [NSString stringWithFormat:@"(%@, iOS %@)\n", [self getDeviceString], [[UIDevice currentDevice] systemVersion]];
+    [mailPicker setMessageBody:emailBody isHTML:YES];
+    [self presentModalViewController: mailPicker animated:YES];
+}
+
+- (void)launchMailAppOnDevice
+{
+    NSString *subject = [NSString stringWithFormat:@"DCTimer %@ %@", [self getAppVersion], NSLocalizedString(@"feedback", @"")];
+    NSString *body = [NSString stringWithFormat:@"(%@, iOS %@)\n", [self getDeviceString], [[UIDevice currentDevice] systemVersion]];
+    NSString *email = [NSString stringWithFormat:@"mailto:meigenchou@foxmail.com?subject=%@&body=%@", subject, body];
+    email = [email stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+    [[UIApplication sharedApplication] openURL: [NSURL URLWithString:email]];
+}
+
+#pragma mark - 实现 MFMailComposeViewControllerDelegate
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    NSString *msg;
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            NSLog(@"邮件发送取消");
+            break;
+        case MFMailComposeResultSaved:
+            msg = @"邮件保存成功";
+            NSLog(@"邮件保存成功");
+            break;
+        case MFMailComposeResultSent:
+            msg = @"邮件发送成功";
+            
+            NSLog(@"邮件发送成功");
+            break;
+        case MFMailComposeResultFailed:
+            msg = @"邮件发送失败";
+            NSLog(@"邮件发送失败");
+            break;
+        default:
+            break;
+    }
+    [self dismissModalViewControllerAnimated:YES];
 }
 @end

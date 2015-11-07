@@ -43,8 +43,8 @@
 - (NSString *)currentMean3;
 - (NSString *)getBestMean3;
 - (int)getBestMeanIdx;
-- (int) getMaxIndex;
-- (int) getMinIndex;
+- (int)getMaxIndex;
+- (int)getMinIndex;
 - (void)getSessionAvg;
 - (NSString *)getSessionAvgSD;
 - (void)getAvgs20:(int)idx;

@@ -28,7 +28,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.title = NSLocalizedString(@"about", @"");
+    self.navigationItem.title = [DCTUtils getString:@"licenses"];
     if([DCTUtils isOS7]) {
         CGSize bounds = [DCTUtils getBounds];
         webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, bounds.width, bounds.height)];
@@ -47,6 +47,16 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    if ([DCTUtils isPhone]) {
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    } else {
+        return YES;
+    }
 }
 
 @end

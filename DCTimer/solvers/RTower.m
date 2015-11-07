@@ -26,7 +26,7 @@ char cpdr[40320];
 char epdr[40320];
 char eodr[2187];
 int facesr[] = {1,1,3,3};
-int seqr[35];
+int seqr[40];
 int lenr1;
 
 - (id) init {
@@ -46,7 +46,7 @@ int lenr1;
     for (int i = 0; i < 40320; i++) {
         for (int j = 0; j < 6; j++) {
             [Im set8Perm:arr i:i];
-            switch(j){
+            switch(j) {
 				case 0: [Im cir:arr a:4 b:5 c:6 d:7]; break;	//D
 				case 1: [Im cir:arr a:1 b:2 c:6 d:5]; break;	//R
 				case 2: [Im cir:arr a:2 b:3 c:7 d:6]; break;	//F
@@ -54,18 +54,18 @@ int lenr1;
 				case 4: [Im cir:arr a:0 b:4 c:7 d:3]; break;	//L
 				case 5: [Im cir:arr a:0 b:1 c:5 d:4]; break;	//B
             }
-            if(j>0)epmr[i][j-1] = [Im get8Perm:arr];
+            if(j>0) epmr[i][j-1] = [Im get8Perm:arr];
             switch(j){
 				case 1: [Im cir:arr a:1 b:2 c:6 d:5]; break;	//R
 				case 2: [Im cir:arr a:2 b:3 c:7 d:6]; break;	//F
             }
-            if(j<4)cpmr[i][idx[j]]= [Im get8Perm:arr];
+            if(j<4) cpmr[i][idx[j]]= [Im get8Perm:arr];
         }
     }
     for (int i = 0; i < 2187; i++) {
         for (int j = 0; j < 5; j++) {
             [Im idxToZsOri:arr i:i n:3 l:8];
-            switch(j){
+            switch(j) {
 				case 2: [Im cir:arr a:0 b:3 c:2 d:1]; break;	//U
 				case 0: [Im cir:arr a:1 b:2 c:6 d:5];
                     arr[1]++; arr[2]+=2; arr[6]++; arr[5]+=2;
@@ -181,7 +181,7 @@ int lenr1;
     if (d == 0) return eo == 0 && ep == 0;
     if (epdr[ep] > d || eodr[eo] > d) return false;
     for (int i = 0; i < 5; i++) {
-        if (i != lf) {
+        if (lf==-1 || i%3!=lf%3) {
             int y=eo, s=ep;
             for(int j=0; j<3; j++){
                 y=eomr[y][i]; s=epmr[s][i];

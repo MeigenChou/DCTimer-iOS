@@ -7,7 +7,6 @@
 //
 
 #import "Scrambler.h"
-//#import "Cube.h"
 #import "Cube222.h"
 #import "Pyraminx.h"
 #import "Megaminx.h"
@@ -55,12 +54,9 @@
 @synthesize latch, floppy;
 @synthesize rtow, sqShape;
 int cubeSize;
-int colorPerm[] = {0, 5, 1, 3, 2, 4};
 int viewType;
-NSMutableArray *scrSeq;
 NSMutableArray *scrPosit;
 NSMutableArray *flat2posit;
-//NSArray *cubesuff;
 
 - (id)init {
     if(self = [super init]) {
@@ -68,10 +64,6 @@ NSMutableArray *flat2posit;
         //cubesuff = [[NSArray alloc] initWithObjects:@"", @"2", @"'", nil];
     }
     return self;
-}
-
-- (int) viewType {
-    return viewType;
 }
 
 - (NSString *)scramble222: (int) type {
@@ -141,9 +133,8 @@ NSMutableArray *flat2posit;
 }
 
 - (NSString *)solveSqShape:(NSString *)scr m:(int)metric {
-    if(!sqShape) {
+    if(!sqShape)
         sqShape = [[Sq1Shape alloc] init];
-    }
     if(metric==1) {
         return [sqShape solveTrn:scr];
     } else if(metric==2) {
@@ -153,10 +144,6 @@ NSMutableArray *flat2posit;
 }
 
 - (NSString *)scramble333: (int) type {
-    //if(!_sq1) self.sq1 = [[Sq12phase alloc] init];
-    //NSString *temp = [self.sq1 scrSq1];
-    //if(!_cube) self.cube = [[Cube alloc] init];
-    //return [self.cube scramble:3 sel:25];
     if(!cube3) cube3 = [[TwoPhaseScrambler alloc] init];
     NSString *temp = [cube3 scramble: type];
     return temp;
@@ -351,7 +338,6 @@ NSMutableArray *flat2posit;
     // adjacency table
     int adj[] = {0x9a, 0x35, 0x6a, 0xc5, 0x303, 0x606, 0xc0c, 0x909, 0xa90, 0x530, 0xa60, 0x5c0};
     // now generate the scramble(s)
-    
     NSMutableString *s = [NSMutableString string];
     for(j=0;j<12;j++){
         used[j] = 0;
@@ -464,7 +450,7 @@ NSMutableArray *flat2posit;
 
 int bicD[][9] = {{0,1,2,5,8,7,6,3,4},{6,7,8,13,20,19,18,11,12},{0,3,6,11,18,17,16,9,10},{8,5,2,15,22,21,20,13,14}};
 int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
-- (BOOL) canMove:(int) face {
+- (BOOL)canMove:(int) face {
     int u[8];
     int ulen=0, i, j, done, z=0;
     for (i=0; i<9; i++) {
@@ -1146,6 +1132,7 @@ int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
     }
     d=0;
     NSMutableArray *img = [[NSMutableArray alloc] init];
+    int colorPerm[] = {0, 5, 1, 3, 2, 4};
     for(i=0;i<3*size;i++){
         for(f=0;f<4*size;f++){
             int fd = [[flat2posit objectAtIndex:d] intValue];

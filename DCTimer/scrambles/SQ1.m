@@ -13,7 +13,6 @@
 
 @implementation SQ1
 int sqPosit[24];
-bool sqMi;
 
 - (id) init {
     if(self = [super init]) {
@@ -164,7 +163,7 @@ bool sqMi;
 + (NSMutableArray *)imagestr:(NSString *)s {
     NSArray *scr = [s componentsSeparatedByString:@" "];
     [SQ1 initPosit];
-    sqMi = true;
+    BOOL sqMi = YES;
     for (int i=0; i<[scr count]; i++) {
         if ([[scr objectAtIndex:i] isEqualToString:@"/"]) {
             [SQ1 doMove:0];
@@ -185,6 +184,7 @@ bool sqMi;
     NSMutableArray *img = [[NSMutableArray alloc] init];
     for (int i=0; i<24; i++)
         [img addObject:@(sqPosit[i])];
+    [img addObject:@(sqMi)];
     return img;
 }
 @end

@@ -29,6 +29,10 @@ extern bool clkFormat;
     return [s substringWithRange:NSMakeRange(start, end - start)];
 }
 
++ (NSString *)getString:(NSString *)str {
+    return NSLocalizedString(str, @"");
+}
+
 + (int)binarySearch:(int[])a ti:(int)toIndex key:(int)key {
     int low = 0;
 	int high = toIndex - 1;
@@ -78,11 +82,11 @@ extern bool clkFormat;
 }
 
 + (NSArray *)getScrType {
-    NSArray *scrType = [[NSArray alloc] initWithObjects:NSLocalizedString(@"c2", @""), NSLocalizedString(@"c3", @""), NSLocalizedString(@"c4", @""), NSLocalizedString(@"c5", @""), NSLocalizedString(@"c6", @""), NSLocalizedString(@"c7", @""), NSLocalizedString(@"mx", @""), NSLocalizedString(@"py", @""), NSLocalizedString(@"sq", @""), NSLocalizedString(@"cl", @""), NSLocalizedString(@"sk", @""), @"LxMxN", @"Cmetrick", NSLocalizedString(@"gr", @""), @"Siamese cube", @"15 puzzle", NSLocalizedString(@"ot", @""), NSLocalizedString(@"3s", @""), NSLocalizedString(@"bd", @""), NSLocalizedString(@"ms", @""), nil];
+    NSArray *scrType = [[NSArray alloc] initWithObjects:[DCTUtils getString:@"c2"], [DCTUtils getString:@"c3"], [DCTUtils getString:@"c4"], [DCTUtils getString:@"c5"], [DCTUtils getString:@"c6"], [DCTUtils getString:@"c7"], [DCTUtils getString:@"mx"], [DCTUtils getString:@"py"], [DCTUtils getString:@"sq"], [DCTUtils getString:@"cl"], [DCTUtils getString:@"sk"], @"LxMxN", @"Cmetrick", [DCTUtils getString:@"gr"], @"Siamese cube", @"15 puzzle", [DCTUtils getString:@"ot"], [DCTUtils getString:@"3s"], [DCTUtils getString:@"bd"], [DCTUtils getString:@"ms"], nil];
     return scrType;
 }
 
-+ (CGFloat) getScreenWidth {
++ (CGFloat)getScreenWidth {
     CGFloat screenWidth;
     screenWidth = [UIScreen mainScreen].applicationFrame.size.width;
     if (screenWidth == 748.0f) {
@@ -91,7 +95,7 @@ extern bool clkFormat;
     return screenWidth;
 }
 
-+ (float) heightForString:(NSString *)value fontSize:(float)fontSize {
++ (float)heightForString:(NSString *)value fontSize:(float)fontSize {
     CGSize size = [value sizeWithFont:[UIFont systemFontOfSize:fontSize] constrainedToSize:CGSizeMake([self getScreenWidth] - 20, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
     //CGSize sizeToFit = [value sizeWithFont:[UIFont systemFontOfSize:fontSize] constrainedToSize:CGSizeMake(width, CGFLOAT_MAX) lineBreakMode:UILineBreakModeCharacterWrap];//此处的换行类型（lineBreakMode）可根据自己的实际情况进行设置
     if(size.height < 24) return 44.0;

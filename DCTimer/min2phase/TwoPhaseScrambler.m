@@ -225,9 +225,9 @@ extern int arrc[2][12];
     return [self randomState:STATE_SOLVED co:co ep:ep eo:STATE_SOLVED];
 }
 
-- (NSString *)randomEasyCross:(int)depth {
+- (NSString *)randomEasyCross {
     Cross *cr = [[Cross alloc] init];
-    [cr easyCross:depth];
+    [cr easyCross];
     return [self randomState:STATE_RANDOM co:STATE_RANDOM ep:arrc[0] eo:arrc[1]];
 }
 
@@ -312,7 +312,7 @@ extern int arrc[2][12];
         case 11:
             sw = rand()%4; cube = [self randomL10p:sw]; break;
         case 12:
-            cube = [self randomEasyCross:3]; break;
+            cube = [self randomEasyCross]; break;
         case 13:
             cube = [self random2GLL]; break;
         default:

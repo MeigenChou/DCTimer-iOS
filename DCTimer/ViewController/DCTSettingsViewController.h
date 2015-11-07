@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h>
 
-@interface DCTSettingsViewController : UITableViewController
+@interface DCTSettingsViewController : UITableViewController <MFMailComposeViewControllerDelegate>
 @property(nonatomic, strong) UILabel *fTime;
 @end

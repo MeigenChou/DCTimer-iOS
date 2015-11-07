@@ -20,17 +20,21 @@
 @synthesize rest;
 @synthesize time;
 @synthesize scramble;
-@synthesize resi;
-@synthesize dbh = _dbh;
-NSMutableArray *resInfo;
+@synthesize dbh;
+int resIdx;
+int resPen;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
+    if (self = [super initWithStyle:style]) {
+        self.dbh = [[DCTData alloc] init];
     }
     return self;
+}
+
+- (void)setDetail:(int)idx penalty:(int)pen {
+    resIdx = idx;
+    resPen = pen;
 }
 
 - (void)viewDidLoad
@@ -43,7 +47,6 @@ NSMutableArray *resInfo;
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"title_more.png"] style:UIBarButtonItemStylePlain target:self action:@selector(displayActionSheet)];
-    resInfo = [[NSMutableArray alloc] initWithObjects:[resi objectAtIndex:0], [resi objectAtIndex:1], nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -97,7 +100,6 @@ NSMutableArray *resInfo;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             break;
     }
-    
     return cell;
 }
 
@@ -156,12 +158,6 @@ NSMutableArray *resInfo;
 }
 */
 
-- (DCTData *)dbh {
-    if(!_dbh)
-        _dbh = [[DCTData alloc] init];
-    return _dbh;
-}
-
 - (void) displayActionSheet {
     UIActionSheet *actionSheet = [[UIActionSheet alloc]
                                   initWithTitle:NSLocalizedString(@"option", @"") delegate:self
@@ -175,31 +171,20 @@ NSMutableArray *resInfo;
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    int idx = [[resInfo objectAtIndex:0] intValue];
-    NSString *pena = [resInfo objectAtIndex:1];
     //NSLog(@"%d %@", idx, pena);
     switch (buttonIndex) {
         case 0: //delete
-            [self.dbh deleteTimeAtIndex:idx];
-            [self.dbh deleteTime:idx];
+            [self.dbh deleteTimeAtIndex:resIdx];
+            [self.dbh deleteTime:resIdx];
             [self.navigationController popToRootViewControllerAnimated:YES];
             break;
         case 1: //no penalty
-            if(![pena isEqualToString:@"n"]) {
-                [self change:idx pen:0];
-                [resInfo replaceObjectAtIndex:1 withObject:@"n"];
-            }
-            break;
         case 2: //+2
-            if(![pena isEqualToString:@"p"]) {
-                [self change:idx pen:1];
-                [resInfo replaceObjectAtIndex:1 withObject:@"p"];
-            }
-            break;
         case 3: //DNF
-            if(![pena isEqualToString:@"d"]) {
-                [self change:idx pen:2];
-                [resInfo replaceObjectAtIndex:1 withObject:@"d"];
+            NSLog(@"%d %d", resPen, buttonIndex-1);
+            if(resPen != buttonIndex-1) {
+                [self change:resIdx pen:buttonIndex-1];
+                resPen = buttonIndex-1;
             }
             break;
         case 4: //copy scr

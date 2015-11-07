@@ -215,9 +215,7 @@ extern bool issChange;
         detailController.rest = selectedTime;
         detailController.time = time;
         detailController.scramble = scr;
-        NSArray *penalty = [[NSArray alloc] initWithObjects:@"n", @"p", @"d", nil];
-        NSArray *resInfo = [[NSArray alloc]initWithObjects:[NSNumber numberWithInt:idx], [penalty objectAtIndex:[self.mi getPenaltyAtIndex:idx]], nil];
-        detailController.resi = resInfo;
+        [detailController setDetail:idx penalty:[self.mi getPenaltyAtIndex:idx]];
         detailController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:detailController animated:YES];
     }

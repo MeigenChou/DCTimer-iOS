@@ -26,8 +26,6 @@ short epmEo[132][6];
 char eodEo[2048];
 char epdEo[132];
 
-bool inieo = false;
-
 - (id)init {
     if(self = [super init]) {
         faceStr = [[NSArray alloc] initWithObjects:@"DF DB", @"DL DR", @"UF UB", @"UL UR",
@@ -38,6 +36,7 @@ bool inieo = false;
                   @" z'", @" z' y", @" z", @" z y", @" x'", @" x' y", @" x", @" x y", nil];
         self.turn = [[NSArray alloc] initWithObjects:@"U", @"D", @"L", @"R", @"F", @"B", nil];
         self.suff = [[NSArray alloc] initWithObjects:@"", @"2", @"'", nil];
+        [self initeo];
     }
     return self;
 }
@@ -79,7 +78,6 @@ bool inieo = false;
 }
 
 - (void)initeo {
-    if(inieo) return;
     int arr[12];
     for(int i=0; i<2048; i++){
         for(int j=0; j<6; j++) {
@@ -142,7 +140,6 @@ bool inieo = false;
                 }
         //System.out.println(d+" "+n);
     }
-    inieo=true;
 }
 
 - (bool)search:(int)eo ep:(int)ep d:(int)depth l:(int)l {
@@ -188,7 +185,6 @@ bool inieo = false;
 }
 
 - (NSString *)eoLine:(NSString *)scr side:(int)side {
-    [self initeo];
     return [NSString stringWithFormat:@"\n%@\n%@", [self solve:scr side:side*2], [self solve:scr side:side*2+1]];
 }
 @end

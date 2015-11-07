@@ -9,15 +9,13 @@
 #import "DCTData.h"
 #import <sqlite3.h>
 #import "DCTUtils.h"
-@interface DCTData ()
-@property (nonatomic, strong) NSMutableArray *resultId;
-@end
 
 @implementation DCTData
-@synthesize resultId;
+
 sqlite3 *database;
 int dbLastId = 0;
 int sesLastId = 0;
+NSMutableArray *resultId;
 NSMutableArray *sesData;
 int crntSesId = 0;
 
@@ -836,4 +834,3 @@ bool issChange = true;
     return s;
 }
 @end
- 

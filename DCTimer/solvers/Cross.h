@@ -12,6 +12,6 @@
 
 - (NSString *) cross:(NSString *)scr side:(int)sd;
 - (NSString *)xcross:(NSString *)scr side:(int)sd;
-- (void)easyCross:(int)depth;
+- (void)easyCross;
 
 @end

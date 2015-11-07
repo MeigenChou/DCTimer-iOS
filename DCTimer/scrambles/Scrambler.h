@@ -16,5 +16,4 @@
 - (NSString *)solveSqShape:(NSString *)scr m:(int)metric;
 + (NSMutableArray *) imageString:(int)size scr:(NSString *)scr;
 - (void) initSq1;
-- (int) viewType;
 @end
