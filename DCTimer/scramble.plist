@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>2x2</key>
+	<array>
+		<string>random state</string>
+		<string>3-gen</string>
+		<string>6-gen</string>
+		<string>CLL training</string>
+		<string>EG1 training</string>
+		<string>EG2 training</string>
+		<string>PBL training</string>
+		<string>TCLL+ training</string>
+		<string>TCLL- training</string>
+	</array>
+	<key>3x3</key>
+	<array>
+		<string>random state</string>
+		<string>old style</string>
+		<string>cross solved</string>
+		<string>last layer</string>
+		<string>PLL</string>
+		<string>corners only</string>
+		<string>edges only</string>
+		<string>LSLL</string>
+		<string>ZBLL</string>
+		<string>CLL</string>
+		<string>ELL</string>
+		<string>last six edges</string>
+		<string>CMLL</string>
+		<string>easy cross</string>
+		<string>2GLL</string>
+	</array>
+	<key>4x4</key>
+	<array>
+		<string>old style</string>
+		<string>SiGN</string>
+		<string>YJ</string>
+		<string>edges</string>
+		<string>R, r, U, u</string>
+	</array>
+	<key>5x5</key>
+	<array>
+		<string>WCA</string>
+		<string>SiGN</string>
+		<string>edges</string>
+	</array>
+	<key>6x6</key>
+	<array>
+		<string>prefix</string>
+		<string>SiGN</string>
+		<string>suffix</string>
+		<string>edges</string>
+	</array>
+	<key>7x7</key>
+	<array>
+		<string>prefix</string>
+		<string>SiGN</string>
+		<string>suffix</string>
+		<string>edges</string>
+	</array>
+	<key>Megaminx</key>
+	<array>
+		<string>WCA</string>
+		<string>old style</string>
+	</array>
+	<key>Pyraminx</key>
+	<array>
+		<string>random state</string>
+		<string>random moves</string>
+	</array>
+	<key>Square-1</key>
+	<array>
+		<string>random state</string>
+		<string>face turn metric</string>
+		<string>twist metric</string>
+		<string>cube shape</string>
+	</array>
+	<key>Clock</key>
+	<array>
+		<string>WCA</string>
+		<string>Jaap order</string>
+		<string>concise</string>
+		<string>efficient pin order</string>
+	</array>
+	<key>Skewb</key>
+	<array>
+		<string>random state</string>
+		<string>R U L B</string>
+	</array>
+	<key>LxMxN</key>
+	<array>
+		<string>1x3x3(Floppy)</string>
+		<string>Super 1x3x3</string>
+		<string>2x3x3(Domino)</string>
+		<string>2x2x3</string>
+		<string>2x2x4</string>
+		<string>3x3x4</string>
+		<string>3x3x5</string>
+		<string>3x3x6</string>
+		<string>3x3x7</string>
+		<string>8x8x8</string>
+		<string>9x9x9</string>
+	</array>
+	<key>Cmetrick</key>
+	<array>
+		<string>normal</string>
+		<string>mini</string>
+	</array>
+	<key>Gear cube</key>
+	<array>
+		<string>random state</string>
+		<string>3-gen</string>
+	</array>
+	<key>Siamese cube</key>
+	<array>
+		<string>1x1x3 block</string>
+		<string>1x2x3 block</string>
+		<string>2x2x2 block</string>
+	</array>
+	<key>15 puzzle</key>
+	<array>
+		<string>piece moves</string>
+		<string>blank moves</string>
+	</array>
+	<key>Other</key>
+	<array>
+		<string>Latch cube</string>
+		<string>Helicoper</string>
+		<string>Square-2</string>
+		<string>Super SQ1</string>
+		<string>UFO</string>
+		<string>FTO</string>
+	</array>
+	<key>3x3 subsets</key>
+	<array>
+		<string>2-gen R, U</string>
+		<string>2-gen L, U</string>
+		<string>Roux-gen M, U</string>
+		<string>3-gen F, R, U</string>
+		<string>3-gen R, U, L</string>
+		<string>3-gen R, r, U</string>
+		<string>half turns only</string>
+		<string>LSLL(old)</string>
+	</array>
+	<key>Bandaged cube</key>
+	<array>
+		<string>Bicube</string>
+		<string>SQ1 /,(1,0)</string>
+	</array>
+	<key>Megaminx subsets</key>
+	<array>
+		<string>2-gen R, U</string>
+		<string>LSLL</string>
+	</array>
+</dict>
+</plist>

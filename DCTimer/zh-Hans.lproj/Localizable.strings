@@ -1,0 +1,132 @@
+/* 
+  Localizable.strings
+  DCTimer
+
+  Created by MeigenChou on 13-3-14.
+  Copyright (c) 2013年 MeigenChou. All rights reserved.
+*/
+"language" = "zh_CN";
+"timer" = "计时";
+"results" = "成绩";
+"settings" = "设置";
+
+"cancel" = "取消";
+"done" = "完成";
+"ok" = "确定";
+"close" = "关闭";
+"time" = "时间";
+
+"c2" = "2阶";
+"c3" = "3阶";
+"c4" = "4阶";
+"c5" = "5阶";
+"c6" = "6阶";
+"c7" = "7阶";
+"mx" = "五魔方";
+"py" = "金字塔";
+"sq" = "SQ1";
+"cl" = "魔表";
+"sk" = "斜转";
+"gr" = "齿轮魔方";
+"ot" = "其他";
+"3s" = "3阶子集";
+"bd" = "捆绑魔方";
+"ms" = "五魔子集";
+
+"scramble_view" = "打乱状态";
+"scramble_type" = "打乱类型";
+"not_support" = "暂不支持的打乱类型";
+"scrambling" = "打乱中…";
+"invalid_in" = "无效输入";
+
+"session" = "分组";
+"stats" = "统计";
+"detail" = "详情";
+
+"option" = "选项";
+"delete" = "删除";
+"nopen" = "无惩罚";
+"copyscr" = "复制打乱";
+"copysuccess" = "已复制到剪贴板";
+"copy" = "复制";
+"save" = "保存";
+"deletelast" = "删除上一次成绩";
+"intime" = "输入时间";
+"conf_delses" = "删除分组所有成绩";
+"last_solve" = "上一次时间：";
+
+"solve" = "还原";
+"inspect" = "观察";
+
+"numbercube" = "还原次数/尝试次数:";
+"besttime" = "最快单次:";
+"worsttime" = "最慢单次:";
+"currentavg5" = "当前5次去尾平均:";
+"bestavg5" = "最快5次去尾平均:";
+"currentavg12" = "当前12次去尾平均:";
+"bestavg12" = "最快12次去尾平均:";
+"currentavg50" = "当前50次去尾平均:";
+"bestavg50" = "最快50次去尾平均:";
+"currentavg100" = "当前100次去尾平均:";
+"bestavg100" = "最快100次去尾平均:";
+"sesmean" = "总平均:";
+"sesavg" = "去尾平均:";
+"currentmean3" = "当前3次平均:";
+"bestmean3" = "最快3次平均:";
+"calcing" = "计算中…";
+
+"WCAinsp" = "WCA 观察";
+"clockformat" = "超过1分钟的按分钟显示";
+"timerupd" = "计时器更新方式";
+"On" = "实时";
+"secondsonly" = "到秒";
+"insponly" = "仅观察";
+"Off" = "隐藏";
+"accuracy" = "计时器精确度";
+"0.001sec" = "0.001秒";
+"0.01sec" = "0.01秒";
+"pressingtime" = "计时器启动延时";
+"input_time" = "手动输入成绩";
+"scramble" = "打乱";
+"hide_scr" = "计时中隐藏打乱";
+"stt_stats" = "统计";
+"prompttime" = "提示对每次成绩的操作";
+"printscr" = "详细成绩中显示打乱";
+"tools" = "工具";
+"cross" = "三阶十字求解";
+"3solver" = "三阶相关求解";
+"solcolor" = "底色";
+"sq_shape_solver" = "SQ1复形求解";
+"none" = "无";
+"dside" = "D(黄)";
+"uside" = "U(白)";
+"lside" = "L(橙)";
+"rside" = "R(红)";
+"fside" = "F(绿)";
+"bside" = "B(蓝)";
+"more" = "更多";
+"interface" = "界面";
+"bgcolor" = "背景颜色";
+"textcolor" = "文字颜色";
+"version" = "版本";
+"about" = "关于";
+
+"stat_title" = "统计信息由DCTimer生成于";
+"stat_solve" = "完成次数/尝试次数：";
+"stat_avg" = "去尾平均：";
+"stat_mean" = "平均：";
+"ses_avg" = "去尾平均：";
+"ses_mean" = "总平均：";
+"stat_best" = "最快单次：";
+"stat_worst" = "最慢单次：";
+"stat_list" = "成绩列表：";
+"title_avg" = "详细成绩：len次去尾平均";
+"title_mean" = "详细成绩：len次平均";
+"title_ses" = "详细成绩：本组平均";
+
+"defsession" = "默认分组";
+"selected" = "已选中";
+"newses" = "新建分组";
+"deleteses" = "删除分组";
+"clearses" = "清空分组成绩";
+"rename" = "重命名";
