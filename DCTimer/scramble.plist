@@ -52,6 +52,7 @@
 		<string>SiGN</string>
 		<string>suffix</string>
 		<string>edges</string>
+		<string>WCA</string>
 	</array>
 	<key>7x7</key>
 	<array>
@@ -59,6 +60,7 @@
 		<string>SiGN</string>
 		<string>suffix</string>
 		<string>edges</string>
+		<string>WCA</string>
 	</array>
 	<key>Megaminx</key>
 	<array>

@@ -112,6 +112,7 @@ extern NSInteger dateForm;
 }
 
 - (int)getSessionCount:(int)sesIdx {
+    if(sesIdx > sesData.count) return 0;
     if(sesIdx!=0) sesIdx = [[[sesData objectAtIndex:sesIdx-1] objectAtIndex:0] intValue];
     NSString *sql = [NSString stringWithFormat:@"select count(*) from resulttb where sesid=%d", sesIdx];
     sqlite3_stmt *statement;

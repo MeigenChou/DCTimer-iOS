@@ -41,7 +41,7 @@ float rotatx[5], rotaty[5];
     CGContextSetLineWidth(context, 1.0);
     CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
     if(!showScr) return;
-    int wid = [DCTUtils isPad] ? 320 : 200;
+    int wid = [DCTUtils isPad] ? 320 : ([DCTUtils getFrame].width * 0.625);
     int a, b, d, i, j;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     switch (viewType) {

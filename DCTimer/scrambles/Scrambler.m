@@ -701,6 +701,10 @@ int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
             scr = [self edgeScramble:start end:end moves:moves len:10];
             viewType=6; break;
         }
+        case 132:
+            turn = [[NSArray alloc] initWithObjects:@"U", @"Uw", @"3Uw", @"Dw", @"D", @"L", @"Lw", @"3Rw", @"Rw", @"R", @"F", @"Fw", @"3Fw", @"Bw", @"B", nil];
+            scr = [self megascramble:turn len:3 suf:cubesuff sql:80];
+            viewType=6; break;
         case 160:   //7x7
             turn = [[NSArray alloc] initWithObjects:@"U", @"2U", @"3U", @"3D", @"2D", @"D", @"L", @"2L", @"3L", @"3R", @"2R", @"R", @"F", @"2F", @"3F", @"3B", @"2B", @"B", nil];
             scr = [self megascramble:turn len:3 suf:cubesuff sql:100];
@@ -721,6 +725,10 @@ int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
             scr = [self edgeScramble:start end:end moves:moves len:11];
             viewType=7; break;
         }
+        case 164:
+            turn = [[NSArray alloc] initWithObjects:@"U", @"Uw", @"3Uw", @"3Dw", @"Dw", @"D", @"L", @"Lw", @"3Lw", @"3Rw", @"Rw", @"R", @"F", @"Fw", @"3Fw", @"3Bw", @"Bw", @"B", nil];
+            scr = [self megascramble:turn len:3 suf:cubesuff sql:100];
+            viewType=7; break;
         case 576:   //bandaged cube
             scr = [self bicube]; viewType=0;
             break;

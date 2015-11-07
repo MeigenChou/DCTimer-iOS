@@ -238,16 +238,18 @@ extern bool svChanged;
 }
 
 - (void)setComponent {
+    int wid = [DCTUtils getFrame].width;
     int hei = [DCTUtils getFrame].height;
+    //NSLog(@"%d x %d", wid, hei);
     int ios7delta = [DCTUtils isOS7] ? 64 : 0;
-    int width = [DCTUtils isPad] ? 510 : 230;
+    int width = [DCTUtils isPad] ? 510 : wid - 90;
     int stx = [DCTUtils isPad] ? (hei==1004 ? 60 : 98) : 20;
-    int sty = [DCTUtils isPad] ? (hei==1004 ? 80 : 72) : (hei==460 ? 50 : 70);
-    int barx = [DCTUtils isPad] ? (hei==1004 ? 630 : 668) : 270;
-    int sqry = [DCTUtils isPad] ? (hei==1004 ? 279 : 72) : (hei==460 ? 122 : 162);
+    int sty = [DCTUtils isPad] ? (hei==1004 ? 80 : 72) : (hei==460 ? 50 : (hei==548 ? 70 : (hei==647 ? 80 : 90)));
+    int barx = [DCTUtils isPad] ? (hei==1004 ? 630 : 668) : wid - 50;
+    int sqry = [DCTUtils isPad] ? (hei==1004 ? 279 : 72) : (hei==460 ? 122 : (hei==548 ? 162 : (hei==647 ? 182 : 202)));
     int barwid = [DCTUtils isPad] ? (hei==1004 ? 78 : 79) : 30;
     int bgwid = [DCTUtils isPad] ? 119 : 59;
-    int bgx = [DCTUtils isPad] ? (hei==1004 ? 589 : 807) : 241;
+    int bgx = [DCTUtils isPad] ? (hei==1004 ? 589 : 807) : wid - 79;
     
     if(hei==1024 || hei==748) { //ios 8
         _rgbLabel.frame = CGRectMake(bgx, 310+ios7delta, bgwid, bgwid);
@@ -270,7 +272,7 @@ extern bool svChanged;
     _squarePicker.frame = CGRectMake(stx-15, sqry-15+ios7delta, width+30, width+30);
     
     if (colorList != nil) {
-        int segWid = [DCTUtils isPad] ? (hei==1004 ? 728 : 984) : 280;
+        int segWid = [DCTUtils isPad] ? (hei==1004 ? 728 : 984) : wid - 40;
         int segHei = [DCTUtils isOS7] ? 29 : 34;
         segment.frame = CGRectMake(20, ios7delta+10, segWid, segHei);
     }

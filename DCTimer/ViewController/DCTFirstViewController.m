@@ -150,7 +150,7 @@ extern NSInteger gestures[4];
         hei = frame.width; wid = frame.height;
     }
     if([DCTUtils isPad]) scrambleView = [[DCTScrambleView alloc] initWithFrame:CGRectMake(wid-325, hei-294+dlt, 321, 241)];
-    else scrambleView = [[DCTScrambleView alloc] initWithFrame:CGRectMake(wid-203, hei-201+dlt, 201, 150)];
+    else scrambleView = [[DCTScrambleView alloc] initWithFrame:CGRectMake(wid*0.368, hei-50-(wid*0.469)+dlt, wid*0.628, wid*0.469)];
     scrambleView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0];
     [self.view addSubview:scrambleView];
     [self.imageView setContentMode:UIViewContentModeScaleAspectFill];

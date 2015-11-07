@@ -57,6 +57,14 @@ bool isDefSes;
     [alert show];
 }
 
+- (int)getSesCount:(NSUInteger)row {
+    if(row >= sesCount.count) {
+        [sesCount addObject:@(0)];
+        return 0;
+    }
+    return [[sesCount objectAtIndex:row] intValue];
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(buttonIndex == 1) {
         UITextField *tf = [alertView textFieldAtIndex:0];
@@ -98,6 +106,7 @@ bool isDefSes;
             [[DCTData dbh] clearSession:selectedSesIdx];
             [[DCTData dbh] deleteSession:selectedSesIdx];
             [session removeObjectAtIndex:selectedSesIdx];
+            [sesCount removeObjectAtIndex:selectedSesIdx];
             if(selectedSesIdx == currentSesIdx) {
                 currentSesIdx = 0;
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -139,7 +148,7 @@ bool isDefSes;
     NSUInteger row = [indexPath row];
     cell.textLabel.text = [session objectAtIndex:row];
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%d", (row==currentSesIdx) ? [DCTUtils getString:@"selected"]:@"", [DCTUtils getString:@"num_of_solve"], [[sesCount objectAtIndex:row] intValue]];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%d", (row==currentSesIdx) ? [DCTUtils getString:@"selected"]:@"", [DCTUtils getString:@"num_of_solve"], [self getSesCount:row]];
     cell.detailTextLabel.textColor = [UIColor darkGrayColor];
     return cell;
 }
