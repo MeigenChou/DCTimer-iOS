@@ -43,12 +43,22 @@ float rotatx[5], rotaty[5];
     if(!showScr) return;
     int wid = [DCTUtils isPad] ? 320 : 200;
     int a, b, d, i, j;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     switch (viewType) {
         case 13: //pyram
         {
             scrImg = [Pyraminx image:currentScr];
             b = (wid*3/4-15)/6; a = b*2/sqrt(3); d = (wid-a*6-14)/2;
-            NSArray *colpy = [[NSArray alloc] initWithObjects:[UIColor redColor], [UIColor colorWithRed:0 green:0.6 blue:0 alpha:1], [UIColor blueColor], [UIColor yellowColor], nil];
+            NSInteger cols[4];
+            for(int i=0; i<4; i++) {
+                cols[i] = [defaults integerForKey:[NSString stringWithFormat:@"csp%d", i+1]];
+            }
+            NSArray *colpy = [[NSArray alloc] initWithObjects:
+                              [UIColor colorWithRed:((cols[1]>>16)&0xff)/255.0 green:((cols[1]>>8)&0xff)/255.0 blue:(cols[1]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[0]>>16)&0xff)/255.0 green:((cols[0]>>8)&0xff)/255.0 blue:(cols[0]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[2]>>16)&0xff)/255.0 green:((cols[2]>>8)&0xff)/255.0 blue:(cols[2]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[3]>>16)&0xff)/255.0 green:((cols[3]>>8)&0xff)/255.0 blue:(cols[3]&0xff)/255.0 alpha:1], nil];
+            //NSArray *colpy = [[NSArray alloc] initWithObjects:[UIColor redColor], [UIColor colorWithRed:0 green:0.6 blue:0 alpha:1], [UIColor blueColor], [UIColor yellowColor], nil];
             float arx[3], ary[3];
             int layout[] = {
                 1,2,1,2,1,0,2,0,1,2,1,2,1,
@@ -155,7 +165,17 @@ float rotatx[5], rotaty[5];
             NSArray *tb = [[NSArray alloc]initWithObjects:@"3", @"3", @"3", @"3", @"3", @"3", @"3", @"3", @"0", @"0", @"0", @"0", @"0", @"0", @"0", @"0", nil];
             NSArray *ty = [[NSArray alloc]initWithObjects:@"c", @"e", @"c", @"e", @"c", @"e", @"c", @"e", @"e", @"c", @"e", @"c", @"e", @"c", @"e", @"c", nil];
             NSArray *col = [[NSArray alloc]initWithObjects:@"51", @"1", @"12", @"2", @"24", @"4", @"45", @"5", @"5", @"54", @"4", @"42", @"2", @"21", @"1", @"15", nil];
-            NSArray *colsq = [[NSArray alloc]initWithObjects:[UIColor yellowColor], [UIColor orangeColor], [UIColor blueColor], [UIColor whiteColor], [UIColor redColor], [UIColor colorWithRed:0 green:0.6 blue:0 alpha:1], nil];
+            NSInteger cols[6];
+            for(int i=0; i<6; i++) {
+                cols[i] = [defaults integerForKey:[NSString stringWithFormat:@"csq%d", i+1]];
+            }
+            NSArray *colsq = [[NSArray alloc] initWithObjects:
+                              [UIColor colorWithRed:((cols[1]>>16)&0xff)/255.0 green:((cols[1]>>8)&0xff)/255.0 blue:(cols[1]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[2]>>16)&0xff)/255.0 green:((cols[2]>>8)&0xff)/255.0 blue:(cols[2]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[5]>>16)&0xff)/255.0 green:((cols[5]>>8)&0xff)/255.0 blue:(cols[5]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[0]>>16)&0xff)/255.0 green:((cols[0]>>8)&0xff)/255.0 blue:(cols[0]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[3]>>16)&0xff)/255.0 green:((cols[3]>>8)&0xff)/255.0 blue:(cols[3]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[4]>>16)&0xff)/255.0 green:((cols[4]>>8)&0xff)/255.0 blue:(cols[4]&0xff)/255.0 alpha:1], nil];
             scrImg = [SQ1 imagestr:currentScr];
             char temp[12];
             for(int i=0; i<12; i++) temp[i] = [[scrImg objectAtIndex:i] charValue];
@@ -431,7 +451,17 @@ float rotatx[5], rotaty[5];
         case 12:    //skewb
         {
             scrImg = [Skewb image:currentScr];
-            NSArray *colsk = [[NSArray alloc] initWithObjects:[UIColor whiteColor], [UIColor orangeColor], [UIColor colorWithRed:0 green:0.6 blue:0 alpha:1], [UIColor redColor], [UIColor blueColor], [UIColor yellowColor], nil];
+            NSInteger cols[6];
+            for(int i=0; i<6; i++) {
+                cols[i] = [defaults integerForKey:[NSString stringWithFormat:@"csk%d", i+1]];
+            }
+            NSArray *colsk = [[NSArray alloc] initWithObjects:
+                              [UIColor colorWithRed:((cols[0]>>16)&0xff)/255.0 green:((cols[0]>>8)&0xff)/255.0 blue:(cols[0]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[4]>>16)&0xff)/255.0 green:((cols[4]>>8)&0xff)/255.0 blue:(cols[4]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[2]>>16)&0xff)/255.0 green:((cols[2]>>8)&0xff)/255.0 blue:(cols[2]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[3]>>16)&0xff)/255.0 green:((cols[3]>>8)&0xff)/255.0 blue:(cols[3]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[5]>>16)&0xff)/255.0 green:((cols[5]>>8)&0xff)/255.0 blue:(cols[5]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[1]>>16)&0xff)/255.0 green:((cols[1]>>8)&0xff)/255.0 blue:(cols[1]&0xff)/255.0 alpha:1], nil];
             int b = wid / 4, a = (b/2 * sqrt(3));
             int stx = (wid - 4*a)/2, sty = (wid*0.75-3*b)/2, i, d = 0;
             float e = 3 / sqrt(3), f = 3 * sqrt(3);
@@ -454,8 +484,19 @@ float rotatx[5], rotaty[5];
             break;
         }
         default:
+        {
             scrImg = [Scrambler imageString:viewType scr:currentScr];
-            NSArray *colsn = [[NSArray alloc] initWithObjects:[UIColor yellowColor], [UIColor blueColor], [UIColor redColor], [UIColor whiteColor], [UIColor colorWithRed:0 green:0.6 blue:0 alpha:1], [UIColor orangeColor], nil];
+            NSInteger cols[6];
+            for(int i=0; i<6; i++) {
+                cols[i] = [defaults integerForKey:[NSString stringWithFormat:@"csn%d", i+1]];
+            }
+            NSArray *colsn = [[NSArray alloc] initWithObjects:
+                              [UIColor colorWithRed:((cols[1]>>16)&0xff)/255.0 green:((cols[1]>>8)&0xff)/255.0 blue:(cols[1]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[5]>>16)&0xff)/255.0 green:((cols[5]>>8)&0xff)/255.0 blue:(cols[5]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[3]>>16)&0xff)/255.0 green:((cols[3]>>8)&0xff)/255.0 blue:(cols[3]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[0]>>16)&0xff)/255.0 green:((cols[0]>>8)&0xff)/255.0 blue:(cols[0]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[4]>>16)&0xff)/255.0 green:((cols[4]>>8)&0xff)/255.0 blue:(cols[4]&0xff)/255.0 alpha:1],
+                              [UIColor colorWithRed:((cols[2]>>16)&0xff)/255.0 green:((cols[2]>>8)&0xff)/255.0 blue:(cols[2]&0xff)/255.0 alpha:1], nil];
             float ia = (wid - 19) / (viewType * 4.0);
             d=0; b=viewType;
             for(i=0; i<b; i++)
@@ -487,6 +528,7 @@ float rotatx[5], rotaty[5];
                     CGContextDrawPath(context, kCGPathFillStroke);
                 }
             break;
+        }
     }
         
     //CGContextSetFillColorWithColor(context, curntColor.CGColor);

@@ -13,23 +13,10 @@
 @interface LatchCube ()
 @property (nonatomic, strong) NSArray *turn;
 @property (nonatomic, strong) NSArray *suff;
-@property (nonatomic, strong) NSMutableString *seq;
 @end
 
 @implementation LatchCube
-@synthesize turn, suff, seq;
-int moveFaces[25];
-int moveTimes[25];
-int moveSeq[25];
-int moveCount = 0;
-int currentMove = -1;
-int currentFace = -1;
-int currentTime = 0;
-int movableFaces[6];
-int specialForbiddenFaces[6];
-int movableFaceCount = 0;
-bool bothDirections = false;
-int label[6][4];
+@synthesize turn, suff;
 
 - (id) init {
     if(self = [super init]) {
@@ -206,7 +193,7 @@ int label[6][4];
         specialForbiddenFaces[i] = -1;
     }
     moveCount = 0;
-    self.seq = [NSMutableString string];
+    bothDirections = false;
 }
 
 - (void)undoLastMove {
@@ -331,12 +318,12 @@ int label[6][4];
         }
         ++i;
     }
-    
+    NSMutableString *seq = [NSMutableString string];
     for (int i = 0; i < 25; ++i) {
-        [self.seq appendFormat:@"%@%@ ", [self.turn objectAtIndex:moveSeq[i]/6], [self.suff objectAtIndex:moveSeq[i]%6]];
+        [seq appendFormat:@"%@%@ ", [self.turn objectAtIndex:moveSeq[i]/6], [self.suff objectAtIndex:moveSeq[i]%6]];
         //sequence.append(moveNames[i]);
     }
-    return self.seq;
+    return seq;
 }
 
 @end

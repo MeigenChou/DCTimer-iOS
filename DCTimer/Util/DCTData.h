@@ -12,6 +12,7 @@
 + (DCTData *)dbh;
 - (void)getSessions;
 - (int)getSessionCount;
+- (int)getSessionCount:(int)sesIdx;
 - (void)getSessionName:(NSMutableArray *)ses;
 - (void)query:(int)sesIdx;
 - (void)insertTime:(int)time pen:(int)pen scr:(NSString *)s date:(NSString *)da;
@@ -27,6 +28,8 @@
 - (void)addTime:(int)time penalty:(int)pen scramble:(NSString *)scr datetime:(NSString *)dt;
 - (void)clearTime;
 - (int)numberOfSolves;
+- (int)getSolved;
+- (int)getTimeAt:(int)idx;
 - (NSString *)getScrambleAtIndex:(int)idx;
 - (int)getPenaltyAtIndex:(int)idx;
 - (void)setPenalty:(int)pen atIndex:(int)idx;
@@ -34,9 +37,12 @@
 - (void)deleteTimeAtIndex:(int)idx;
 - (void)getSessionStats;
 - (NSString *)cubeSolves;
+- (int)getSesMean;
 - (NSString *)getSessionMeanSD;
 - (NSString *)bestTime;
 - (NSString *)worstTime;
+- (int)getBestTime;
+- (int)getWorstTime;
 - (void)getAvgs:(int)idx;
 - (NSString *)currentAvg:(int)idx;
 - (NSString *)bestAvg:(int)idx;

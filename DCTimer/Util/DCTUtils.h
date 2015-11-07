@@ -30,5 +30,6 @@
 + (NSString *)getFilePath:(NSString *)file;
 + (NSString *)getDeviceString;
 + (NSString *)getAppVersion;
++ (NSString *)getDateFormat:(NSString *)str ty:(NSInteger)type;
 
 @end

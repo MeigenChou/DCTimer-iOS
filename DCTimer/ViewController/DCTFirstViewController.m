@@ -61,6 +61,7 @@ bool esChanged = false; //extern
 double lowZ = 0.98;
 NSArray *fonts;
 extern NSInteger tmfont;
+extern NSInteger gestures[4];
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -98,7 +99,7 @@ extern NSInteger tmfont;
     canScr = true;
     //lastScr = currentScr;
     NSString *lang = NSLocalizedString(@"language", @"");
-    NSLog(@"language %@", lang);
+    NSLog(@"language: %@", lang);
     NSString *scrList = [lang isEqualToString:@"zh_CN"] ? @"scrambleCN" : ([lang isEqualToString:@"zh_HK"] ? @"scrambleHK" : @"scramble");
     NSURL *plistURL = [[NSBundle mainBundle] URLForResource:scrList withExtension:@"plist"];
     scrType = [NSDictionary dictionaryWithContentsOfURL:plistURL];
@@ -110,11 +111,11 @@ extern NSInteger tmfont;
     if(type == 2 && sub == 5) sub = 0;
     [btnScrType setTitle:[NSString stringWithFormat:@"%@ - %@", select, [subsets objectAtIndex:sub]] forState:UIControlStateNormal];
     selScrType = type << 5 | sub;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:selScrType forKey:@"crntscrtype"];
     currentScr = [scrambler getScrString:selScrType];
     [self setScrLblFont];
     [self extraSolve];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:selScrType forKey:@"crntscrtype"];
     //[self newScramble:true];
     
     if ([DCTUtils isOS7]) {
@@ -172,14 +173,14 @@ extern NSInteger tmfont;
             }
         }];
     }
-    NSArray *fontl = [[UIFont familyNames] sortedArrayUsingSelector:@selector(compare:)];
-    for (NSString *fname in fontl) {
-        NSLog(@"family: %s\n", [fname UTF8String]);
+    //NSArray *fontl = [[UIFont familyNames] sortedArrayUsingSelector:@selector(compare:)];
+    //for (NSString *fname in fontl) {
+        //NSLog(@"family: %s\n", [fname UTF8String]);
 //        NSArray *fontn = [UIFont fontNamesForFamilyName:fname];
 //        for(NSString *fn in fontn) {
 //            NSLog(@" font: %s\n", [fn UTF8String]);
 //        }
-    }
+    //}
 }
 
 - (void)viewDidUnload {
@@ -411,6 +412,10 @@ extern NSInteger tmfont;
     tmSize = [defaults integerForKey:@"tmsize"];
     tmfont = [defaults integerForKey:@"tmfont"];
     monoFont = [defaults boolForKey:@"monofont"];
+    gestures[0] = [defaults integerForKey:@"gestl"];
+    gestures[1] = [defaults integerForKey:@"gestr"];
+    gestures[2] = [defaults integerForKey:@"gestu"];
+    gestures[3] = [defaults integerForKey:@"gestd"];
 }
 
 - (void)record:(int)time pen:(int)pen {
@@ -731,89 +736,87 @@ extern NSInteger tmfont;
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     timerLabel.textColor = textCol;
+    
     if(swipeType > 0) {
         isChange = true;
         [fTimer invalidate];
         switch (swipeType) {
-            case 2:
+            case 1:
                 if([[DCTData dbh] numberOfSolves]>0) {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"deletelast", @"") message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"ok", @""), nil];
                     [alert setTag:3];
                     [alert show];
                 }
                 break;
-            case 3:
+            case 2:
+                [self newScramble:false];
+                break;
+            case 4:
                 if([[DCTData dbh] numberOfSolves]>0) {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"conf_delses", @"") message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"ok", @""), nil];
                     [alert setTag:5];
                     [alert show];
                 }
                 break;
-            case 4:
+            case 3:
                 if([[DCTData dbh] numberOfSolves]>0) {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"last_solve", @""), [DCTData distimeAtIndex:[[DCTData dbh] numberOfSolves]-1 dt:true]] message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"nopen", @""), @"+2", @"DNF", nil];
                     [alert setTag:6];
                     [alert show];
                 }
                 break;
-            default:
-                break;
         }
     }
-    else {
-        switch (self.timerState) {
-            case STOP:
-                if(inTime) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"intime", @"") message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"done", @""), nil];
-                    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-                    UITextField *tf = [alert textFieldAtIndex:0];
-                    tf.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-                    tf.clearButtonMode = UITextFieldViewModeWhileEditing;
-                    [alert setTag:4];
-                    [alert show];
-                }
-                else if(canStart) {
-                    time1 = 0;
-                    timeStart = mach_absolute_time();
-                    if(wcaInsp) {
-                        timerLabel.textColor = [UIColor redColor];
-                        inspTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateInspTime) userInfo:nil repeats:YES];
-                        self.timerState = INSPECTING;
-                    } else {
-                        dctTimer = [NSTimer scheduledTimerWithTimeInterval:(timerupd==0 ? 0.017 : 0.1) target:self selector:@selector(updateTime) userInfo:nil repeats:YES];
-                        self.timerState = RUNNING;
-                    }
-                    btnScrType.hidden = YES;
-                    scrambleView.hidden = YES;
-                    if([DCTUtils isOS7]) [self.tabBarController.tabBar setHidden:YES];
-                    else {
-                        [self hideTabBar:YES];
-                    }
-                    if(hideScr) scrLabel.hidden = YES;
-                    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-                } else {
-                    [fTimer invalidate];
-                    timerLabel.textColor = textCol;
-                }
-                break;
-            case RUNNING:
-            {
-                [self confirmSave];
-                break;
+    else switch (self.timerState) {
+        case STOP:
+            if(inTime) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"intime", @"") message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"done", @""), nil];
+                alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+                UITextField *tf = [alert textFieldAtIndex:0];
+                tf.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+                tf.clearButtonMode = UITextFieldViewModeWhileEditing;
+                [alert setTag:4];
+                [alert show];
             }
-            case INSPECTING:
-                if(canStart) {
-                    time1 = 0;
-                    timeStart = mach_absolute_time();
-                    [inspTimer invalidate];
-                    dctTimer = [NSTimer scheduledTimerWithTimeInterval:0.017 target:self selector:@selector(updateTime) userInfo:nil repeats:YES];
-                    self.timerState = RUNNING;
-                } else {
-                    [fTimer invalidate];
+            else if(canStart) {
+                time1 = 0;
+                timeStart = mach_absolute_time();
+                if(wcaInsp) {
                     timerLabel.textColor = [UIColor redColor];
+                    inspTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateInspTime) userInfo:nil repeats:YES];
+                    self.timerState = INSPECTING;
+                } else {
+                    dctTimer = [NSTimer scheduledTimerWithTimeInterval:(timerupd==0 ? 0.017 : 0.1) target:self selector:@selector(updateTime) userInfo:nil repeats:YES];
+                    self.timerState = RUNNING;
                 }
-                break;
-        }
+                btnScrType.hidden = YES;
+                scrambleView.hidden = YES;
+                if([DCTUtils isOS7]) [self.tabBarController.tabBar setHidden:YES];
+                else {
+                    [self hideTabBar:YES];
+                }
+                if(hideScr) scrLabel.hidden = YES;
+                [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+            } else {
+                [fTimer invalidate];
+                timerLabel.textColor = textCol;
+            }
+            break;
+        case RUNNING:
+            [self confirmSave];
+            break;
+        case INSPECTING:
+            if(canStart) {
+                time1 = 0;
+                timeStart = mach_absolute_time();
+                [inspTimer invalidate];
+                dctTimer = [NSTimer scheduledTimerWithTimeInterval:0.017 target:self selector:@selector(updateTime) userInfo:nil repeats:YES];
+                self.timerState = RUNNING;
+            } else {
+                [fTimer invalidate];
+                timerLabel.textColor = [UIColor redColor];
+            }
+            break;
     }
 }
 
@@ -823,18 +826,18 @@ extern NSInteger tmfont;
         CGPoint currentPo = [touch locationInView:self.view];
         CGFloat deltaX = currentPo.x - gestureStartPoint.x;
         CGFloat deltaY = currentPo.y - gestureStartPoint.y;
-        if(fabsf(deltaY) <= 8) {
-            if(deltaX >= 25) {
-                swipeType = 1;
+        if(fabsf((float)deltaY) <= 8) {
+            if(deltaX >= 40) {
+                swipeType = gestures[1];
                 if(isChange) {
                     timerLabel.textColor = textCol;
                     [fTimer invalidate];
-                    [self newScramble:false];
+                    //[self newScramble:false];
                     isChange = false;
                 }
             }
-            else if(deltaX <= -25) {
-                swipeType = 2;
+            else if(deltaX <= -40) {
+                swipeType = gestures[0];
                 if(isChange) {
                     timerLabel.textColor = textCol;
                     [fTimer invalidate];
@@ -842,16 +845,16 @@ extern NSInteger tmfont;
                 }
             }
         }
-        if(fabsf(deltaX) <= 8) {
-            if(deltaY >= 25) {
-                swipeType = 3;
+        if(fabsf((float)deltaX) <= 8) {
+            if(deltaY >= 40) {
+                swipeType = gestures[3];
                 if(isChange) {
                     timerLabel.textColor = textCol;
                     [fTimer invalidate];
                     isChange = false;
                 }
-            } else if(deltaY <= -25) {
-                swipeType = 4;
+            } else if(deltaY <= -40) {
+                swipeType = gestures[2];
                 if(isChange) {
                     timerLabel.textColor = textCol;
                     [fTimer invalidate];

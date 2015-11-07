@@ -19,6 +19,8 @@
 @property (nonatomic) UIColor *resultColor;
 @property (nonatomic, strong) NSNumber *crntColor;
 @property (nonatomic, strong) NSString *defkey;
+@property (nonatomic, strong) UISegmentedControl *segment;
+@property (nonatomic, strong) NSMutableArray *colorList;
 
 @property (weak, nonatomic) id <DCTColorPickerControllerDelegate> delegate;
 

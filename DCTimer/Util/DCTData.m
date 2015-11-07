@@ -12,10 +12,12 @@
 
 @interface DCTData ()
 @property (nonatomic, strong) NSMutableArray *resultId;
+@property (nonatomic, strong) NSArray *dateForms;
 @end
 
 @implementation DCTData
 @synthesize resultId;
+@synthesize dateForms;
 sqlite3 *database;
 int dbLastId = 0;
 int sesLastId = 0;
@@ -34,6 +36,7 @@ int curMean3, bestMean3, bestMeanIdx;
 extern NSInteger accuracy;
 extern BOOL prntScr;
 bool issChange = true;
+extern NSInteger dateForm;
 
 - (id)init {
     if(self = [super init]) {
@@ -43,6 +46,7 @@ bool issChange = true;
             scrList = [[NSMutableArray alloc] init];
             dateList = [[NSMutableArray alloc] init];
         }
+        dateForms = [[NSArray alloc] initWithObjects:@"yyyy-MM-dd", @"MM-dd-yyyy", @"dd-MM-yyyy", nil];
     }
     return self;
 }
@@ -105,6 +109,18 @@ bool issChange = true;
 
 - (int)getSessionCount {
     return (int)sesData.count;
+}
+
+- (int)getSessionCount:(int)sesIdx {
+    if(sesIdx!=0) sesIdx = [[[sesData objectAtIndex:sesIdx-1] objectAtIndex:0] intValue];
+    NSString *sql = [NSString stringWithFormat:@"select count(*) from resulttb where sesid=%d", sesIdx];
+    sqlite3_stmt *statement;
+    if(sqlite3_prepare_v2(database, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
+        if(sqlite3_step(statement) == SQLITE_ROW) {
+            return sqlite3_column_int(statement, 0);
+        }
+    }
+    return 0;
 }
 
 - (void)getSessionName:(NSMutableArray *)ses {
@@ -283,6 +299,15 @@ bool issChange = true;
 
 - (int)numberOfSolves {
     return (int)resList.count;
+}
+
+- (int)getSolved {
+    return solved;
+}
+
+- (int)getTimeAt:(int)idx {
+    if ([[penList objectAtIndex:idx] intValue] == 2) return 0;
+    return [[resList objectAtIndex:idx] intValue] + 2000 * [[penList objectAtIndex:idx] intValue];
 }
 
 - (NSString *)cubeSolves {
@@ -525,6 +550,16 @@ bool issChange = true;
     return minIdx;
 }
 
+- (int)getBestTime {
+    if (minIdx == -1) return 0;
+    return [[resList objectAtIndex:minIdx] intValue] + 2000 * [[penList objectAtIndex:minIdx] intValue];
+}
+
+- (int)getWorstTime {
+    if (maxIdx == -1) return 0;
+    return [[resList objectAtIndex:maxIdx] intValue] + 2000 * [[penList objectAtIndex:maxIdx] intValue];
+}
+
 - (NSString *)currentAvg:(int)idx {
     int ca = curAvg[idx];
     if(ca==MAX_VALUE)return @"DNF";
@@ -548,6 +583,10 @@ bool issChange = true;
     if(i<0)return @"N/A";
     if(accuracy==0)i/=10;
     return [NSString stringWithFormat:@"%d.%@%d", i/100, (i%100<10)?@"0":@"", i%100];
+}
+
+- (int)getSesMean {
+    return sessionMean;
 }
 
 - (NSString *)getSessionMeanSD {
@@ -610,7 +649,7 @@ bool issChange = true;
 - (NSString *)getMsgOfAvg:(int)idx num:(int)n {
     NSMutableString *s = [NSMutableString stringWithString:[DCTUtils getString:@"stat_title"]];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"YYYY-MM-dd"];
+    [formatter setDateFormat:[dateForms objectAtIndex:dateForm]];
     NSString *date = [formatter stringFromDate:[NSDate date]];
     [s appendFormat:@"%@\n%@", date, [DCTUtils getString:@"stat_avg"]];
     int maxi=-1,mini=-1,dnf=0;
@@ -680,7 +719,7 @@ bool issChange = true;
 - (NSString *)getMsgOfAvg20:(int)idx num:(int)n {
     NSMutableString *s = [NSMutableString stringWithString:[DCTUtils getString:@"stat_title"]];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"YYYY-MM-dd"];
+    [formatter setDateFormat:[dateForms objectAtIndex:dateForm]];
     NSString *date = [formatter stringFromDate:[NSDate date]];
     [s appendFormat:@"%@\n%@", date, [DCTUtils getString:@"stat_avg"]];
     int trim = ceil(n/20.0), dnf = 0;
@@ -742,7 +781,7 @@ bool issChange = true;
 - (NSString *)getMsgOfMean3:(int)idx {
     NSMutableString *s = [NSMutableString stringWithString:[DCTUtils getString:@"stat_title"]];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"YYYY-MM-dd"];
+    [formatter setDateFormat:[dateForms objectAtIndex:dateForm]];
     NSString *date = [formatter stringFromDate:[NSDate date]];
     [s appendFormat:@"%@\n%@", date, [DCTUtils getString:@"stat_mean"]];
     int maxi=-1,mini=-1,dnf=0;
@@ -803,7 +842,7 @@ bool issChange = true;
 - (NSString *)getSessionMean {
     NSMutableString *s = [NSMutableString stringWithString:[DCTUtils getString:@"stat_title"]];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"YYYY-MM-dd"];
+    [formatter setDateFormat:[dateForms objectAtIndex:dateForm]];
     NSString *date = [formatter stringFromDate:[NSDate date]];
     [s appendFormat:@"%@\n%@", date, [DCTUtils getString:@"stat_solve"]];
     [s appendFormat:@"%@\n", [self cubeSolves]];

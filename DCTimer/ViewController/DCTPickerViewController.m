@@ -70,6 +70,7 @@ extern NSDictionary *scrType;
 
 - (void)dismiss {
     if ([self.delegate respondsToSelector:@selector(setScr:)]) {
+        selScrType = (int)(selectedType << 5 | selectedSubset);
         [self.delegate setScr:selScrName];
     }
 }
@@ -106,7 +107,7 @@ extern NSDictionary *scrType;
     }
     selectedType = [pickerView selectedRowInComponent:0];
     selectedSubset = [pickerView selectedRowInComponent:1];
-    selScrType = (int)(selectedType << 5 | selectedSubset);
+    //selScrType = (int)(selectedType << 5 | selectedSubset);
     selScrName = [NSString stringWithFormat:@"%@ - %@", [types objectAtIndex:selectedType], [subsets objectAtIndex:selectedSubset]];
 }
 

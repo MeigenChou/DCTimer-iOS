@@ -9,20 +9,13 @@
 #import "DCTSettingsViewController.h"
 #import "DCTSecondLevelViewController.h"
 #import "DCTColorPickerController.h"
-#import "DCTHelpViewController.h"
 #import "DCTAboutViewController.h"
 #import "DCTUtils.h"
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
-
-@interface DCTSettingsViewController ()
-@property (nonatomic, strong) DCTHelpViewController *helpView;
-@end
-
 @implementation DCTSettingsViewController
 @synthesize fTime;
-@synthesize helpView;
 NSInteger timerupd, accuracy;
 NSInteger cside, cxe, sqshp;
 NSInteger timeForm;
@@ -35,6 +28,8 @@ BOOL showImg = NO;
 BOOL prntScr;
 NSInteger subTitle;
 NSInteger tmfont;
+NSInteger dateForm;
+NSInteger gestures[4];
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -65,7 +60,8 @@ NSInteger tmfont;
     int r = (bgcolor>>16)&0xff;
     int g = (bgcolor>>8)&0xff;
     int b = bgcolor&0xff;
-    if([DCTUtils isOS7]) self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1];
+    if([DCTUtils isOS7])
+        self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1];
     else self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1];
 }
 
@@ -74,21 +70,25 @@ NSInteger tmfont;
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     //#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 6;
+    return 8;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     switch (section) {
         case 0:
-            return NSLocalizedString(@"timer", @"");
+            return [DCTUtils getString:@"timer"];
         case 1:
-            return NSLocalizedString(@"scramble", @"");
+            return [DCTUtils getString:@"scramble"];
         case 2:
-            return NSLocalizedString(@"stt_stats", @"");
+            return [DCTUtils getString:@"stt_stats"];
         case 3:
-            return NSLocalizedString(@"tools", @"");
+            return [DCTUtils getString:@"tools"];
         case 4:
-            return NSLocalizedString(@"interface", @"");
+            return [DCTUtils getString:@"color_scheme"];
+        case 5:
+            return [DCTUtils getString:@"interface"];
+        case 6:
+            return [DCTUtils getString:@"gesture"];
         default:
             return @"";
     }
@@ -98,18 +98,22 @@ NSInteger tmfont;
     //#warning Incomplete method implementation.
     // Return the number of rows in the section.
     switch (section) {
-        case 0:
+        case 0: //计时
             return 8;
-        case 1:
+        case 1: //打乱
             return 3;
-        case 2:
+        case 2: //统计
+            return 5;
+        case 3: //工具
+            return 3;
+        case 4: //配色
             return 4;
-        case 3:
-            return 3;
-        case 4:
+        case 5: //界面
             return [DCTUtils isPad] ? 7 : 6;
-        case 5:
+        case 6: //手势
             return 4;
+        case 7:
+            return [[DCTUtils getString:@"language"] isEqualToString:@"zh_CN"] ? 2 : 3;
         default:
             return 0;
     }
@@ -210,7 +214,7 @@ NSInteger tmfont;
                     if([DCTUtils isOS7]) fTime.textColor = [UIColor grayColor];
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     cell.detailTextLabel.text = [NSString stringWithFormat:@"%1.2f s", (double)time*0.05];
-                    UISlider *freezeTime = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, 140, 34)];
+                    UISlider *freezeTime = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, [DCTUtils isPad] ? 160 : 140, 34)];
                     freezeTime.minimumValue = 0;
                     freezeTime.maximumValue = 20;
                     freezeTime.tag = 0;
@@ -261,7 +265,7 @@ NSInteger tmfont;
                     NSInteger sens = [defaults integerForKey:@"sensity"];
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     cell.detailTextLabel.text = @"";
-                    UISlider *senSlide = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, 140, 34)];
+                    UISlider *senSlide = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, [DCTUtils isPad] ? 160 : 140, 34)];
                     senSlide.minimumValue = 0;
                     senSlide.maximumValue = 50;
                     senSlide.tag = 2;
@@ -332,10 +336,10 @@ NSInteger tmfont;
                         cell.textLabel.font = [UIFont systemFontOfSize:17];
                         cell.textLabel.numberOfLines = 2;
                     }
-//                    if(isNl) {
-//                        if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
-//                        else cell.textLabel.font = [UIFont systemFontOfSize:13];
-//                    }
+                    //if(isNl) {
+                    //    if([DCTUtils isOS7]) cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    //    else cell.textLabel.font = [UIFont systemFontOfSize:13];
+                    //}
                     UISwitch *promtSwitch = [[UISwitch alloc] init];
                     [promtSwitch setTag:2];
                     promtSwitch.on = [defaults boolForKey:@"prompttime"];
@@ -399,6 +403,20 @@ NSInteger tmfont;
                     cell.accessoryView = nil;
                     break;
                 }
+                case 4: //日期格式
+                {
+                    cell.textLabel.text = NSLocalizedString(@"dateformat", @"");
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    NSArray *array = [[NSArray alloc] initWithObjects:@"yyyy-MM-dd", @"MM-dd-yyyy", @"dd-MM-yyyy", nil];
+                    dateForm = [defaults integerForKey:@"dateformat"];
+                    cell.detailTextLabel.text = [array objectAtIndex:dateForm];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                }
             }
             break;
         case 3: //工具
@@ -451,7 +469,59 @@ NSInteger tmfont;
                 }
             }
             break;
-        case 4: //界面
+        case 4: //配色
+            switch (indexPath.row) {
+                case 0: //N阶
+                {
+                    cell.textLabel.text = @"NxNxN";
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                }
+                case 1: //金字塔
+                {
+                    cell.textLabel.text = @"Pyraminx";
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                }
+                case 2: //SQ1
+                {
+                    cell.textLabel.text = @"Square-1";
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                }
+                case 3: //Skewb
+                {
+                    cell.textLabel.text = @"Skewb";
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    cell.detailTextLabel.text = @"";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                }
+            }
+            break;
+        case 5: //界面
             switch (indexPath.row) {
                 case 0: //背景色
                 {
@@ -499,7 +569,7 @@ NSInteger tmfont;
                     }
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     cell.detailTextLabel.text = @"";
-                    UISlider *opac = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, 140, 34)];
+                    UISlider *opac = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, [DCTUtils isPad] ? 160 : 140, 34)];
                     opac.minimumValue = 0;
                     opac.maximumValue = 100;
                     opac.tag = 1;
@@ -545,7 +615,7 @@ NSInteger tmfont;
                     cell.textLabel.text = NSLocalizedString(@"timer_size", @"");
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     cell.detailTextLabel.text = @"";
-                    UISlider *tmSize = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, 140, 34)];
+                    UISlider *tmSize = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, [DCTUtils isPad] ? 160 : 140, 34)];
                     tmSize.minimumValue = 80;
                     tmSize.maximumValue = 180;
                     tmSize.tag = 3;
@@ -557,9 +627,60 @@ NSInteger tmfont;
                 }
             }
             break;
-        case 5:
+        case 6: //手势
+        {
+            NSArray *array = [[NSArray alloc] initWithObjects:[DCTUtils getString:@"none"], [DCTUtils getString:@"sldo"], [DCTUtils getString:@"srdo"], [DCTUtils getString:@"sudo"], [DCTUtils getString:@"sddo"], nil];
             switch (indexPath.row) {
-                case 0: //手势说明
+                case 0: //左
+                    cell.textLabel.text = [DCTUtils getString:@"sl"];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    gestures[0] = [defaults integerForKey:@"gestl"];
+                    cell.detailTextLabel.text = [array objectAtIndex:gestures[0]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                case 1: //右
+                    cell.textLabel.text = [DCTUtils getString:@"sr"];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    gestures[1] = [defaults integerForKey:@"gestr"];
+                    cell.detailTextLabel.text = [array objectAtIndex:gestures[1]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                case 2: //上
+                    cell.textLabel.text = [DCTUtils getString:@"su"];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    gestures[2] = [defaults integerForKey:@"gestu"];
+                    cell.detailTextLabel.text = [array objectAtIndex:gestures[2]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+                case 3: //下
+                    cell.textLabel.text = [DCTUtils getString:@"sd"];
+                    if(isEn || isNl) {
+                        cell.textLabel.font = [UIFont systemFontOfSize:17];
+                    }
+                    gestures[3] = [defaults integerForKey:@"gestd"];
+                    cell.detailTextLabel.text = [array objectAtIndex:gestures[3]];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                    cell.accessoryView = nil;
+                    break;
+            }
+            break;
+        }
+        case 7: //杂项
+            switch (indexPath.row) {
+                /*case 0: //手势说明
                     cell.textLabel.text = NSLocalizedString(@"gesture", @"");
                     if(isEn || isNl) {
                         cell.textLabel.font = [UIFont systemFontOfSize:17];
@@ -568,8 +689,8 @@ NSInteger tmfont;
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     cell.selectionStyle = UITableViewCellSelectionStyleBlue;
                     cell.accessoryView = nil;
-                    break;
-                case 1: //评分
+                    break;*/
+                case 0: //评分
                     cell.textLabel.text = NSLocalizedString(@"rate_app", @"");
                     if(isEn || isNl) {
                         cell.textLabel.font = [UIFont systemFontOfSize:17];
@@ -589,7 +710,7 @@ NSInteger tmfont;
                     cell.selectionStyle = UITableViewCellSelectionStyleBlue;
                     cell.accessoryView = nil;
                     break;
-                case 3: //许可证
+                case 1: //许可证
                     cell.textLabel.text = NSLocalizedString(@"licenses", @"");
                     if(isEn || isNl) {
                         cell.textLabel.font = [UIFont systemFontOfSize:17];
@@ -608,9 +729,9 @@ NSInteger tmfont;
 #pragma mark Table View Delegate Methods
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     switch (indexPath.section) {
-        case 0:
+        case 0: //计时
             switch (indexPath.row) {
-                case 1:
+                case 1: //时间格式
                 {
                     NSArray *array = [[NSArray alloc] initWithObjects:@"hh:mm:ss.xy(z)", @"mm:ss.xy(z)", @"ss.xy(z)", nil];
                     DCTSecondLevelViewController *second = [[DCTSecondLevelViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -621,7 +742,7 @@ NSInteger tmfont;
                     [self.navigationController pushViewController:second animated:YES];
                     break;
                 }
-                case 2:
+                case 2: //计时器更新方式
                 {
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"On", @""), NSLocalizedString(@"secondsonly", @""), NSLocalizedString(@"insponly", @""), NSLocalizedString(@"Off", @""), nil];
                     DCTSecondLevelViewController *second = [[DCTSecondLevelViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -632,7 +753,7 @@ NSInteger tmfont;
                     [self.navigationController pushViewController:second animated:YES];
                     break;
                 }
-                case 3:
+                case 3: //计时器精度
                 {
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"0.001sec", @""), NSLocalizedString(@"0.01sec", @""), nil];
                     DCTSecondLevelViewController *second = [[DCTSecondLevelViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -645,9 +766,9 @@ NSInteger tmfont;
                 }
             }
             break;
-        case 2:
+        case 2: //统计
             switch (indexPath.row) {
-                case 3:
+                case 3: //副标题
                 {
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"time", @""), [DCTUtils getString:@"scramble"], nil];
                     DCTSecondLevelViewController *second = [[DCTSecondLevelViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -658,11 +779,22 @@ NSInteger tmfont;
                     [self.navigationController pushViewController:second animated:YES];
                     break;
                 }
+                case 4: //日期格式
+                {
+                    NSArray *array = [[NSArray alloc] initWithObjects:@"yyyy-MM-dd", @"MM-dd-yyyy", @"dd-MM-yyyy", nil];
+                    DCTSecondLevelViewController *second = [[DCTSecondLevelViewController alloc] initWithStyle:UITableViewStyleGrouped];
+                    second.selIndex = @(dateForm);
+                    second.key = @"dateformat";
+                    second.title = [DCTUtils getString:@"dateformat"];
+                    second.array = array;
+                    [self.navigationController pushViewController:second animated:YES];
+                    break;
+                }
             }
             break;
-        case 3:
+        case 3: //工具
             switch (indexPath.row) {
-                case 0:
+                case 0: //三阶求解
                 {
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"none", @""), @"Cross", @"Xcross", @"EOLine", nil];
                     DCTSecondLevelViewController *second = [[DCTSecondLevelViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -673,7 +805,7 @@ NSInteger tmfont;
                     [self.navigationController pushViewController:second animated:YES];
                     break;
                 }
-                case 1:
+                case 1: //底色
                 {
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"dside", @""), NSLocalizedString(@"uside", @""), NSLocalizedString(@"lside", @""), NSLocalizedString(@"rside", @""), NSLocalizedString(@"fside", @""), NSLocalizedString(@"bside", @""), nil];
                     DCTSecondLevelViewController *second = [[DCTSecondLevelViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -684,7 +816,7 @@ NSInteger tmfont;
                     [self.navigationController pushViewController:second animated:YES];
                     break;
                 }
-                case 2:
+                case 2: //SQ复形
                 {
                     NSArray *array = [[NSArray alloc] initWithObjects:NSLocalizedString(@"none", @""), @"Face turn metric", @"Twist metric", nil];
                     DCTSecondLevelViewController *second = [[DCTSecondLevelViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -697,30 +829,81 @@ NSInteger tmfont;
                 }
             }
             break;
-        case 4:
+        case 4: //配色
+        {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSMutableArray *array = [[NSMutableArray alloc] init];
+            DCTColorPickerController *colorView = [[DCTColorPickerController alloc] init];
             switch (indexPath.row) {
-                case 0:
+                case 0: //N阶
+                    [array addObject:@([defaults integerForKey:@"csn1"])];
+                    [array addObject:@([defaults integerForKey:@"csn2"])];
+                    [array addObject:@([defaults integerForKey:@"csn3"])];
+                    [array addObject:@([defaults integerForKey:@"csn4"])];
+                    [array addObject:@([defaults integerForKey:@"csn5"])];
+                    [array addObject:@([defaults integerForKey:@"csn6"])];
+                    colorView.title = @"NxNxN";
+                    colorView.defkey=@"csn";
+                    break;
+                case 1: //金字塔
+                    [array addObject:@([defaults integerForKey:@"csp1"])];
+                    [array addObject:@([defaults integerForKey:@"csp2"])];
+                    [array addObject:@([defaults integerForKey:@"csp3"])];
+                    [array addObject:@([defaults integerForKey:@"csp4"])];
+                    colorView.title = @"Pyraminx";
+                    colorView.defkey=@"csp";
+                    break;
+                case 2: //SQ1
+                    [array addObject:@([defaults integerForKey:@"csq1"])];
+                    [array addObject:@([defaults integerForKey:@"csq2"])];
+                    [array addObject:@([defaults integerForKey:@"csq3"])];
+                    [array addObject:@([defaults integerForKey:@"csq4"])];
+                    [array addObject:@([defaults integerForKey:@"csq5"])];
+                    [array addObject:@([defaults integerForKey:@"csq6"])];
+                    colorView.title = @"Square-1";
+                    colorView.defkey=@"csq";
+                    break;
+                case 3: //Skewb
+                    [array addObject:@([defaults integerForKey:@"csk1"])];
+                    [array addObject:@([defaults integerForKey:@"csk2"])];
+                    [array addObject:@([defaults integerForKey:@"csk3"])];
+                    [array addObject:@([defaults integerForKey:@"csk4"])];
+                    [array addObject:@([defaults integerForKey:@"csk5"])];
+                    [array addObject:@([defaults integerForKey:@"csk6"])];
+                    colorView.title = @"Skewb";
+                    colorView.defkey=@"csk";
+                    break;
+            }
+            colorView.colorList = array;
+            [self.navigationController pushViewController:colorView animated:YES];
+            break;
+        }
+        case 5: //界面
+            switch (indexPath.row) {
+                case 0: //背景色
                 {
                     DCTColorPickerController *colorView = [[DCTColorPickerController alloc] init];
                     colorView.title = NSLocalizedString(@"bgcolor", @"");
                     colorView.crntColor = @(bgcolor);
                     colorView.defkey = @"bgcolor";
+                    colorView.colorList = nil;
                     [self.navigationController pushViewController:colorView animated:YES];
                     break;
                 }
-                case 1:
+                case 1: //文字色
                 {
                     DCTColorPickerController *colorView = [[DCTColorPickerController alloc] init];
                     colorView.title = NSLocalizedString(@"textcolor", @"");
                     colorView.crntColor = @(textcolor);
                     colorView.defkey = @"textcolor";
+                    colorView.colorList = nil;
                     [self.navigationController pushViewController:colorView animated:YES];
                     break;
                 }
-                case 2:
+                case 2: //背景图
                     [self showPicker];
                     break;
-                case 5:
+                case 5: //计时器字体
                 {
                     NSArray *array = [[NSArray alloc] initWithObjects:@"Arial", @"Courier New", @"Digiface", @"Georgia", @"Helvetica", @"Times New Roman", @"Verdana", nil];
                     DCTSecondLevelViewController *second = [[DCTSecondLevelViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -733,9 +916,39 @@ NSInteger tmfont;
                 }
             }
             break;
-        case 5:
+        case 6:
+        {
+            NSArray *array = [[NSArray alloc] initWithObjects:[DCTUtils getString:@"none"], [DCTUtils getString:@"sldo"], [DCTUtils getString:@"srdo"], [DCTUtils getString:@"sudo"], [DCTUtils getString:@"sddo"], nil];
+            DCTSecondLevelViewController *second = [[DCTSecondLevelViewController alloc] initWithStyle:UITableViewStyleGrouped];
+            second.array = array;
             switch (indexPath.row) {
                 case 0:
+                    second.selIndex = @(gestures[0]);
+                    second.key = @"gestl";
+                    second.title = [DCTUtils getString:@"sl"];
+                    break;
+                case 1:
+                    second.selIndex = @(gestures[1]);
+                    second.key = @"gestr";
+                    second.title = [DCTUtils getString:@"sr"];
+                    break;
+                case 2:
+                    second.selIndex = @(gestures[2]);
+                    second.key = @"gestu";
+                    second.title = [DCTUtils getString:@"su"];
+                    break;
+                case 3:
+                    second.selIndex = @(gestures[3]);
+                    second.key = @"gestd";
+                    second.title = [DCTUtils getString:@"sd"];
+                    break;
+            }
+            [self.navigationController pushViewController:second animated:YES];
+            break;
+        }
+        case 7:
+            switch (indexPath.row) {
+                /*case 0: //手势说明
                 {
                     if(!helpView) {
                         helpView = [[DCTHelpViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -743,25 +956,23 @@ NSInteger tmfont;
                     helpView.title = NSLocalizedString(@"gesture", @"");
                     [self.navigationController pushViewController:helpView animated:YES];
                     break;
-                }
-                case 1:
+                }*/
+                case 0: //评分
                 {
                     NSString *url = [DCTUtils isOS7] ? [NSString stringWithFormat:@"itms-apps://itunes.apple.com/app/id%d", 794870196] : [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%d", 794870196];
                     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
                     break;
                 }
-                case 2:
+                case 2: //反馈
                     [self sendFeedback];
                     break;
-                case 3:
+                case 1: //许可证
                 {
                     DCTAboutViewController *aboutView = [[DCTAboutViewController alloc] init];
                     //aboutView.title = NSLocalizedString(@"", @"");
                     [self.navigationController pushViewController:aboutView animated:YES];
-                }
-                    
-                default:
                     break;
+                }
             }
     }
 }
@@ -787,32 +998,32 @@ NSInteger tmfont;
         case 2: //确认成绩
             [defaults setBool:switchButton.on forKey:@"prompttime"];
             break;
-        case 3:
+        case 3: //成绩显示打乱
             [defaults setBool:switchButton.on forKey:@"printscr"];
             break;
-        case 4:
+        case 4: //计时隐藏打乱
             [defaults setBool:switchButton.on forKey:@"hidescr"];
             break;
-        case 5:
+        case 5: //输入成绩
             [defaults setBool:switchButton.on forKey:@"intime"];
             tfChanged = true;
             break;
-        case 6:
+        case 6: //拍桌子停表
             [defaults setBool:switchButton.on forKey:@"drops"];
             break;
-        case 7:
+        case 7: //显示图片
             [defaults setBool:switchButton.on forKey:@"showimg"];
             showImg = switchButton.on;
             imgChanged = true;
             break;
-        case 8:
+        case 8: //显示打乱状态
             [defaults setBool:switchButton.on forKey:@"showscr"];
             svChanged = true;
             break;
-        case 9:
+        case 9: //成绩列表逆序
             [defaults setBool:switchButton.on forKey:@"newtop"];
             break;
-        case 10:
+        case 10:    //等宽打乱字体
             [defaults setBool:switchButton.on forKey:@"monofont"];
             monoChanged = true;
             break;

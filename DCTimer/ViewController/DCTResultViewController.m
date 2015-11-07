@@ -22,7 +22,8 @@
 @synthesize detailController;
 BOOL newestTop;
 int numberSolves;
-extern int subTitle;
+extern NSInteger subTitle;
+extern NSInteger dateForm;
 
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
@@ -96,7 +97,7 @@ extern int subTitle;
     NSUInteger row = [indexPath row];
     if(newestTop) row = numberSolves-1-row;
     cell.textLabel.text = [DCTData distimeAtIndex:(int)row dt:false];
-    if(subTitle == 0) cell.detailTextLabel.text = [[DCTData dbh] getDateAtIndex:(int)row];
+    if(subTitle == 0) cell.detailTextLabel.text = [DCTUtils getDateFormat:[[DCTData dbh] getDateAtIndex:(int)row] ty:dateForm];
     else if(subTitle == 1) cell.detailTextLabel.text = [[DCTData dbh] getScrambleAtIndex:(int)row];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
@@ -111,7 +112,7 @@ extern int subTitle;
     if(row >= numberSolves) row = numberSolves-1;
     if(newestTop) row = numberSolves-1-row;
     NSString *selectedTime = [DCTData distimeAtIndex:(int)row dt:true];
-    NSString *time = [NSString stringWithFormat:@"(%@)", [[DCTData dbh] getDateAtIndex:(int)row]];
+    NSString *time = [NSString stringWithFormat:@"(%@)", [DCTUtils getDateFormat:[[DCTData dbh] getDateAtIndex:(int)row] ty:dateForm]];
     NSString *scr = [[DCTData dbh] getScrambleAtIndex:(int)row];
     detailController.rest = selectedTime;
     detailController.time = time;

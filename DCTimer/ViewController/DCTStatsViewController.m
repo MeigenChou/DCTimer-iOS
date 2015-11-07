@@ -9,6 +9,7 @@
 #import "DCTStatsViewController.h"
 #import "DCTStatDetailController.h"
 #import "DCTDetailViewController.h"
+#import "DCTGraphViewController.h"
 #import "DCTData.h"
 #import "DCTUtils.h"
 
@@ -21,6 +22,7 @@
 NSMutableArray *stats;
 NSMutableArray *statsDetail;
 int num;
+int graphType;
 NSString *alertMsg;
 extern bool issChange;
 
@@ -37,14 +39,8 @@ extern bool issChange;
     [super viewWillAppear:animated];
     [[DCTData dbh] getSessionStats];
     num = [[DCTData dbh] numberOfSolves];
-    stats = [[NSMutableArray alloc] initWithObjects:NSLocalizedString(@"numbercube", @""), nil];
-    statsDetail = [[NSMutableArray alloc] initWithObjects:[[DCTData dbh] cubeSolves], nil];
-    if(num>0) {
-        [stats addObject:NSLocalizedString(@"besttime", @"")];
-        [statsDetail addObject:[[DCTData dbh] bestTime]];
-        [stats addObject:NSLocalizedString(@"worsttime", @"")];
-        [statsDetail addObject:[[DCTData dbh] worstTime]];
-    }
+    stats = [[NSMutableArray alloc] init];
+    statsDetail = [[NSMutableArray alloc] init];
     if(num>2) {
         [stats addObject:NSLocalizedString(@"currentmean3", @"")];
         [statsDetail addObject:NSLocalizedString(@"calcing", @"")];
@@ -97,20 +93,20 @@ extern bool issChange;
 - (void) calcavgs {
     if(num > 2) {
         if(issChange)[[DCTData dbh] getMean:3];
-        [statsDetail replaceObjectAtIndex:3 withObject:[[DCTData dbh] currentMean3]];
-        [statsDetail replaceObjectAtIndex:4 withObject:[[DCTData dbh] getBestMean3]];
+        [statsDetail replaceObjectAtIndex:0 withObject:[[DCTData dbh] currentMean3]];
+        [statsDetail replaceObjectAtIndex:1 withObject:[[DCTData dbh] getBestMean3]];
         [self performSelectorOnMainThread:@selector(updateTable) withObject:nil waitUntilDone:NO];
     }
     if(num > 4) {
         if(issChange)[[DCTData dbh] getAvgs:0];
-        [statsDetail replaceObjectAtIndex:5 withObject:[[DCTData dbh] currentAvg:0]];
-        [statsDetail replaceObjectAtIndex:6 withObject:[[DCTData dbh] bestAvg:0]];
+        [statsDetail replaceObjectAtIndex:2 withObject:[[DCTData dbh] currentAvg:0]];
+        [statsDetail replaceObjectAtIndex:3 withObject:[[DCTData dbh] bestAvg:0]];
         [self performSelectorOnMainThread:@selector(updateTable) withObject:nil waitUntilDone:NO];
     }
     if(num > 11) {
         if(issChange)[[DCTData dbh] getAvgs:1];
-        [statsDetail replaceObjectAtIndex:7 withObject:[[DCTData dbh] currentAvg:1]];
-        [statsDetail replaceObjectAtIndex:8 withObject:[[DCTData dbh] bestAvg:1]];
+        [statsDetail replaceObjectAtIndex:4 withObject:[[DCTData dbh] currentAvg:1]];
+        [statsDetail replaceObjectAtIndex:5 withObject:[[DCTData dbh] bestAvg:1]];
         [self performSelectorOnMainThread:@selector(updateTable) withObject:nil waitUntilDone:NO];
     }
     if(num > 2) {
@@ -120,14 +116,14 @@ extern bool issChange;
     }
     if(num > 49) {
         if(issChange)[[DCTData dbh] getAvgs20:2];
-        [statsDetail replaceObjectAtIndex:9 withObject:[[DCTData dbh] currentAvg:2]];
-        [statsDetail replaceObjectAtIndex:10 withObject:[[DCTData dbh] bestAvg:2]];
+        [statsDetail replaceObjectAtIndex:6 withObject:[[DCTData dbh] currentAvg:2]];
+        [statsDetail replaceObjectAtIndex:7 withObject:[[DCTData dbh] bestAvg:2]];
         [self performSelectorOnMainThread:@selector(updateTable) withObject:nil waitUntilDone:NO];
     }
     if(num > 99) {
         if(issChange)[[DCTData dbh] getAvgs20:3];
-        [statsDetail replaceObjectAtIndex:11 withObject:[[DCTData dbh] currentAvg:3]];
-        [statsDetail replaceObjectAtIndex:12 withObject:[[DCTData dbh] bestAvg:3]];
+        [statsDetail replaceObjectAtIndex:8 withObject:[[DCTData dbh] currentAvg:3]];
+        [statsDetail replaceObjectAtIndex:9 withObject:[[DCTData dbh] bestAvg:3]];
         [self performSelectorOnMainThread:@selector(updateTable) withObject:nil waitUntilDone:NO];
     }
     issChange = false;
@@ -149,7 +145,7 @@ extern bool issChange;
 //    [alert show];
 }
 
-- (void)willPresentAlertView:(UIAlertView *)alertView {
+/*- (void)willPresentAlertView:(UIAlertView *)alertView {
     int intFlg=0;
     for(UIView *view in alertView.subviews) {
         if([view isKindOfClass:[UILabel class]]) {
@@ -160,7 +156,7 @@ extern bool issChange;
             intFlg=1;
         }
     }
-}
+}*/
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(buttonIndex == 1) {
@@ -171,10 +167,36 @@ extern bool issChange;
     }
 }
 
-#pragma mark =
+#pragma mark -
 #pragma mark Table View Data Source Methods
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    //#warning Potentially incomplete method implementation.
+    // Return the number of sections.
+    if (num < 1) return 1;
+    if ([[DCTData dbh] getSolved] < 1) return 2;
+    return 3;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [stats count];
+    switch (section) {
+        case 0:
+            if (num == 0) return 1;
+            return 3;
+        case 1:
+            if (num < 1) return 0;
+            if (num < 3) return 1;
+            if (num < 5) return 4;
+            if (num < 12) return 6;
+            if (num < 50) return 8;
+            if (num < 100) return 10;
+            return 12;
+        case 2:
+            if ([[DCTData dbh] getSolved] > 1)
+                return 2;
+            return 1;
+        default:
+            return 0;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -184,10 +206,40 @@ extern bool issChange;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:sti];
     }
     NSUInteger row = [indexPath row];
-    cell.textLabel.text = [stats objectAtIndex:row];
-    cell.detailTextLabel.text = [statsDetail objectAtIndex:row];
-    cell.accessoryType = (row != 0) ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
-    cell.selectionStyle = (row != 0) ? UITableViewCellSelectionStyleBlue : UITableViewCellSelectionStyleNone;
+    switch (indexPath.section) {
+        case 0:
+            switch (row) {
+                case 0:
+                    cell.textLabel.text = [DCTUtils getString:@"numbercube"];
+                    cell.detailTextLabel.text = [[DCTData dbh] cubeSolves];
+                    break;
+                case 1:
+                    cell.textLabel.text = [DCTUtils getString:@"besttime"];
+                    cell.detailTextLabel.text = [[DCTData dbh] bestTime];
+                    break;
+                default:
+                    cell.textLabel.text = [DCTUtils getString:@"worsttime"];
+                    cell.detailTextLabel.text = [[DCTData dbh] worstTime];
+                    break;
+            }
+            cell.accessoryType = (row != 0) ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
+            cell.selectionStyle = (row != 0) ? UITableViewCellSelectionStyleBlue : UITableViewCellSelectionStyleNone;
+            break;
+        case 1:
+            cell.textLabel.text = [stats objectAtIndex:row];
+            cell.detailTextLabel.text = [statsDetail objectAtIndex:row];
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+            break;
+        case 2:
+            if (row == 0)
+                cell.textLabel.text = [DCTUtils getString:@"histogram"];
+            else cell.textLabel.text = [DCTUtils getString:@"graph"];
+            cell.detailTextLabel.text = @"";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+            break;
+    }
     return cell;
 }
 
@@ -195,68 +247,56 @@ extern bool issChange;
 #pragma mark Table View Delegate Methods
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger row = [indexPath row];
-    int num = [[DCTData dbh] numberOfSolves];
-    if(row == 0);
-    else if(row < 3) {
-        detailController = [[DCTDetailViewController alloc] initWithStyle:UITableViewStyleGrouped];
-        detailController.title = NSLocalizedString(@"detail", @"");
-        int idx = (row == 1)?[[DCTData dbh] getMinIndex]:[[DCTData dbh] getMaxIndex];
-        NSString *selectedTime = [DCTData distimeAtIndex:idx dt:false];
-        NSString *time = [NSString stringWithFormat:@"(%@)", [[DCTData dbh] getDateAtIndex:idx]];
-        NSString *scr = [[DCTData dbh] getScrambleAtIndex:idx];
-        detailController.rest = selectedTime;
-        detailController.time = time;
-        detailController.scramble = scr;
-        [detailController setDetail:idx];
-        detailController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:detailController animated:YES];
-    }
-    else if(row < 5) {
-        if(num < 3) [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
-        else if(row==3)
-            [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_mean", @"") str:@"len" with:@"3"] msg:[[DCTData dbh] getMsgOfMean3:num-1]];
-        else {
-            NSString *msg = [[DCTData dbh] getMsgOfMean3:[[DCTData dbh] getBestMeanIdx]];
-            [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_mean", @"") str:@"len" with:@"3"] msg:msg];
+    switch (indexPath.section) {
+        case 0:
+            if(row != 0) {
+                detailController = [[DCTDetailViewController alloc] initWithStyle:UITableViewStyleGrouped];
+                detailController.title = NSLocalizedString(@"detail", @"");
+                int idx = (row == 1)?[[DCTData dbh] getMinIndex]:[[DCTData dbh] getMaxIndex];
+                NSString *selectedTime = [DCTData distimeAtIndex:idx dt:false];
+                NSString *time = [NSString stringWithFormat:@"(%@)", [[DCTData dbh] getDateAtIndex:idx]];
+                NSString *scr = [[DCTData dbh] getScrambleAtIndex:idx];
+                detailController.rest = selectedTime;
+                detailController.time = time;
+                detailController.scramble = scr;
+                [detailController setDetail:idx];
+                detailController.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:detailController animated:YES];
+            }
+            break;
+        case 1:
+            if(row < 2) {
+                if(num < 3) [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
+                else [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_mean", @"") str:@"len" with:@"3"] msg:[[DCTData dbh] getMsgOfMean3:(row==0 ? num-1 : [[DCTData dbh] getBestMeanIdx])]];
+            }
+            else if(row < 4) {
+                if(num < 5) [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
+                else [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"5"] msg:[[DCTData dbh] getMsgOfAvg:(row==2 ? num-1 : [[DCTData dbh] bestAvgIdx:0]) num:5]];
+            }
+            else if(row < 6) {
+                if(num < 12) [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
+                else [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"12"] msg:[[DCTData dbh] getMsgOfAvg:(row==4 ? num-1 : [[DCTData dbh] bestAvgIdx:1]) num:12]];
+            }
+            else if(row < 8) {
+                if(num < 50) [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
+                else [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"50"] msg:[[DCTData dbh] getMsgOfAvg20:(row==6 ? num-1 : [[DCTData dbh] bestAvgIdx:2]) num:50]];
+            }
+            else if(row < 10) {
+                if(num < 100) [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
+                else [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"100"] msg:[[DCTData dbh] getMsgOfAvg20:(row==8 ? num-1 : [[DCTData dbh] bestAvgIdx:3]) num:100]];
+            }
+            else [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
+            break;
+        case 2:
+        {
+            DCTGraphViewController *graphController = [[DCTGraphViewController alloc] init];
+            graphType = (int)row;
+            graphController.title = row==0 ? [DCTUtils getString:@"histogram"] : [DCTUtils getString:@"graph"];
+            graphController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:graphController animated:YES];
+            break;
         }
     }
-    else if(row < 7) {
-        if(num < 5) [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
-        else if(row==5) 
-            [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"5"] msg:[[DCTData dbh] getMsgOfAvg:num-1 num:5]];
-        else {
-            NSString *msg = [[DCTData dbh] getMsgOfAvg:[[DCTData dbh] bestAvgIdx:0] num:5];
-            [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"5"] msg:msg];
-        }
-    }
-    else if(row < 9) {
-        if(num < 12) [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
-        else if(row==7)
-            [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"12"] msg:[[DCTData dbh] getMsgOfAvg:num-1 num:12]];
-        else {
-            NSString *msg = [[DCTData dbh] getMsgOfAvg:[[DCTData dbh] bestAvgIdx:1] num:12];
-            [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"12"] msg:msg];
-        }
-    }
-    else if(row < 11) {
-        if(num < 50) [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
-        else if(row==9)
-            [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"50"] msg:[[DCTData dbh] getMsgOfAvg20:num-1 num:50]];
-        else {
-            NSString *msg = [[DCTData dbh] getMsgOfAvg20:[[DCTData dbh] bestAvgIdx:2] num:50];
-            [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"50"] msg:msg];
-        }
-    }
-    else if(row < 13) {
-        if(num < 100) [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
-        else if(row==11)
-            [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"100"] msg:[[DCTData dbh] getMsgOfAvg20:num-1 num:100]];
-        else {
-            NSString *msg = [[DCTData dbh] getMsgOfAvg20:[[DCTData dbh] bestAvgIdx:3] num:100];
-            [self showAlertStat:[DCTUtils replace:NSLocalizedString(@"title_avg", @"") str:@"len" with:@"100"] msg:msg];
-        }
-    }
-    else [self showAlertStat:NSLocalizedString(@"title_ses", @"") msg:[[DCTData dbh] getSessionMean]];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

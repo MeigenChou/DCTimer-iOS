@@ -35,7 +35,6 @@
 
 "scramble_view" = "Scramble view";
 "scramble_type" = "Scramble type";
-"not_support" = "Unavailable for this scramble type.";
 "scrambling" = "scrambling...";
 "invalid_in" = "Invalid input.";
 
@@ -74,6 +73,8 @@
 "sesavg" = "Session avg:";
 "currentmean3" = "Current mean of 3:";
 "bestmean3" = "Best mean of 3:";
+"histogram" = "Histogram";
+"graph" = "Graph";
 "calcing" = "Calculating...";
 
 "WCAinsp" = "WCA inspection";
@@ -93,12 +94,14 @@
 "scramble" = "Scramble";
 "hide_scr" = "Hide scramble while timing";
 "display_scr" = "Display scramble view";
-"mono_font" = "Use monospaced font";
+"mono_font" = "Monospace scramble font";
 "stt_stats" = "Results and Stats";
 "prompttime" = "Prompt when new time detected";
 "printscr" = "Print scramble(s) in statistics";
 "newest_top" = "Newest times at top";
 "subtitle" = "Subtitle";
+"dateformat" = "Date format";
+
 "tools" = "Tools";
 "cross" = "Solve 3x3 cross";
 "3solver" = "3x3 solvers";
@@ -111,6 +114,8 @@
 "rside" = "R(red)";
 "fside" = "F(green)";
 "bside" = "B(blue)";
+"color_scheme" = "Color schemes";
+
 "more" = "More";
 "interface" = "Interface";
 "bgcolor" = "Background color";
@@ -122,7 +127,7 @@
 "timer_size" = "Timer size";
 "version" = "Version";
 "about" = "About";
-"gesture" = "Gestures help";
+"gesture" = "Gesture manager";
 "rate_app" = "Rate app";
 "email_feedback" = "Email feedback";
 "licenses" = "Licenses";
@@ -142,11 +147,12 @@
 "title_ses" = "Detail: session mean";
 
 "defsession" = "Default session";
-"selected" = "Selected";
-"newses" = "New session";
-"deleteses" = "Delete session";
-"clearses" = "Clear session";
+"selected" = "Current session. ";
+"new_session" = "New session";
+"delete_session" = "Delete session";
+"clear_session" = "Clear session";
 "rename" = "Rename";
+"num_of_solve" = "Number of solves: ";
 
 "1fhold" = "One finger long press";
 "sr" = "Swipe right";
@@ -158,5 +164,5 @@
 "srdo" = "New scramble";
 "sldo" = "Delete last solve";
 "1f2tdo" = "Choose penalty";
-"sudo" = "Edit penalty of last solve";
+"sudo" = "Penalty of last solve";
 "sddo" = "Clear session";

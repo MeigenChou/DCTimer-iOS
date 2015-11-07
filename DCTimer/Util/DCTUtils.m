@@ -223,4 +223,14 @@ extern NSInteger timeForm;
     NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
     return [NSString stringWithFormat:@"v%@", version];
 }
+
++ (NSString *)getDateFormat:(NSString *)str ty:(NSInteger)type {
+    if (type == 0)
+        return str;
+    if (type == 1) {    //MM-dd-yyyy
+        return [NSString stringWithFormat:@"%@-%@-%@%@", [DCTUtils substring:str s:5 e:7], [DCTUtils substring:str s:8 e:10], [str substringToIndex:4], [str substringFromIndex:10]];
+    }
+    //dd-MM-yyyy
+    return [NSString stringWithFormat:@"%@-%@-%@%@", [DCTUtils substring:str s:8 e:10], [DCTUtils substring:str s:5 e:7], [str substringToIndex:4], [str substringFromIndex:10]];
+}
 @end

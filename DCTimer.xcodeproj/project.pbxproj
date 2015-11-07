@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F53D83731A59331800084BE3 /* DCTGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = F53D83721A59331800084BE3 /* DCTGraphView.m */; };
 		F58371F71704DB9E0011FB0A /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F58371F31704DB2C0011FB0A /* libsqlite3.0.dylib */; };
 		F590468116F21649001B71F5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F590468316F21649001B71F5 /* Localizable.strings */; };
 		F59FF53E16E1FD7400D7FE65 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F59FF53D16E1FD7400D7FE65 /* UIKit.framework */; };
@@ -68,24 +69,12 @@
 		F5DC199518CE073300ABA2C0 /* InfColorSquarePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC198B18CE073300ABA2C0 /* InfColorSquarePicker.m */; };
 		F5DC199618CE073300ABA2C0 /* InfHSBSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC198D18CE073300ABA2C0 /* InfHSBSupport.m */; };
 		F5DC199A18CE082100ABA2C0 /* DCTColorPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DC199918CE082100ABA2C0 /* DCTColorPickerController.m */; };
-		F5DE322B18ABBF57004A78D5 /* DCTHelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DE322A18ABBF57004A78D5 /* DCTHelpViewController.m */; };
 		F5E253D31882E03100EBC520 /* Sq1Shape.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E253D21882E03100EBC520 /* Sq1Shape.m */; };
-		F5E287BE18AE2CA700397D69 /* 1hold.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B418AE2CA700397D69 /* 1hold.png */; };
-		F5E287BF18AE2CA700397D69 /* 1hold@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B518AE2CA700397D69 /* 1hold@2x.png */; };
-		F5E287C018AE2CA700397D69 /* sd.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B618AE2CA700397D69 /* sd.png */; };
-		F5E287C118AE2CA700397D69 /* sd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B718AE2CA700397D69 /* sd@2x.png */; };
-		F5E287C218AE2CA700397D69 /* sl.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B818AE2CA700397D69 /* sl.png */; };
-		F5E287C318AE2CA700397D69 /* sl@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287B918AE2CA700397D69 /* sl@2x.png */; };
-		F5E287C418AE2CA700397D69 /* sr.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287BA18AE2CA700397D69 /* sr.png */; };
-		F5E287C518AE2CA700397D69 /* sr@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287BB18AE2CA700397D69 /* sr@2x.png */; };
-		F5E287C618AE2CA700397D69 /* su.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287BC18AE2CA700397D69 /* su.png */; };
-		F5E287C718AE2CA700397D69 /* su@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E287BD18AE2CA700397D69 /* su@2x.png */; };
 		F5E287C918AE2E7B00397D69 /* license.html in Resources */ = {isa = PBXBuildFile; fileRef = F5E287C818AE2E7B00397D69 /* license.html */; };
+		F5E91B5B1A5C249D00C0D14B /* DCTGraphViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E91B5A1A5C249D00C0D14B /* DCTGraphViewController.m */; };
 		F5E9201118D89CC900D2A901 /* Df.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F5E9200F18D89CC900D2A901 /* Df.ttf */; };
 		F5E98D90187ACDF5006933EE /* DCTAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E98D8F187ACDF5006933EE /* DCTAboutViewController.m */; };
 		F5E98D92187AD915006933EE /* scrambleCN.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5E98D91187AD915006933EE /* scrambleCN.plist */; };
-		F5F00F5119F8B59500BC6B19 /* DCTResultPadControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F00F4F19F8B59500BC6B19 /* DCTResultPadControllerViewController.m */; };
-		F5F00F5219F8B59500BC6B19 /* DCTResultPadControllerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5F00F5019F8B59500BC6B19 /* DCTResultPadControllerViewController.xib */; };
 		F5F50EEE1773EF9A0049AA65 /* CubieCube.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F50EED1773EF9A0049AA65 /* CubieCube.m */; };
 		F5F50EF11773F4EA0049AA65 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F50EF01773F4EA0049AA65 /* Util.m */; };
 		F5F50EF41773FA750049AA65 /* CoordCube.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F50EF31773FA750049AA65 /* CoordCube.m */; };
@@ -93,6 +82,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F53D83711A59331800084BE3 /* DCTGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTGraphView.h; sourceTree = "<group>"; };
+		F53D83721A59331800084BE3 /* DCTGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTGraphView.m; sourceTree = "<group>"; };
 		F58371F31704DB2C0011FB0A /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		F590468216F21649001B71F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F590468416F2164F001B71F5 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -199,28 +190,15 @@
 		F5DC198D18CE073300ABA2C0 /* InfHSBSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InfHSBSupport.m; path = InfColorPicker/InfHSBSupport.m; sourceTree = "<group>"; };
 		F5DC199818CE082100ABA2C0 /* DCTColorPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTColorPickerController.h; sourceTree = "<group>"; };
 		F5DC199918CE082100ABA2C0 /* DCTColorPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTColorPickerController.m; sourceTree = "<group>"; };
-		F5DE322918ABBF57004A78D5 /* DCTHelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTHelpViewController.h; sourceTree = "<group>"; };
-		F5DE322A18ABBF57004A78D5 /* DCTHelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTHelpViewController.m; sourceTree = "<group>"; };
 		F5E253D11882E03100EBC520 /* Sq1Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sq1Shape.h; sourceTree = "<group>"; };
 		F5E253D21882E03100EBC520 /* Sq1Shape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sq1Shape.m; sourceTree = "<group>"; };
-		F5E287B418AE2CA700397D69 /* 1hold.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1hold.png; sourceTree = "<group>"; };
-		F5E287B518AE2CA700397D69 /* 1hold@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1hold@2x.png"; sourceTree = "<group>"; };
-		F5E287B618AE2CA700397D69 /* sd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sd.png; sourceTree = "<group>"; };
-		F5E287B718AE2CA700397D69 /* sd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sd@2x.png"; sourceTree = "<group>"; };
-		F5E287B818AE2CA700397D69 /* sl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sl.png; sourceTree = "<group>"; };
-		F5E287B918AE2CA700397D69 /* sl@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sl@2x.png"; sourceTree = "<group>"; };
-		F5E287BA18AE2CA700397D69 /* sr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sr.png; sourceTree = "<group>"; };
-		F5E287BB18AE2CA700397D69 /* sr@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sr@2x.png"; sourceTree = "<group>"; };
-		F5E287BC18AE2CA700397D69 /* su.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = su.png; sourceTree = "<group>"; };
-		F5E287BD18AE2CA700397D69 /* su@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "su@2x.png"; sourceTree = "<group>"; };
 		F5E287C818AE2E7B00397D69 /* license.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = license.html; sourceTree = "<group>"; };
+		F5E91B591A5C249D00C0D14B /* DCTGraphViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTGraphViewController.h; sourceTree = "<group>"; };
+		F5E91B5A1A5C249D00C0D14B /* DCTGraphViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTGraphViewController.m; sourceTree = "<group>"; };
 		F5E9200F18D89CC900D2A901 /* Df.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Df.ttf; path = resource/Df.ttf; sourceTree = "<group>"; };
 		F5E98D8E187ACDF5006933EE /* DCTAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTAboutViewController.h; sourceTree = "<group>"; };
 		F5E98D8F187ACDF5006933EE /* DCTAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTAboutViewController.m; sourceTree = "<group>"; };
 		F5E98D91187AD915006933EE /* scrambleCN.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = scrambleCN.plist; sourceTree = "<group>"; };
-		F5F00F4E19F8B59500BC6B19 /* DCTResultPadControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTResultPadControllerViewController.h; sourceTree = "<group>"; };
-		F5F00F4F19F8B59500BC6B19 /* DCTResultPadControllerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTResultPadControllerViewController.m; sourceTree = "<group>"; };
-		F5F00F5019F8B59500BC6B19 /* DCTResultPadControllerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DCTResultPadControllerViewController.xib; sourceTree = "<group>"; };
 		F5F50EEC1773EF9A0049AA65 /* CubieCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CubieCube.h; sourceTree = "<group>"; };
 		F5F50EED1773EF9A0049AA65 /* CubieCube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CubieCube.m; sourceTree = "<group>"; };
 		F5F50EEF1773F4EA0049AA65 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
@@ -406,12 +384,12 @@
 				F5DC199918CE082100ABA2C0 /* DCTColorPickerController.m */,
 				F5D9ED35187D6D34003AFF8C /* DCTDetailViewController.h */,
 				F5D9ED36187D6D34003AFF8C /* DCTDetailViewController.m */,
-				F5B8733F171312CF0065F0D2 /* DCTFirstViewController.h */,
-				F5B87340171312CF0065F0D2 /* DCTFirstViewController.m */,
 				F59FF56016E1FD7500D7FE65 /* DCTFirstViewController_iPad.xib */,
 				F59FF55D16E1FD7500D7FE65 /* DCTFirstViewController_iPhone.xib */,
-				F5DE322918ABBF57004A78D5 /* DCTHelpViewController.h */,
-				F5DE322A18ABBF57004A78D5 /* DCTHelpViewController.m */,
+				F5B8733F171312CF0065F0D2 /* DCTFirstViewController.h */,
+				F5B87340171312CF0065F0D2 /* DCTFirstViewController.m */,
+				F5E91B591A5C249D00C0D14B /* DCTGraphViewController.h */,
+				F5E91B5A1A5C249D00C0D14B /* DCTGraphViewController.m */,
 				F5D47B561874478600EA90B7 /* DCTPickerViewController.h */,
 				F5D47B571874478600EA90B7 /* DCTPickerViewController.m */,
 				F5B87343171312CF0065F0D2 /* DCTResultViewController.h */,
@@ -426,9 +404,6 @@
 				F5CD77DA18B264CB00180470 /* DCTStatDetailController.m */,
 				F5B8734D171312CF0065F0D2 /* DCTStatsViewController.h */,
 				F5B8734E171312CF0065F0D2 /* DCTStatsViewController.m */,
-				F5F00F4E19F8B59500BC6B19 /* DCTResultPadControllerViewController.h */,
-				F5F00F4F19F8B59500BC6B19 /* DCTResultPadControllerViewController.m */,
-				F5F00F5019F8B59500BC6B19 /* DCTResultPadControllerViewController.xib */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -438,6 +413,8 @@
 			children = (
 				F5B87360171313680065F0D2 /* DCTScrambleView.h */,
 				F5B87361171313680065F0D2 /* DCTScrambleView.m */,
+				F53D83711A59331800084BE3 /* DCTGraphView.h */,
+				F53D83721A59331800084BE3 /* DCTGraphView.m */,
 			);
 			name = View;
 			path = Views;
@@ -446,16 +423,6 @@
 		F5B87364171313E90065F0D2 /* drawable */ = {
 			isa = PBXGroup;
 			children = (
-				F5E287B418AE2CA700397D69 /* 1hold.png */,
-				F5E287B518AE2CA700397D69 /* 1hold@2x.png */,
-				F5E287B618AE2CA700397D69 /* sd.png */,
-				F5E287B718AE2CA700397D69 /* sd@2x.png */,
-				F5E287B818AE2CA700397D69 /* sl.png */,
-				F5E287B918AE2CA700397D69 /* sl@2x.png */,
-				F5E287BA18AE2CA700397D69 /* sr.png */,
-				F5E287BB18AE2CA700397D69 /* sr@2x.png */,
-				F5E287BC18AE2CA700397D69 /* su.png */,
-				F5E287BD18AE2CA700397D69 /* su@2x.png */,
 				F5B87365171313E90065F0D2 /* blueButton.png */,
 				F5B87366171313E90065F0D2 /* img1.png */,
 				F5B87367171313E90065F0D2 /* img1@2x.png */,
@@ -530,7 +497,7 @@
 		F59FF53016E1FD7400D7FE65 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0640;
 				TargetAttributes = {
 					F59FF53816E1FD7400D7FE65 = {
 						DevelopmentTeam = 258G8G83YY;
@@ -563,9 +530,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5E287C418AE2CA700397D69 /* sr.png in Resources */,
-				F5E287C618AE2CA700397D69 /* su.png in Resources */,
-				F5E287BE18AE2CA700397D69 /* 1hold.png in Resources */,
 				F59FF54816E1FD7400D7FE65 /* InfoPlist.strings in Resources */,
 				F59FF55F16E1FD7500D7FE65 /* DCTFirstViewController_iPhone.xib in Resources */,
 				F59FF56216E1FD7500D7FE65 /* DCTFirstViewController_iPad.xib in Resources */,
@@ -573,22 +537,14 @@
 				F5B8736E171313E90065F0D2 /* blueButton.png in Resources */,
 				F5B8736F171313E90065F0D2 /* img1.png in Resources */,
 				F5B87370171313E90065F0D2 /* img1@2x.png in Resources */,
-				F5E287C218AE2CA700397D69 /* sl.png in Resources */,
-				F5E287C318AE2CA700397D69 /* sl@2x.png in Resources */,
 				F5B87371171313E90065F0D2 /* img2.png in Resources */,
 				F5E98D92187AD915006933EE /* scrambleCN.plist in Resources */,
 				F5E287C918AE2E7B00397D69 /* license.html in Resources */,
-				F5E287C718AE2CA700397D69 /* su@2x.png in Resources */,
 				F5E9201118D89CC900D2A901 /* Df.ttf in Resources */,
-				F5E287BF18AE2CA700397D69 /* 1hold@2x.png in Resources */,
 				F5D521E0187EC1E0009F452B /* Images.xcassets in Resources */,
-				F5E287C018AE2CA700397D69 /* sd.png in Resources */,
 				F5B87372171313E90065F0D2 /* img2@2x.png in Resources */,
 				F5D8F9EA18CC9D560051BEC5 /* scrambleHK.plist in Resources */,
-				F5E287C118AE2CA700397D69 /* sd@2x.png in Resources */,
 				F5B87373171313E90065F0D2 /* img3.png in Resources */,
-				F5E287C518AE2CA700397D69 /* sr@2x.png in Resources */,
-				F5F00F5219F8B59500BC6B19 /* DCTResultPadControllerViewController.xib in Resources */,
 				F5B87374171313E90065F0D2 /* img3@2x.png in Resources */,
 				F5B87375171313E90065F0D2 /* title_more@2x.png in Resources */,
 				F5B87376171313E90065F0D2 /* whiteButton.png in Resources */,
@@ -621,6 +577,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F59FF54A16E1FD7400D7FE65 /* main.m in Sources */,
+				F53D83731A59331800084BE3 /* DCTGraphView.m in Sources */,
 				F5D9EEA3189E1756004CB5F2 /* Scrambler.m in Sources */,
 				F59FF54E16E1FD7400D7FE65 /* DCTAppDelegate.m in Sources */,
 				F5D47B581874478600EA90B7 /* DCTPickerViewController.m in Sources */,
@@ -634,9 +591,9 @@
 				F5D40C89188ACAE100169650 /* DCTData.m in Sources */,
 				F5B8732D171310880065F0D2 /* Cube222.m in Sources */,
 				F5D9EE9E189E1704004CB5F2 /* FPPopoverController.m in Sources */,
+				F5E91B5B1A5C249D00C0D14B /* DCTGraphViewController.m in Sources */,
 				F5DC199118CE073300ABA2C0 /* InfColorIndicatorView.m in Sources */,
 				F5B8732E171310880065F0D2 /* EOLine.m in Sources */,
-				F5F00F5119F8B59500BC6B19 /* DCTResultPadControllerViewController.m in Sources */,
 				F5DC199618CE073300ABA2C0 /* InfHSBSupport.m in Sources */,
 				F5B8732F171310880065F0D2 /* Floppy.m in Sources */,
 				F5B87330171310880065F0D2 /* Gear.m in Sources */,
@@ -653,7 +610,6 @@
 				F5B87359171312CF0065F0D2 /* DCTSessionViewController.m in Sources */,
 				F5B8735A171312CF0065F0D2 /* DCTSettingsViewController.m in Sources */,
 				F5B8735B171312CF0065F0D2 /* DCTStatsViewController.m in Sources */,
-				F5DE322B18ABBF57004A78D5 /* DCTHelpViewController.m in Sources */,
 				F5DC199A18CE082100ABA2C0 /* DCTColorPickerController.m in Sources */,
 				F5D97DC81872F06800E1872F /* DCTUtils.m in Sources */,
 				F5B87363171313680065F0D2 /* DCTScrambleView.m in Sources */,
@@ -732,6 +688,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -770,6 +727,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -799,7 +757,7 @@
 				INFOPLIST_FILE = "DCTimer/DCTimer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1f426ea0-aa95-49bd-ac7d-da5a3db0ce39";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
@@ -819,7 +777,7 @@
 				INFOPLIST_FILE = "DCTimer/DCTimer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1f426ea0-aa95-49bd-ac7d-da5a3db0ce39";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

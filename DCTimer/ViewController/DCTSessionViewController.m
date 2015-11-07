@@ -15,6 +15,7 @@
 
 @implementation DCTSessionViewController
 NSMutableArray *session;
+NSMutableArray *sesCount;
 extern int currentSesIdx;
 int selectedSesIdx;
 bool isDefSes;
@@ -24,7 +25,7 @@ bool isDefSes;
     self = [super initWithStyle:style];
     if (self) {
         self.title = NSLocalizedString(@"session", @"");
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"newses", @"") style:UIBarButtonItemStylePlain target:self action:@selector(newSes)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:[DCTUtils getString:@"new_session"] style:UIBarButtonItemStylePlain target:self action:@selector(newSes)];
     }
     return self;
 }
@@ -34,6 +35,11 @@ bool isDefSes;
     NSString *defname = [defaults objectForKey:@"defsesname"];
     session = [[NSMutableArray alloc] initWithObjects:defname, nil];
     [[DCTData dbh] getSessionName:session];
+    sesCount = [[NSMutableArray alloc] init];
+    NSInteger count = session.count;
+    for(int i=0; i<count; i++) {
+        [sesCount addObject:@([[DCTData dbh] getSessionCount:i])];
+    }
     [super viewWillAppear:animated];
     [self.tableView reloadData];
 }
@@ -43,7 +49,7 @@ bool isDefSes;
 }
 
 - (void)newSes {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"newses", @"") message:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") otherButtonTitles:NSLocalizedString(@"done", @""), nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[DCTUtils getString:@"new_session"] message:@"" delegate:self cancelButtonTitle:[DCTUtils getString:@"cancel"] otherButtonTitles:[DCTUtils getString:@"done"], nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     UITextField *tf = [alert textFieldAtIndex:0];
     tf.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -133,7 +139,8 @@ bool isDefSes;
     NSUInteger row = [indexPath row];
     cell.textLabel.text = [session objectAtIndex:row];
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-    cell.detailTextLabel.text = (row==currentSesIdx)?NSLocalizedString(@"selected", @""):@"";
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%d", (row==currentSesIdx) ? [DCTUtils getString:@"selected"]:@"", [DCTUtils getString:@"num_of_solve"], [[sesCount objectAtIndex:row] intValue]];
+    cell.detailTextLabel.textColor = [UIColor darkGrayColor];
     return cell;
 }
 
@@ -157,11 +164,11 @@ bool isDefSes;
     isDefSes = row==0;
     UIActionSheet *actionSheet;
     if(isDefSes) {
-        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"rename", @""), NSLocalizedString(@"clearses", @""), nil];
+        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:[DCTUtils getString:@"cancel"] destructiveButtonTitle:nil otherButtonTitles:[DCTUtils getString:@"rename"], [DCTUtils getString:@"clear_session"], nil];
         [actionSheet setTag:1];
     }
     else {
-        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", @"") destructiveButtonTitle:NSLocalizedString(@"deleteses", @"") otherButtonTitles:NSLocalizedString(@"rename", @""), NSLocalizedString(@"clearses", @""), nil];
+        actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:[DCTUtils getString:@"cancel"] destructiveButtonTitle:[DCTUtils getString:@"delete_session"] otherButtonTitles:[DCTUtils getString:@"rename"], [DCTUtils getString:@"clear_session"], nil];
         [actionSheet setTag:0];
     }
     if ([DCTUtils isPad]) {

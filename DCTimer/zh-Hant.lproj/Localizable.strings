@@ -35,7 +35,6 @@
 
 "scramble_view" = "轉亂狀態";
 "scramble_type" = "轉亂類型";
-"not_support" = "暫不支持的轉亂類型";
 "scrambling" = "轉亂中…";
 "invalid_in" = "無效輸入";
 
@@ -74,6 +73,8 @@
 "sesavg" = "去尾平均:";
 "currentmean3" = "目前3次平均:";
 "bestmean3" = "最快3次平均:";
+"histogram" = "時間分佈";
+"graph" = "折線圖";
 "calcing" = "計算中…";
 
 "WCAinsp" = "WCA 觀察";
@@ -96,6 +97,7 @@
 "mono_font" = "使用等寬字型";
 "newest_top" = "成績列表逆序顯示";
 "subtitle" = "成績列表副標題";
+"dateformat" = "日期格式";
 "stt_stats" = "統計";
 "prompttime" = "有新成績時顯示提示";
 "printscr" = "成績詳情中顯示轉亂";
@@ -110,6 +112,7 @@
 "rside" = "R(紅)";
 "fside" = "F(緑)";
 "bside" = "B(藍)";
+"color_scheme" = "配色設定";
 "more" = "更多";
 "interface" = "界面";
 "bgcolor" = "背景顏色";
@@ -121,8 +124,8 @@
 "timer_size" = "計時器大小";
 "version" = "版本";
 "about" = "關於";
-"gesture" = "手勢說明";
-"rate_app" = "如果你喜歡，請評分";
+"gesture" = "手勢管理";
+"rate_app" = "為App評分";
 "email_feedback" = "意見反饋";
 "licenses" = "許可證";
 "feedback" = "反饋";
@@ -141,11 +144,12 @@
 "title_ses" = "詳情：本組平均";
 
 "defsession" = "默認分組";
-"selected" = "已選中";
-"newses" = "新建分組";
-"deleteses" = "刪除分組";
-"clearses" = "清空分組成績";
+"selected" = "已選中，";
+"new_session" = "新建分組";
+"delete_session" = "刪除分組";
+"clear_session" = "清空分組成績";
 "rename" = "重命名";
+"num_of_solve" = "還原次數：";
 
 "1fhold" = "單指長按計時界面";
 "sr" = "向右輕掃";

@@ -366,9 +366,8 @@ CubieCube *temps = nil;
     CubieCube *f2 = [[CubieCube alloc] initCubie:28783 twist:0 eperm:259268407 flip:0];
     CubieCube *u4 = [[CubieCube alloc] initCubie:15138 twist:0 eperm:119765538 flip:7];
     CubieCube *lr2 = [[CubieCube alloc] initCubie:5167 twist:0 eperm:83473207 flip:0];
-    for (int x = 0; x < 8; x++) {
+    for (int x = 0; x < 8; x++)
         lr2->co[x] = 3;
-    }
     
     CubeSym = [[NSMutableArray alloc] init];
     for (int i=0; i<16; i++) {
@@ -407,10 +406,9 @@ CubieCube *temps = nil;
     for (int j=0; j<18; j++) {
         for (int s=0; s<16; s++) {
             [CubieCube CornConjugate:[moveCube objectAtIndex:j] idx:SymInv[s] cubeB:c];
-            int m=0;
-            int i=0;
+            int m=0, i=0;
         label: //Let this comment serve as a reminder of my pain while writing this.
-            for (; m<18; m++) {
+            for (; m<18; ) {
                 for (i=0; i<8; i+=2) {
                     CubieCube *tempCube = [moveCube objectAtIndex:m];
                     if (c->cp[i] != tempCube->cp[i]) {

@@ -35,7 +35,6 @@
 
 "scramble_view" = "Scramble view";
 "scramble_type" = "Scramble type";
-"not_support" = "Niet mogelijk voor dit scramble type";
 "scrambling" = "scrambling...";
 "invalid_in" = "Ongeldige input.";
 
@@ -74,6 +73,8 @@
 "sesavg" = "Sessie avg:";
 "currentmean3" = "Huidig-mean van 3:";
 "bestmean3" = "Beste mean van 3:";
+"histogram" = "Histogram";
+"graph" = "Graph";
 "calcing" = "Uitrekenen...";
 
 "WCAinsp" = "WCA inspectie";
@@ -99,6 +100,7 @@
 "printscr" = "Laat scramble(s) in statistieken zien";
 "newest_top" = "Nieuwste tijden bovenaan";
 "subtitle" = "Subtitel";
+"dateformat" = "Date format";
 "tools" = "Tools";
 "cross" = "Solve 3x3 cross";
 "3solver" = "3x3 solvers";
@@ -111,6 +113,7 @@
 "rside" = "R(rood)";
 "fside" = "F(groen)";
 "bside" = "B(blauw)";
+"color_scheme" = "Color schemes";
 "more" = "Meer";
 "interface" = "Interface";
 "bgcolor" = "Achtergrond kleur";
@@ -122,7 +125,7 @@
 "timer_size" = "Grootte timer";
 "version" = "Versie";
 "about" = "Over";
-"gesture" = "Help gebaren";
+"gesture" = "Gebaar beheer";
 "rate_app" = "Rate app";
 "email_feedback" = "Email feedback";
 "licenses" = "Licensies";
@@ -142,11 +145,12 @@
 "title_ses" = "Detail: session mean";
 
 "defsession" = "Standaard sessie";
-"selected" = "Geselecteerd";
-"newses" = "Nieuwe sessie";
-"deleteses" = "Verwijder sessie";
-"clearses" = "Wis sessie";
+"selected" = "Current session. ";
+"new_session" = "Nieuwe sessie";
+"delete_session" = "Verwijder sessie";
+"clear_session" = "Wis sessie";
 "rename" = "Hernoem";
+"num_of_solve" = "Number of solves: ";
 
 "1fhold" = "Één vinger lang indrukken";
 "sr" = "Veeg naar rechts";
@@ -158,5 +162,5 @@
 "srdo" = "Verwijder scramble";
 "sldo" = "Verwijder laatste solve";
 "1f2tdo" = "Kies penalty";
-"sudo" = "Wijzig penalty van laatste solve";
+"sudo" = "Penalty van laatste solve";
 "sddo" = "Wis sessie";

@@ -567,7 +567,7 @@ int prm[8];
     int shape = [self getShapeIdx];
     //NSLog(@"%d %d %d %d %d, %d %d", ul, ur, dl, dr, ml, shape, ShapePrun[shape]);
     for (len1=ShapePrun[shape]; len1<70; len1++) {
-        maxlen2 = MIN(34 - len1, 17);
+        maxlen2 = MIN(32 - len1, 17);
         if ([self sqPhase1:shape p:ShapePrun[shape] m:len1 d:0 l:-1]) {
             break;
         }

@@ -35,7 +35,6 @@
 
 "scramble_view" = "打乱状态";
 "scramble_type" = "打乱类型";
-"not_support" = "暂不支持的打乱类型";
 "scrambling" = "打乱中…";
 "invalid_in" = "无效输入";
 
@@ -74,6 +73,8 @@
 "sesavg" = "去尾平均:";
 "currentmean3" = "当前3次平均:";
 "bestmean3" = "最快3次平均:";
+"histogram" = "时间分布";
+"graph" = "折线图";
 "calcing" = "计算中…";
 
 "WCAinsp" = "WCA 观察";
@@ -96,13 +97,14 @@
 "mono_font" = "使用等宽打乱字体";
 "newest_top" = "成绩列表逆序显示";
 "subtitle" = "成绩列表副标题";
+"dateformat" = "日期格式";
 "stt_stats" = "统计";
 "prompttime" = "提示对每次成绩的操作";
 "printscr" = "详细成绩中显示打乱";
 "tools" = "工具";
 "cross" = "三阶十字求解";
 "3solver" = "三阶相关求解";
-"solcolor" = "底色";
+"solcolor" = "十字/EC/EO求解底色";
 "sq_shape_solver" = "SQ1复形求解";
 "none" = "无";
 "dside" = "D(黄)";
@@ -111,19 +113,20 @@
 "rside" = "R(红)";
 "fside" = "F(绿)";
 "bside" = "B(蓝)";
+"color_scheme" = "配色";
 "more" = "更多";
 "interface" = "界面";
 "bgcolor" = "背景颜色";
 "textcolor" = "文字颜色";
 "bg_image" = "背景图片";
 "opacity" = "不透明度";
-"show_image" = "显示图片";
+"show_image" = "显示背景图片";
 "timer_font" = "计时器字体";
 "timer_size" = "计时器大小";
 "version" = "版本";
 "about" = "关于";
-"gesture" = "手势说明";
-"rate_app" = "如果你喜欢，请评分";
+"gesture" = "手势管理";
+"rate_app" = "为App评分";
 "email_feedback" = "意见反馈";
 "licenses" = "许可证";
 "feedback" = "反馈";
@@ -142,11 +145,12 @@
 "title_ses" = "详情：本组平均";
 
 "defsession" = "默认分组";
-"selected" = "已选中";
-"newses" = "新建分组";
-"deleteses" = "删除分组";
-"clearses" = "清空分组成绩";
+"selected" = "已选中，";
+"new_session" = "新建分组";
+"delete_session" = "删除分组";
+"clear_session" = "清空分组成绩";
 "rename" = "重命名";
+"num_of_solve" = "还原次数：";
 
 "1fhold" = "单指长按计时界面";
 "sr" = "向右轻扫";

@@ -25,7 +25,7 @@ typedef enum timerState {
     int resTime;
     int time1;
     uint64_t timeStart;
-    int swipeType;
+    NSInteger swipeType;
     bool isChange;
     bool canStart, isNextScr;
     int bgcolor, textcolor;
