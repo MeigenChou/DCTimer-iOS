@@ -2,7 +2,7 @@
 //  EdgeCube.m
 //  DCTimer
 //
-//  Created by MeigenChou on 14-8-16.
+//  Created by meigen on 15/10/30.
 //
 //
 
@@ -10,7 +10,6 @@
 #import "Util4.h"
 
 @implementation EdgeCube
-
 const int U = 0;
 const int D = 1;
 const int F = 2;
@@ -24,9 +23,8 @@ extern char colorMap4to3[];
 -(id) init {
     if (self = [super init]) {
         for (int i=0; i<24; i++) {
-			ep[i] = i;
-		}
-        srand((unsigned)time(0));
+            ep[i] = i;
+        }
     }
     return self;
 }
@@ -34,25 +32,24 @@ extern char colorMap4to3[];
 -(id) initEdge:(EdgeCube *)c {
     if (self = [super init]) {
         [self copy:c];
-        srand((unsigned)time(0));
     }
     return self;
 }
 
--(id) initRandomEdge {
+-(id)initRandomEdge {
     if (self = [super init]) {
         srand((unsigned)time(0));
         for (int i=0; i<24; i++) {
-			ep[i] = i;
-		}
+            ep[i] = i;
+        }
         for (int i=0; i<23; i++) {
-			int t = i + (rand() % (24 - i));
-			if (t != i) {
-				int m = ep[i];
-				ep[i] = ep[t];
-				ep[t] = m;
-			}
-		}
+            int t = i + (rand() % (24 - i));
+            if (t != i) {
+                int m = ep[i];
+                ep[i] = ep[t];
+                ep[t] = m;
+            }
+        }
     }
     return self;
 }
@@ -90,40 +87,40 @@ extern char colorMap4to3[];
     switch (m) {
         case 6: //u
             [Util4 swap:ep a:9 b:22 c:11 d:20 k:key];
-		case 0:	//U
+        case 0:	//U
             [Util4 swap:ep a:0 b:1 c:2 d:3 k:key];
-			[Util4 swap:ep a:12 b:13 c:14 d:15 k:key];
-			break;
+            [Util4 swap:ep a:12 b:13 c:14 d:15 k:key];
+            break;
         case 7: //r
             [Util4 swap:ep a:2 b:16 c:6 d:12 k:key];
-		case 1:	//R
+        case 1:	//R
             [Util4 swap:ep a:11 b:15 c:10 d:19 k:key];
-			[Util4 swap:ep a:23 b:3 c:22 d:7 k:key];
-			break;
+            [Util4 swap:ep a:23 b:3 c:22 d:7 k:key];
+            break;
         case 8: //f
             [Util4 swap:ep a:3 b:19 c:5 d:13 k:key];
-		case 2:	//F
+        case 2:	//F
             [Util4 swap:ep a:0 b:11 c:6 d:8 k:key];
-			[Util4 swap:ep a:12 b:23 c:18 d:20 k:key];
-			break;
+            [Util4 swap:ep a:12 b:23 c:18 d:20 k:key];
+            break;
         case 9: //d
             [Util4 swap:ep a:8 b:23 c:10 d:21 k:key];
-		case 3:	//D
+        case 3:	//D
             [Util4 swap:ep a:4 b:5 c:6 d:7 k:key];
-			[Util4 swap:ep a:16 b:17 c:18 d:19 k:key];
-			break;
+            [Util4 swap:ep a:16 b:17 c:18 d:19 k:key];
+            break;
         case 10:    //l
             [Util4 swap:ep a:14 b:0 c:18 d:4 k:key];
-		case 4:	//L
+        case 4:	//L
             [Util4 swap:ep a:1 b:20 c:5 d:21 k:key];
-			[Util4 swap:ep a:13 b:8 c:17 d:9 k:key];
-			break;
+            [Util4 swap:ep a:13 b:8 c:17 d:9 k:key];
+            break;
         case 11:    //b
             [Util4 swap:ep a:7 b:15 c:1 d:17 k:key];
-		case 5:	//B
+        case 5:	//B
             [Util4 swap:ep a:2 b:9 c:4 d:10 k:key];
-			[Util4 swap:ep a:14 b:21 c:16 d:22 k:key];
-			break;
+            [Util4 swap:ep a:14 b:21 c:16 d:22 k:key];
+            break;
     }
 }
 @end

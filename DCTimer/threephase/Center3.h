@@ -2,7 +2,7 @@
 //  Center3.h
 //  DCTimer
 //
-//  Created by MeigenChou on 14-8-15.
+//  Created by meigen on 15/10/30.
 //
 //
 
@@ -17,6 +17,8 @@
 }
 
 +(void) initCent3;
++(void)initMove;
++(void)initPrun;
 -(void)set:(CenterCube *)c ep:(int)eXc_parity;
 -(int)getct;
 

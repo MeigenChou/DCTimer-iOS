@@ -2,7 +2,7 @@
 //  Center1.h
 //  DCTimer
 //
-//  Created by MeigenChou on 14-8-2.
+//  Created by meigen on 15/10/30.
 //
 //
 
@@ -13,8 +13,12 @@
     int ct[24];
 }
 
-+(void) initCent1;
 -(id) initCentUrf:(CenterCube *)c urf:(int)urf;
-+(int) getSolvedSym:(CenterCube *)cube;
--(int) getsym;
++(int)getSolvedSym:(CenterCube *)cube;
+-(int)getsym;
++(void)initSym;
++(void)initSym2Raw;
++(void)createMoveTable;
++(void)createPrun;
+
 @end

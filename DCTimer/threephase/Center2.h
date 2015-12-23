@@ -2,7 +2,7 @@
 //  Center2.h
 //  DCTimer
 //
-//  Created by MeigenChou on 14-8-14.
+//  Created by meigen on 15/10/30.
 //
 //
 
@@ -14,8 +14,12 @@
     int ct[16];
     int parity;
 }
-+(void) initCent2;
--(void) set:(CenterCube *)c ep:(int)edgeParity;
--(int) getct;
--(int) getrl;
+
++(void)initRL;
++(void)initMove;
++(void)initPrun;
+-(void)set:(CenterCube *)c ep:(int)edgeParity;
+-(int)getct;
+-(int)getrl;
+
 @end

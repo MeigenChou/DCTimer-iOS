@@ -2,7 +2,7 @@
 //  CenterCube.h
 //  DCTimer
 //
-//  Created by MeigenChou on 14-8-15.
+//  Created by meigen on 15/10/30.
 //
 //
 
@@ -12,9 +12,9 @@
 @public
     int ct[24];
 }
-
--(id) initRandomCent;
--(void) move:(int)m;
--(void) fill333Facelet:(char[])facelet;
+-(id)initRandomCent;
+-(void)copy:(CenterCube *)c;
+-(void)move:(int)m;
+-(void)fill333Facelet:(char[])facelet;
 
 @end

@@ -2,14 +2,12 @@
 //  Center2.m
 //  DCTimer
 //
-//  Created by MeigenChou on 14-8-14.
+//  Created by meigen on 15/10/30.
 //
 //
 
 #import "Center2.h"
-#import "CenterCube.h"
 #import "Util4.h"
-
 
 @implementation Center2
 int rlmv[70][28];
@@ -25,10 +23,9 @@ extern int move2std[];
 int c2pmv[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1,
     0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0};
 
-+(void) initCent2 {
-    NSLog(@"init cent2..");
++(void)initRL {
     Center2 *c = [[Center2 alloc] init];
-    for (int i=0; i<35*2; i++) {
+    for (int i=0; i<70; i++) {
         for (int m=0; m<28; m++) {
             [c setrl:i];
             [c move:move2std[m]];
@@ -44,15 +41,10 @@ int c2pmv[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             if (j%8==7) [c rot:2];
         }
     }
-    for (int i=0; i<6435; i++) {
-        [c setct:i];
-        for (int j=0; j<16; j++) {
-            ctrot[i][j] = [c getct];
-            [c rot:0];
-            if (j%2==1) [c rot:1];
-            if (j%8==7) [c rot:2];
-        }
-    }
+}
+
++(void)initMove {
+    Center2 *c = [[Center2 alloc] init];
     for (int i=0; i<6435; i++) {
         for (int m=0; m<28; m++) {
             [c setct:i];
@@ -60,16 +52,16 @@ int c2pmv[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
             ctmv[i][m] = [c getct];
         }
     }
-    for(int i=1; i<450450; i++)
-        ct2prun[i] = -1;
+}
+
++(void)initPrun {
+    for(int i=1; i<450450; i++) ct2prun[i] = -1;
     ct2prun[0] = ct2prun[18] = ct2prun[28] = ct2prun[46] = ct2prun[54] = ct2prun[56] = 0;
     int depth = 0;
     int done = 6;
     while (depth < 9) {
         for (int i=0; i<450450; i++) {
-            if (ct2prun[i] != depth) {
-                continue;
-            }
+            if (ct2prun[i] != depth) continue;
             int ct = i / 70;
             int rl = i % 70;
             for (int m=0; m<23; m++) {
@@ -85,7 +77,6 @@ int c2pmv[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
         depth++;
         //NSLog(@"%d %d", depth, done);
     }
-    NSLog(@"OK");
 }
 
 -(id) init {
@@ -99,18 +90,18 @@ int c2pmv[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
     if (self = [super init]) {
         parity = 0;
         for (int i=0; i<16; i++) {
-			ct[i] = c->ct[i] / 2;
-		}
-		for (int i=0; i<8; i++) {
-			rl[i] = c->ct[i+16];
-		}
+            ct[i] = c->ct[i] / 2;
+        }
+        for (int i=0; i<8; i++) {
+            rl[i] = c->ct[i+16];
+        }
     }
     return self;
 }
 
 -(void) set:(CenterCube *)c ep:(int)edgeParity {
     for (int i=0; i<16; i++) {
-        ct[i] = c->ct[i] / 2;
+        ct[i] = c->ct[i] % 3;
     }
     for (int i=0; i<8; i++) {
         rl[i] = c->ct[i+16];
@@ -170,22 +161,22 @@ int c2pmv[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 
 -(void) rot:(int)r {
     switch (r) {
-		case 0:
+        case 0:
             [self move:ux2];
-			[self move:dx2];
-			break;
-		case 1:
+            [self move:dx2];
+            break;
+        case 1:
             [self move:rx1];
-			[self move:lx3];
-			break;
-		case 2:
+            [self move:lx3];
+            break;
+        case 2:
             [Util4 swap:ct a:0 b:3 c:1 d:2 k:1];
-			[Util4 swap:ct a:8 b:11 c:9 d:10 k:1];
-			[Util4 swap:ct a:4 b:7 c:5 d:6 k:1];
-			[Util4 swap:ct a:12 b:15 c:13 d:14 k:1];
-			[Util4 swap:rl a:0 b:3 c:5 d:6 k:1];
-			[Util4 swap:rl a:1 b:2 c:4 d:7 k:1];
-			break;
+            [Util4 swap:ct a:8 b:11 c:9 d:10 k:1];
+            [Util4 swap:ct a:4 b:7 c:5 d:6 k:1];
+            [Util4 swap:ct a:12 b:15 c:13 d:14 k:1];
+            [Util4 swap:rl a:0 b:3 c:5 d:6 k:1];
+            [Util4 swap:rl a:1 b:2 c:4 d:7 k:1];
+            break;
     }
 }
 
@@ -197,39 +188,39 @@ int c2pmv[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
         case 6:		//u
             [Util4 swap:rl a:0 b:5 c:4 d:1 k:key];
             [Util4 swap:ct a:8 b:9 c:12 d:13 k:key];
-		case 0:		//U
+        case 0:		//U
             [Util4 swap:ct a:0 b:1 c:2 d:3 k:key];
-			break;
+            break;
         case 7:		//r
             [Util4 swap:ct a:1 b:15 c:5 d:9 k:key];
             [Util4 swap:ct a:2 b:12 c:6 d:10 k:key];
-		case 1:		//R
+        case 1:		//R
             [Util4 swap:rl a:0 b:1 c:2 d:3 k:key];
-			break;
+            break;
         case 8:		//f
             [Util4 swap:rl a:0 b:3 c:6 d:5 k:key];
             [Util4 swap:ct a:3 b:2 c:5 d:4 k:key];
-		case 2:		//F
+        case 2:		//F
             [Util4 swap:ct a:8 b:9 c:10 d:11 k:key];
-			break;
+            break;
         case 9:		//d
             [Util4 swap:rl a:3 b:2 c:7 d:6 k:key];
             [Util4 swap:ct a:11 b:10 c:15 d:14 k:key];
-		case 3:		//D
+        case 3:		//D
             [Util4 swap:ct a:4 b:5 c:6 d:7 k:key];
-			break;
+            break;
         case 10:	//l
             [Util4 swap:ct a:0 b:8 c:4 d:14 k:key];
             [Util4 swap:ct a:3 b:11 c:7 d:13 k:key];
-		case 4:		//L
+        case 4:		//L
             [Util4 swap:rl a:4 b:5 c:6 d:7 k:key];
-			break;
+            break;
         case 11:	//b
             [Util4 swap:rl a:1 b:4 c:7 d:2 k:key];
             [Util4 swap:ct a:1 b:0 c:7 d:6 k:key];
-		case 5:		//B
+        case 5:		//B
             [Util4 swap:ct a:12 b:13 c:14 d:15 k:key];
-			break;
+            break;
     }
 }
 @end

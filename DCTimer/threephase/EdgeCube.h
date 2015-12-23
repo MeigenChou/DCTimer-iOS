@@ -2,7 +2,7 @@
 //  EdgeCube.h
 //  DCTimer
 //
-//  Created by MeigenChou on 14-8-16.
+//  Created by meigen on 15/10/30.
 //
 //
 
@@ -14,8 +14,10 @@
 }
 
 -(id) initRandomEdge;
+-(void) copy:(EdgeCube *)c;
 -(bool) checkEdge;
 -(void) move:(int)m;
 -(void) fill333Facelet:(char[])facelet;
 -(int) getParity;
+
 @end

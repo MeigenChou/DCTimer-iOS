@@ -2,13 +2,14 @@
 //  Moves.m
 //  DCTimer
 //
-//  Created by MeigenChou on 14-8-14.
+//  Created by meigen on 15/10/30.
 //
 //
 
 #import "Moves.h"
 
 @implementation Moves
+
 extern int Ux1, Ux2, Ux3, Rx1, Rx2, Rx3, Fx1, Fx2, Fx3;
 extern int Dx1, Dx2, Dx3, Lx1, Lx2, Lx3, Bx1, Bx2, Bx3;
 const int ux1 = 18;
@@ -43,4 +44,50 @@ int ckmv3[21][20];
 int skipAxis[36];
 int skipAxis2[28];
 int skipAxis3[20];
+
++(void)initMoves {
+    for (int i=0; i<36; i++) {
+        for (int j=0; j<36; j++) {
+            ckmv[i][j] = (i/3 == j/3) || ((i/3%3 == j/3%3) && (i>j));
+        }
+        ckmv[36][i] = false;
+    }
+    for (int i=0; i<29; i++) {
+        for (int j=0; j<28; j++) {
+            ckmv2[i][j] = ckmv[move2std[i]][move2std[j]];
+        }
+    }
+    for (int i=0; i<21; i++) {
+        for (int j=0; j<20; j++) {
+            ckmv3[i][j] = ckmv[move3std[i]][move3std[j]];
+        }
+    }
+    for (int i=0; i<36; i++) {
+        skipAxis[i] = 36;
+        for (int j=i; j<36; j++) {
+            if (!ckmv[i][j]) {
+                skipAxis[i] = j - 1;
+                break;
+            }
+        }
+    }
+    for (int i=0; i<28; i++) {
+        skipAxis2[i] = 28;
+        for (int j=i; j<28; j++) {
+            if (!ckmv2[i][j]) {
+                skipAxis2[i] = j - 1;
+                break;
+            }
+        }
+    }
+    for (int i=0; i<20; i++) {
+        skipAxis3[i] = 20;
+        for (int j=i; j<20; j++) {
+            if (!ckmv3[i][j]) {
+                skipAxis3[i] = j - 1;
+                break;
+            }
+        }
+    }
+}
 @end

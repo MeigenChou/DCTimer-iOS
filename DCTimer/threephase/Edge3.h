@@ -2,7 +2,7 @@
 //  Edge3.h
 //  DCTimer
 //
-//  Created by MeigenChou on 14-8-15.
+//  Created by meigen on 15/10/30.
 //
 //
 
@@ -23,10 +23,10 @@
 +(void) createPrun;
 -(void) set:(int)idx;
 +(int) getmvrot:(int[])ep m:(int)mrIdx e:(int)end;
-+(int) getprun:(int)edge p:(int)prun;
++(int)getprun:(int)edge prun:(int)prun;
 -(int) setEdgeCube:(EdgeCube *)c;
 -(int) get:(int)end;
-+(int) getprun:(int)edge;
++(int)getprun:(int)edge;
 -(int) getsym;
 
 @end

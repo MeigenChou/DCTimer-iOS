@@ -2,16 +2,14 @@
 //  Center3.m
 //  DCTimer
 //
-//  Created by MeigenChou on 14-8-15.
+//  Created by meigen on 15/10/30.
 //
 //
 
 #import "Center3.h"
-#import "CenterCube.h"
 #import "Util4.h"
 
 @implementation Center3
-
 unsigned short ctmove[35*35*12*2][20];
 int pmove[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};
 char ct3prun[35*35*12*2];
@@ -26,11 +24,13 @@ extern int Cnk[25][25];
     return self;
 }
 
-+(void) initCent3 {
-    NSLog(@"init cent3..");
++(void)initCent3 {
     for (int i=0; i<12; i++) {
         std2rl[rl2std[i]] = i;
     }
+}
+
++(void)initMove {
     Center3 *c = [[Center3 alloc] init];
     for (int i=0; i<35*35*12*2; i++) {
         for (int m=0; m<20; m++) {
@@ -39,6 +39,9 @@ extern int Cnk[25][25];
             ctmove[i][m] = [c getct];
         }
     }
+}
+
++(void)initPrun {
     for (int i=1; i<29400; i++) ct3prun[i] = -1;
     ct3prun[0] = 0;
     int depth = 0;
@@ -58,15 +61,14 @@ extern int Cnk[25][25];
         depth++;
         //NSLog(@"%d %d", depth, done);
     }
-    NSLog(@"OK");
 }
 
 -(void)set:(CenterCube *)c ep:(int)eXc_parity {
-    int p = (c->ct[0]>c->ct[8] ^ c->ct[8]>c->ct[16] ^ c->ct[0]>c->ct[16]) ? 1 : 0;
+    int p = (c->ct[0]%3 > c->ct[8]%3 ^ c->ct[8]%3 > c->ct[16]%3 ^ c->ct[0]%3 > c->ct[16]%3) ? 0 : 1;
     for (int i=0; i<8; i++) {
-        ud[i] = (c->ct[i] & 1) ^ 1;
-        fb[i] = (c->ct[i+8] & 1) ^ 1;
-        rl[i] = (c->ct[i+16] & 1) ^ 1 ^ p;
+        ud[i] = (c->ct[i] / 3) ^ 1;
+        fb[i] = (c->ct[i+8] / 3) ^ 1;
+        rl[i] = (c->ct[i+16] / 3) ^ 1 ^ p;
     }
     self->parity = p ^ eXc_parity;
 }
@@ -138,62 +140,62 @@ extern int Cnk[25][25];
 -(void) move:(int)i {
     parity ^= pmove[i];
     switch (i) {
-		case 0:		//U
-		case 1:		//U2
-		case 2:		//U'
+        case 0:		//U
+        case 1:		//U2
+        case 2:		//U'
             [Util4 swap:ud a:0 b:1 c:2 d:3 k:i%3];
-			break;
-		case 3:		//R2
+            break;
+        case 3:		//R2
             [Util4 swap:rl a:0 b:1 c:2 d:3 k:1];
-			break;
-		case 4:		//F
-		case 5:		//F2
-		case 6:		//F'
+            break;
+        case 4:		//F
+        case 5:		//F2
+        case 6:		//F'
             [Util4 swap:fb a:0 b:1 c:2 d:3 k:(i-1)%3];
-			break;
-		case 7:		//D
-		case 8:		//D2
-		case 9:		//D'
+            break;
+        case 7:		//D
+        case 8:		//D2
+        case 9:		//D'
             [Util4 swap:ud a:4 b:5 c:6 d:7 k:(i-1)%3];
-			break;
-		case 10:	//L2
+            break;
+        case 10:	//L2
             [Util4 swap:rl a:4 b:5 c:6 d:7 k:1];
-			break;
-		case 11:	//B
-		case 12:	//B2
-		case 13:	//B'
+            break;
+        case 11:	//B
+        case 12:	//B2
+        case 13:	//B'
             [Util4 swap:fb a:4 b:5 c:6 d:7 k:(i+1)%3];
-			break;
-		case 14:	//u2
+            break;
+        case 14:	//u2
             [Util4 swap:ud a:0 b:1 c:2 d:3 k:1];
             [Util4 swap:rl a:0 b:5 c:4 d:1 k:1];
             [Util4 swap:fb a:0 b:5 c:4 d:1 k:1];
-			break;
-		case 15:	//r2
+            break;
+        case 15:	//r2
             [Util4 swap:rl a:0 b:1 c:2 d:3 k:1];
             [Util4 swap:fb a:1 b:4 c:7 d:2 k:1];
             [Util4 swap:ud a:1 b:6 c:5 d:2 k:1];
-			break;
-		case 16:	//f2
+            break;
+        case 16:	//f2
             [Util4 swap:fb a:0 b:1 c:2 d:3 k:1];
             [Util4 swap:ud a:3 b:2 c:5 d:4 k:1];
             [Util4 swap:rl a:0 b:3 c:6 d:5 k:1];
-			break;
-		case 17:	//d2
+            break;
+        case 17:	//d2
             [Util4 swap:ud a:4 b:5 c:6 d:7 k:1];
             [Util4 swap:rl a:3 b:2 c:7 d:6 k:1];
             [Util4 swap:fb a:3 b:2 c:7 d:6 k:1];
-			break;
-		case 18:	//l2
+            break;
+        case 18:	//l2
             [Util4 swap:rl a:4 b:5 c:6 d:7 k:1];
             [Util4 swap:fb a:0 b:3 c:6 d:5 k:1];
             [Util4 swap:ud a:0 b:3 c:4 d:7 k:1];
-			break;
-		case 19:	//b2
+            break;
+        case 19:	//b2
             [Util4 swap:fb a:4 b:5 c:6 d:7 k:1];
             [Util4 swap:ud a:0 b:7 c:6 d:1 k:1];
             [Util4 swap:rl a:1 b:4 c:7 d:2 k:1];
-			break;
+            break;
     }
 }
 @end

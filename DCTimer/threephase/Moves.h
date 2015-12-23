@@ -2,12 +2,14 @@
 //  Moves.h
 //  DCTimer
 //
-//  Created by MeigenChou on 14-8-14.
+//  Created by meigen on 15/10/30.
 //
 //
 
 #import <Foundation/Foundation.h>
 
 @interface Moves : NSObject
+
++(void)initMoves;
 
 @end
