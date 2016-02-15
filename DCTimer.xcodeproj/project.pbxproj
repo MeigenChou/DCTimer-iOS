@@ -8,7 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		F53D83731A59331800084BE3 /* DCTGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = F53D83721A59331800084BE3 /* DCTGraphView.m */; };
+		F55C00961BD5416200E4203A /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F55C00951BD5416200E4203A /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F55C6C961BE46463002A9225 /* FullCube.m in Sources */ = {isa = PBXBuildFile; fileRef = F55C6C951BE46463002A9225 /* FullCube.m */; };
+		F55C6C991BE467B5002A9225 /* CornerCube.m in Sources */ = {isa = PBXBuildFile; fileRef = F55C6C981BE467B5002A9225 /* CornerCube.m */; };
+		F55C95AC1BE3822F00223D7A /* Util4.m in Sources */ = {isa = PBXBuildFile; fileRef = F55C95AB1BE3822F00223D7A /* Util4.m */; };
+		F55C95B81BE3848100223D7A /* Moves.m in Sources */ = {isa = PBXBuildFile; fileRef = F55C95B61BE3848100223D7A /* Moves.m */; };
+		F55C95BB1BE3851400223D7A /* Center1.m in Sources */ = {isa = PBXBuildFile; fileRef = F55C95BA1BE3851400223D7A /* Center1.m */; };
+		F55C95BE1BE388CB00223D7A /* CenterCube.m in Sources */ = {isa = PBXBuildFile; fileRef = F55C95BD1BE388CB00223D7A /* CenterCube.m */; };
+		F55C95C11BE38CA400223D7A /* Search4.m in Sources */ = {isa = PBXBuildFile; fileRef = F55C95C01BE38CA400223D7A /* Search4.m */; };
+		F55C95C41BE391C800223D7A /* Center2.m in Sources */ = {isa = PBXBuildFile; fileRef = F55C95C31BE391C800223D7A /* Center2.m */; };
+		F55C95C71BE393FB00223D7A /* Center3.m in Sources */ = {isa = PBXBuildFile; fileRef = F55C95C61BE393FB00223D7A /* Center3.m */; };
+		F55C95CA1BE3961700223D7A /* EdgeCube.m in Sources */ = {isa = PBXBuildFile; fileRef = F55C95C91BE3961700223D7A /* EdgeCube.m */; };
+		F55C95CD1BE396D200223D7A /* Edge3.m in Sources */ = {isa = PBXBuildFile; fileRef = F55C95CC1BE396D200223D7A /* Edge3.m */; };
+		F56A008A1BE4F9B0008D7E6C /* PriorityQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F56A00891BE4F9B0008D7E6C /* PriorityQueue.m */; };
+		F57510421C632C750076FA86 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = F57510411C632C750076FA86 /* Util.m */; };
+		F57510451C632D5B0076FA86 /* Util3.m in Sources */ = {isa = PBXBuildFile; fileRef = F57510441C632D5B0076FA86 /* Util3.m */; };
 		F58371F71704DB9E0011FB0A /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F58371F31704DB2C0011FB0A /* libsqlite3.0.dylib */; };
+		F58DE69B1BD9232F00B29F4A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58DE69A1BD9232F00B29F4A /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F590468116F21649001B71F5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F590468316F21649001B71F5 /* Localizable.strings */; };
 		F59FF53E16E1FD7400D7FE65 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F59FF53D16E1FD7400D7FE65 /* UIKit.framework */; };
 		F59FF54016E1FD7400D7FE65 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F59FF53F16E1FD7400D7FE65 /* Foundation.framework */; };
@@ -29,7 +45,6 @@
 		F5B8732E171310880065F0D2 /* EOLine.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B8731B171310880065F0D2 /* EOLine.m */; };
 		F5B8732F171310880065F0D2 /* Floppy.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B8731D171310880065F0D2 /* Floppy.m */; };
 		F5B87330171310880065F0D2 /* Gear.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B8731F171310880065F0D2 /* Gear.m */; };
-		F5B87331171310880065F0D2 /* Im.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B87321171310880065F0D2 /* Im.m */; };
 		F5B87332171310880065F0D2 /* Pyraminx.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B87323171310880065F0D2 /* Pyraminx.m */; };
 		F5B87333171310880065F0D2 /* RTower.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B87325171310880065F0D2 /* RTower.m */; };
 		F5B87334171310880065F0D2 /* Skewb.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B87327171310880065F0D2 /* Skewb.m */; };
@@ -42,15 +57,12 @@
 		F5B8735A171312CF0065F0D2 /* DCTSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B8734C171312CF0065F0D2 /* DCTSettingsViewController.m */; };
 		F5B8735B171312CF0065F0D2 /* DCTStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B8734E171312CF0065F0D2 /* DCTStatsViewController.m */; };
 		F5B87363171313680065F0D2 /* DCTScrambleView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B87361171313680065F0D2 /* DCTScrambleView.m */; };
-		F5B8736E171313E90065F0D2 /* blueButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B87365171313E90065F0D2 /* blueButton.png */; };
 		F5B8736F171313E90065F0D2 /* img1.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B87366171313E90065F0D2 /* img1.png */; };
 		F5B87370171313E90065F0D2 /* img1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B87367171313E90065F0D2 /* img1@2x.png */; };
 		F5B87371171313E90065F0D2 /* img2.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B87368171313E90065F0D2 /* img2.png */; };
 		F5B87372171313E90065F0D2 /* img2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B87369171313E90065F0D2 /* img2@2x.png */; };
 		F5B87373171313E90065F0D2 /* img3.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B8736A171313E90065F0D2 /* img3.png */; };
 		F5B87374171313E90065F0D2 /* img3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B8736B171313E90065F0D2 /* img3@2x.png */; };
-		F5B87375171313E90065F0D2 /* title_more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B8736C171313E90065F0D2 /* title_more@2x.png */; };
-		F5B87376171313E90065F0D2 /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F5B8736D171313E90065F0D2 /* whiteButton.png */; };
 		F5CC233A18B8F778005503A6 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5CC233918B8F778005503A6 /* CoreMotion.framework */; };
 		F5CD77DB18B264CB00180470 /* DCTStatDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5CD77DA18B264CB00180470 /* DCTStatDetailController.m */; };
 		F5D0570618AA88C2002E9746 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D0570518AA88C2002E9746 /* MessageUI.framework */; };
@@ -76,7 +88,6 @@
 		F5E98D90187ACDF5006933EE /* DCTAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E98D8F187ACDF5006933EE /* DCTAboutViewController.m */; };
 		F5E98D92187AD915006933EE /* scrambleCN.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5E98D91187AD915006933EE /* scrambleCN.plist */; };
 		F5F50EEE1773EF9A0049AA65 /* CubieCube.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F50EED1773EF9A0049AA65 /* CubieCube.m */; };
-		F5F50EF11773F4EA0049AA65 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F50EF01773F4EA0049AA65 /* Util.m */; };
 		F5F50EF41773FA750049AA65 /* CoordCube.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F50EF31773FA750049AA65 /* CoordCube.m */; };
 		F5F50EF7177404280049AA65 /* Search.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F50EF6177404280049AA65 /* Search.m */; };
 /* End PBXBuildFile section */
@@ -84,7 +95,37 @@
 /* Begin PBXFileReference section */
 		F53D83711A59331800084BE3 /* DCTGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTGraphView.h; sourceTree = "<group>"; };
 		F53D83721A59331800084BE3 /* DCTGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTGraphView.m; sourceTree = "<group>"; };
+		F55C00951BD5416200E4203A /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		F55C6C941BE46463002A9225 /* FullCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullCube.h; path = threephase/FullCube.h; sourceTree = "<group>"; };
+		F55C6C951BE46463002A9225 /* FullCube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullCube.m; path = threephase/FullCube.m; sourceTree = "<group>"; };
+		F55C6C971BE467B5002A9225 /* CornerCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CornerCube.h; path = threephase/CornerCube.h; sourceTree = "<group>"; };
+		F55C6C981BE467B5002A9225 /* CornerCube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CornerCube.m; path = threephase/CornerCube.m; sourceTree = "<group>"; };
+		F55C95AA1BE3822F00223D7A /* Util4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Util4.h; path = threephase/Util4.h; sourceTree = "<group>"; };
+		F55C95AB1BE3822F00223D7A /* Util4.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Util4.m; path = threephase/Util4.m; sourceTree = "<group>"; };
+		F55C95B51BE3848100223D7A /* Moves.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Moves.h; path = threephase/Moves.h; sourceTree = "<group>"; };
+		F55C95B61BE3848100223D7A /* Moves.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Moves.m; path = threephase/Moves.m; sourceTree = "<group>"; };
+		F55C95B91BE3851400223D7A /* Center1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Center1.h; path = threephase/Center1.h; sourceTree = "<group>"; };
+		F55C95BA1BE3851400223D7A /* Center1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Center1.m; path = threephase/Center1.m; sourceTree = "<group>"; };
+		F55C95BC1BE388CB00223D7A /* CenterCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CenterCube.h; path = threephase/CenterCube.h; sourceTree = "<group>"; };
+		F55C95BD1BE388CB00223D7A /* CenterCube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CenterCube.m; path = threephase/CenterCube.m; sourceTree = "<group>"; };
+		F55C95BF1BE38CA400223D7A /* Search4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Search4.h; path = threephase/Search4.h; sourceTree = "<group>"; };
+		F55C95C01BE38CA400223D7A /* Search4.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Search4.m; path = threephase/Search4.m; sourceTree = "<group>"; };
+		F55C95C21BE391C800223D7A /* Center2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Center2.h; path = threephase/Center2.h; sourceTree = "<group>"; };
+		F55C95C31BE391C800223D7A /* Center2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Center2.m; path = threephase/Center2.m; sourceTree = "<group>"; };
+		F55C95C51BE393FB00223D7A /* Center3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Center3.h; path = threephase/Center3.h; sourceTree = "<group>"; };
+		F55C95C61BE393FB00223D7A /* Center3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Center3.m; path = threephase/Center3.m; sourceTree = "<group>"; };
+		F55C95C81BE3961700223D7A /* EdgeCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EdgeCube.h; path = threephase/EdgeCube.h; sourceTree = "<group>"; };
+		F55C95C91BE3961700223D7A /* EdgeCube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EdgeCube.m; path = threephase/EdgeCube.m; sourceTree = "<group>"; };
+		F55C95CB1BE396D200223D7A /* Edge3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Edge3.h; path = threephase/Edge3.h; sourceTree = "<group>"; };
+		F55C95CC1BE396D200223D7A /* Edge3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Edge3.m; path = threephase/Edge3.m; sourceTree = "<group>"; };
+		F56A00881BE4F9B0008D7E6C /* PriorityQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PriorityQueue.h; path = threephase/PriorityQueue.h; sourceTree = "<group>"; };
+		F56A00891BE4F9B0008D7E6C /* PriorityQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PriorityQueue.m; path = threephase/PriorityQueue.m; sourceTree = "<group>"; };
+		F57510401C632C750076FA86 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
+		F57510411C632C750076FA86 /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
+		F57510431C632D5B0076FA86 /* Util3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util3.h; sourceTree = "<group>"; };
+		F57510441C632D5B0076FA86 /* Util3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util3.m; sourceTree = "<group>"; };
 		F58371F31704DB2C0011FB0A /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		F58DE69A1BD9232F00B29F4A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		F590468216F21649001B71F5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F590468416F2164F001B71F5 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F59FF53916E1FD7400D7FE65 /* DCTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DCTimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -120,8 +161,6 @@
 		F5B8731D171310880065F0D2 /* Floppy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Floppy.m; sourceTree = "<group>"; };
 		F5B8731E171310880065F0D2 /* Gear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gear.h; sourceTree = "<group>"; };
 		F5B8731F171310880065F0D2 /* Gear.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gear.m; sourceTree = "<group>"; };
-		F5B87320171310880065F0D2 /* Im.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Im.h; sourceTree = "<group>"; };
-		F5B87321171310880065F0D2 /* Im.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Im.m; sourceTree = "<group>"; };
 		F5B87322171310880065F0D2 /* Pyraminx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pyraminx.h; sourceTree = "<group>"; };
 		F5B87323171310880065F0D2 /* Pyraminx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pyraminx.m; sourceTree = "<group>"; };
 		F5B87324171310880065F0D2 /* RTower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTower.h; sourceTree = "<group>"; };
@@ -146,15 +185,12 @@
 		F5B8734E171312CF0065F0D2 /* DCTStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTStatsViewController.m; sourceTree = "<group>"; };
 		F5B87360171313680065F0D2 /* DCTScrambleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTScrambleView.h; sourceTree = "<group>"; };
 		F5B87361171313680065F0D2 /* DCTScrambleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTScrambleView.m; sourceTree = "<group>"; };
-		F5B87365171313E90065F0D2 /* blueButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueButton.png; sourceTree = "<group>"; };
 		F5B87366171313E90065F0D2 /* img1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img1.png; sourceTree = "<group>"; };
 		F5B87367171313E90065F0D2 /* img1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img1@2x.png"; sourceTree = "<group>"; };
 		F5B87368171313E90065F0D2 /* img2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img2.png; sourceTree = "<group>"; };
 		F5B87369171313E90065F0D2 /* img2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img2@2x.png"; sourceTree = "<group>"; };
 		F5B8736A171313E90065F0D2 /* img3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img3.png; sourceTree = "<group>"; };
 		F5B8736B171313E90065F0D2 /* img3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img3@2x.png"; sourceTree = "<group>"; };
-		F5B8736C171313E90065F0D2 /* title_more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "title_more@2x.png"; sourceTree = "<group>"; };
-		F5B8736D171313E90065F0D2 /* whiteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteButton.png; sourceTree = "<group>"; };
 		F5CC233918B8F778005503A6 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		F5CD77D918B264CB00180470 /* DCTStatDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTStatDetailController.h; sourceTree = "<group>"; };
 		F5CD77DA18B264CB00180470 /* DCTStatDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCTStatDetailController.m; sourceTree = "<group>"; };
@@ -201,8 +237,6 @@
 		F5E98D91187AD915006933EE /* scrambleCN.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = scrambleCN.plist; sourceTree = "<group>"; };
 		F5F50EEC1773EF9A0049AA65 /* CubieCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CubieCube.h; sourceTree = "<group>"; };
 		F5F50EED1773EF9A0049AA65 /* CubieCube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CubieCube.m; sourceTree = "<group>"; };
-		F5F50EEF1773F4EA0049AA65 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
-		F5F50EF01773F4EA0049AA65 /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
 		F5F50EF21773FA740049AA65 /* CoordCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoordCube.h; sourceTree = "<group>"; };
 		F5F50EF31773FA750049AA65 /* CoordCube.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoordCube.m; sourceTree = "<group>"; };
 		F5F50EF5177404280049AA65 /* Search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Search.h; sourceTree = "<group>"; };
@@ -215,6 +249,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F58DE69B1BD9232F00B29F4A /* AVFoundation.framework in Frameworks */,
+				F55C00961BD5416200E4203A /* Social.framework in Frameworks */,
 				F5CC233A18B8F778005503A6 /* CoreMotion.framework in Frameworks */,
 				F5D0570618AA88C2002E9746 /* MessageUI.framework in Frameworks */,
 				F58371F71704DB9E0011FB0A /* libsqlite3.0.dylib in Frameworks */,
@@ -241,6 +277,37 @@
 			name = FPPopover;
 			sourceTree = "<group>";
 		};
+		F55C95881BE37D5F00223D7A /* threephase */ = {
+			isa = PBXGroup;
+			children = (
+				F55C95B91BE3851400223D7A /* Center1.h */,
+				F55C95BA1BE3851400223D7A /* Center1.m */,
+				F55C95C21BE391C800223D7A /* Center2.h */,
+				F55C95C31BE391C800223D7A /* Center2.m */,
+				F55C95C51BE393FB00223D7A /* Center3.h */,
+				F55C95C61BE393FB00223D7A /* Center3.m */,
+				F55C95BC1BE388CB00223D7A /* CenterCube.h */,
+				F55C95BD1BE388CB00223D7A /* CenterCube.m */,
+				F55C6C971BE467B5002A9225 /* CornerCube.h */,
+				F55C6C981BE467B5002A9225 /* CornerCube.m */,
+				F55C95CB1BE396D200223D7A /* Edge3.h */,
+				F55C95CC1BE396D200223D7A /* Edge3.m */,
+				F55C95C81BE3961700223D7A /* EdgeCube.h */,
+				F55C95C91BE3961700223D7A /* EdgeCube.m */,
+				F55C6C941BE46463002A9225 /* FullCube.h */,
+				F55C6C951BE46463002A9225 /* FullCube.m */,
+				F55C95B51BE3848100223D7A /* Moves.h */,
+				F55C95B61BE3848100223D7A /* Moves.m */,
+				F56A00881BE4F9B0008D7E6C /* PriorityQueue.h */,
+				F56A00891BE4F9B0008D7E6C /* PriorityQueue.m */,
+				F55C95BF1BE38CA400223D7A /* Search4.h */,
+				F55C95C01BE38CA400223D7A /* Search4.m */,
+				F55C95AA1BE3822F00223D7A /* Util4.h */,
+				F55C95AB1BE3822F00223D7A /* Util4.m */,
+			);
+			name = threephase;
+			sourceTree = "<group>";
+		};
 		F59FF52E16E1FD7400D7FE65 = {
 			isa = PBXGroup;
 			children = (
@@ -261,6 +328,8 @@
 		F59FF53C16E1FD7400D7FE65 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F58DE69A1BD9232F00B29F4A /* AVFoundation.framework */,
+				F55C00951BD5416200E4203A /* Social.framework */,
 				F5CC233918B8F778005503A6 /* CoreMotion.framework */,
 				F5D0570518AA88C2002E9746 /* MessageUI.framework */,
 				F58371F31704DB2C0011FB0A /* libsqlite3.0.dylib */,
@@ -289,6 +358,7 @@
 				F5D8F9E918CC9D560051BEC5 /* scrambleHK.plist */,
 				F5B87315171310880065F0D2 /* solver */,
 				F59FF54416E1FD7400D7FE65 /* Supporting Files */,
+				F55C95881BE37D5F00223D7A /* threephase */,
 				F5B87380171315E90065F0D2 /* Util */,
 				F5B8735D171313680065F0D2 /* View */,
 				F5B87337171312CF0065F0D2 /* ViewController */,
@@ -315,12 +385,12 @@
 				F5AB5699171C309100BF231E /* TwoPhaseScrambler.m */,
 				F5F50EEC1773EF9A0049AA65 /* CubieCube.h */,
 				F5F50EED1773EF9A0049AA65 /* CubieCube.m */,
-				F5F50EEF1773F4EA0049AA65 /* Util.h */,
-				F5F50EF01773F4EA0049AA65 /* Util.m */,
 				F5F50EF21773FA740049AA65 /* CoordCube.h */,
 				F5F50EF31773FA750049AA65 /* CoordCube.m */,
 				F5F50EF5177404280049AA65 /* Search.h */,
 				F5F50EF6177404280049AA65 /* Search.m */,
+				F57510431C632D5B0076FA86 /* Util3.h */,
+				F57510441C632D5B0076FA86 /* Util3.m */,
 			);
 			path = min2phase;
 			sourceTree = "<group>";
@@ -356,20 +426,20 @@
 				F5B8731D171310880065F0D2 /* Floppy.m */,
 				F5B8731E171310880065F0D2 /* Gear.h */,
 				F5B8731F171310880065F0D2 /* Gear.m */,
-				F5B87320171310880065F0D2 /* Im.h */,
-				F5B87321171310880065F0D2 /* Im.m */,
 				F5B87322171310880065F0D2 /* Pyraminx.h */,
 				F5B87323171310880065F0D2 /* Pyraminx.m */,
 				F5B87324171310880065F0D2 /* RTower.h */,
 				F5B87325171310880065F0D2 /* RTower.m */,
 				F5B87326171310880065F0D2 /* Skewb.h */,
 				F5B87327171310880065F0D2 /* Skewb.m */,
+				F5E253D11882E03100EBC520 /* Sq1Shape.h */,
+				F5E253D21882E03100EBC520 /* Sq1Shape.m */,
 				F5B87328171310880065F0D2 /* Sq12phase.h */,
 				F5B87329171310880065F0D2 /* Sq12phase.m */,
 				F5B8732A171310880065F0D2 /* Tower.h */,
 				F5B8732B171310880065F0D2 /* Tower.m */,
-				F5E253D11882E03100EBC520 /* Sq1Shape.h */,
-				F5E253D21882E03100EBC520 /* Sq1Shape.m */,
+				F57510401C632C750076FA86 /* Util.h */,
+				F57510411C632C750076FA86 /* Util.m */,
 			);
 			name = solver;
 			path = solvers;
@@ -423,15 +493,12 @@
 		F5B87364171313E90065F0D2 /* drawable */ = {
 			isa = PBXGroup;
 			children = (
-				F5B87365171313E90065F0D2 /* blueButton.png */,
 				F5B87366171313E90065F0D2 /* img1.png */,
 				F5B87367171313E90065F0D2 /* img1@2x.png */,
 				F5B87368171313E90065F0D2 /* img2.png */,
 				F5B87369171313E90065F0D2 /* img2@2x.png */,
 				F5B8736A171313E90065F0D2 /* img3.png */,
 				F5B8736B171313E90065F0D2 /* img3@2x.png */,
-				F5B8736C171313E90065F0D2 /* title_more@2x.png */,
-				F5B8736D171313E90065F0D2 /* whiteButton.png */,
 			);
 			path = drawable;
 			sourceTree = "<group>";
@@ -534,7 +601,6 @@
 				F59FF55F16E1FD7500D7FE65 /* DCTFirstViewController_iPhone.xib in Resources */,
 				F59FF56216E1FD7500D7FE65 /* DCTFirstViewController_iPad.xib in Resources */,
 				F590468116F21649001B71F5 /* Localizable.strings in Resources */,
-				F5B8736E171313E90065F0D2 /* blueButton.png in Resources */,
 				F5B8736F171313E90065F0D2 /* img1.png in Resources */,
 				F5B87370171313E90065F0D2 /* img1@2x.png in Resources */,
 				F5B87371171313E90065F0D2 /* img2.png in Resources */,
@@ -546,8 +612,6 @@
 				F5D8F9EA18CC9D560051BEC5 /* scrambleHK.plist in Resources */,
 				F5B87373171313E90065F0D2 /* img3.png in Resources */,
 				F5B87374171313E90065F0D2 /* img3@2x.png in Resources */,
-				F5B87375171313E90065F0D2 /* title_more@2x.png in Resources */,
-				F5B87376171313E90065F0D2 /* whiteButton.png in Resources */,
 				F5AAD6F8171DAF2C001E3F32 /* scramble.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -580,7 +644,10 @@
 				F53D83731A59331800084BE3 /* DCTGraphView.m in Sources */,
 				F5D9EEA3189E1756004CB5F2 /* Scrambler.m in Sources */,
 				F59FF54E16E1FD7400D7FE65 /* DCTAppDelegate.m in Sources */,
+				F55C95BE1BE388CB00223D7A /* CenterCube.m in Sources */,
+				F57510421C632C750076FA86 /* Util.m in Sources */,
 				F5D47B581874478600EA90B7 /* DCTPickerViewController.m in Sources */,
+				F56A008A1BE4F9B0008D7E6C /* PriorityQueue.m in Sources */,
 				F5CD77DB18B264CB00180470 /* DCTStatDetailController.m in Sources */,
 				F5B8731117130FDB0065F0D2 /* Clock.m in Sources */,
 				F5B8731217130FDB0065F0D2 /* LatchCube.m in Sources */,
@@ -591,21 +658,27 @@
 				F5D40C89188ACAE100169650 /* DCTData.m in Sources */,
 				F5B8732D171310880065F0D2 /* Cube222.m in Sources */,
 				F5D9EE9E189E1704004CB5F2 /* FPPopoverController.m in Sources */,
+				F55C95C71BE393FB00223D7A /* Center3.m in Sources */,
+				F55C6C991BE467B5002A9225 /* CornerCube.m in Sources */,
 				F5E91B5B1A5C249D00C0D14B /* DCTGraphViewController.m in Sources */,
 				F5DC199118CE073300ABA2C0 /* InfColorIndicatorView.m in Sources */,
 				F5B8732E171310880065F0D2 /* EOLine.m in Sources */,
 				F5DC199618CE073300ABA2C0 /* InfHSBSupport.m in Sources */,
+				F55C95AC1BE3822F00223D7A /* Util4.m in Sources */,
 				F5B8732F171310880065F0D2 /* Floppy.m in Sources */,
 				F5B87330171310880065F0D2 /* Gear.m in Sources */,
-				F5B87331171310880065F0D2 /* Im.m in Sources */,
 				F5B87332171310880065F0D2 /* Pyraminx.m in Sources */,
 				F5E98D90187ACDF5006933EE /* DCTAboutViewController.m in Sources */,
 				F5B87333171310880065F0D2 /* RTower.m in Sources */,
 				F5B87334171310880065F0D2 /* Skewb.m in Sources */,
+				F55C95B81BE3848100223D7A /* Moves.m in Sources */,
 				F5B87335171310880065F0D2 /* Sq12phase.m in Sources */,
 				F5B87336171310880065F0D2 /* Tower.m in Sources */,
 				F5B87354171312CF0065F0D2 /* DCTFirstViewController.m in Sources */,
 				F5B87356171312CF0065F0D2 /* DCTResultViewController.m in Sources */,
+				F55C95CD1BE396D200223D7A /* Edge3.m in Sources */,
+				F55C95C41BE391C800223D7A /* Center2.m in Sources */,
+				F57510451C632D5B0076FA86 /* Util3.m in Sources */,
 				F5B87358171312CF0065F0D2 /* DCTSecondLevelViewController.m in Sources */,
 				F5B87359171312CF0065F0D2 /* DCTSessionViewController.m in Sources */,
 				F5B8735A171312CF0065F0D2 /* DCTSettingsViewController.m in Sources */,
@@ -614,13 +687,16 @@
 				F5D97DC81872F06800E1872F /* DCTUtils.m in Sources */,
 				F5B87363171313680065F0D2 /* DCTScrambleView.m in Sources */,
 				F5D9ED37187D6D34003AFF8C /* DCTDetailViewController.m in Sources */,
+				F55C95CA1BE3961700223D7A /* EdgeCube.m in Sources */,
+				F55C95BB1BE3851400223D7A /* Center1.m in Sources */,
 				F5E253D31882E03100EBC520 /* Sq1Shape.m in Sources */,
 				F5DC199518CE073300ABA2C0 /* InfColorSquarePicker.m in Sources */,
 				F5DC199018CE073300ABA2C0 /* InfColorBarPicker.m in Sources */,
 				F5AB569A171C309100BF231E /* TwoPhaseScrambler.m in Sources */,
+				F55C95C11BE38CA400223D7A /* Search4.m in Sources */,
 				F5F50EEE1773EF9A0049AA65 /* CubieCube.m in Sources */,
+				F55C6C961BE46463002A9225 /* FullCube.m in Sources */,
 				F5D9EEA0189E1704004CB5F2 /* FPTouchView.m in Sources */,
-				F5F50EF11773F4EA0049AA65 /* Util.m in Sources */,
 				F5F50EF41773FA750049AA65 /* CoordCube.m in Sources */,
 				F5F50EF7177404280049AA65 /* Search.m in Sources */,
 			);
@@ -722,8 +798,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ming yuan Zhang (258G8G83YY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ming yuan Zhang (258G8G83YY)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -757,7 +833,7 @@
 				INFOPLIST_FILE = "DCTimer/DCTimer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1f426ea0-aa95-49bd-ac7d-da5a3db0ce39";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
@@ -769,15 +845,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ming yuan Zhang (258G8G83YY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ming yuan Zhang (258G8G83YY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DCTimer/DCTimer-Prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				INFOPLIST_FILE = "DCTimer/DCTimer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1f426ea0-aa95-49bd-ac7d-da5a3db0ce39";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

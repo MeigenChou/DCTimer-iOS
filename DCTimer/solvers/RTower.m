@@ -7,7 +7,7 @@
 //
 
 #import "RTower.h"
-#import "Im.h"
+#import "Util.h"
 #import "stdlib.h"
 #import "time.h"
 
@@ -38,42 +38,42 @@
     int idx[] = {3,0,1,2};
     for (int i = 0; i < 40320; i++) {
         for (int j = 0; j < 6; j++) {
-            [Im set8Perm:arr i:i];
+            [Util set8Perm:arr i:i];
             switch(j) {
-				case 0: [Im cir:arr a:4 b:5 c:6 d:7]; break;	//D
-				case 1: [Im cir:arr a:1 b:2 c:6 d:5]; break;	//R
-				case 2: [Im cir:arr a:2 b:3 c:7 d:6]; break;	//F
-				case 3: [Im cir:arr a:0 b:3 c:2 d:1]; break;	//U
-				case 4: [Im cir:arr a:0 b:4 c:7 d:3]; break;	//L
-				case 5: [Im cir:arr a:0 b:1 c:5 d:4]; break;	//B
+				case 0: [Util cir:arr a:4 b:5 c:6 d:7]; break;	//D
+				case 1: [Util cir:arr a:1 b:2 c:6 d:5]; break;	//R
+				case 2: [Util cir:arr a:2 b:3 c:7 d:6]; break;	//F
+				case 3: [Util cir:arr a:0 b:3 c:2 d:1]; break;	//U
+				case 4: [Util cir:arr a:0 b:4 c:7 d:3]; break;	//L
+				case 5: [Util cir:arr a:0 b:1 c:5 d:4]; break;	//B
             }
-            if(j>0) epm[i][j-1] = [Im get8Perm:arr];
+            if(j>0) epm[i][j-1] = [Util get8Perm:arr];
             switch(j){
-				case 1: [Im cir:arr a:1 b:2 c:6 d:5]; break;	//R
-				case 2: [Im cir:arr a:2 b:3 c:7 d:6]; break;	//F
+				case 1: [Util cir:arr a:1 b:2 c:6 d:5]; break;	//R
+				case 2: [Util cir:arr a:2 b:3 c:7 d:6]; break;	//F
             }
-            if(j<4) cpm[i][idx[j]]= [Im get8Perm:arr];
+            if(j<4) cpm[i][idx[j]]= [Util get8Perm:arr];
         }
     }
     for (int i = 0; i < 2187; i++) {
         for (int j = 0; j < 5; j++) {
-            [Im idxToZsOri:arr i:i n:3 l:8];
+            [Util idxToZsOri:arr i:i n:3 l:8];
             switch(j) {
-				case 2: [Im cir:arr a:0 b:3 c:2 d:1]; break;	//U
-				case 0: [Im cir:arr a:1 b:2 c:6 d:5];
+				case 2: [Util cir:arr a:0 b:3 c:2 d:1]; break;	//U
+				case 0: [Util cir:arr a:1 b:2 c:6 d:5];
                     arr[1]++; arr[2]+=2; arr[6]++; arr[5]+=2;
                     break;	//R
-				case 1: [Im cir:arr a:2 b:3 c:7 d:6];
+				case 1: [Util cir:arr a:2 b:3 c:7 d:6];
                     arr[2]++; arr[3]+=2; arr[7]++; arr[6]+=2;
                     break;	//F
-				case 3: [Im cir:arr a:0 b:4 c:7 d:3];
+				case 3: [Util cir:arr a:0 b:4 c:7 d:3];
                     arr[3]++; arr[0]+=2; arr[4]++; arr[7]+=2;
                     break;	//L
-				case 4: [Im cir:arr a:0 b:1 c:5 d:4];
+				case 4: [Util cir:arr a:0 b:1 c:5 d:4];
                     arr[0]++; arr[1]+=2; arr[5]++; arr[4]+=2;
                     break;	//B
             }
-            eom[i][j] = [Im zsOriToIdx:arr n:3 l:8];
+            eom[i][j] = [Util zsOriToIdx:arr n:3 l:8];
         }
     }
     for (int i = 1; i < 40320; i++)

@@ -58,7 +58,6 @@ int FullEdgeMap[] = {0, 2, 4, 6, 1, 3, 7, 5, 8, 9, 10, 11};
             for (int i=0; i<12; i++) {
                 mvrot[m<<3|r][i] = e->edge[i];
             }
-            //NSLog(@"%d: %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d", idx, e->edge[0], e->edge[1], e->edge[2], e->edge[3], e->edge[4], e->edge[5], e->edge[6], e->edge[7], e->edge[8], e->edge[9], e->edge[10], e->edge[11]);
             [e std];
             for (int i=0; i<12; i++) {
                 mvroto[m<<3|r][i] = e->temp[i];
@@ -74,7 +73,6 @@ int FullEdgeMap[] = {0, 2, 4, 6, 1, 3, 7, 5, 8, 9, 10, 11};
     for (int i=0; i<1485; i++) occ[i] = 0;
     for (int i=0; i<11880; i++) {
         if ((occ[i>>3]&(1<<(i&7))) == 0) {
-            //NSLog(@"%d, %d", count, i);
             [e set:(i * factX[8])];
             for (int j=0; j<8; j++) {
                 int idx = [e get:4];
@@ -92,7 +90,6 @@ int FullEdgeMap[] = {0, 2, 4, 6, 1, 3, 7, 5, 8, 9, 10, 11};
             sym2raw[count++] = i;
         }
     }
-    //NSLog(@"count %d", count);
 }
 
 +(void)setPruning:(int)index val:(int)value {

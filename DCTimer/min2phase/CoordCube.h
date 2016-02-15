@@ -17,20 +17,20 @@
 #import <Foundation/Foundation.h>
 
 @interface CoordCube : NSObject
-+(int) getPruning:(int[])table i:(int)index;
-+(void) setPruning:(int[])table i:(int)index v:(int)value;
++ (int)getPruning:(int[])table i:(int)index;
++ (void)setPruning:(int[])table i:(int)index v:(int)value;
 
-+(void) initFlipMove;
-+(void) initTwistMove;
-+(void) initUDSliceMoveConj;
++ (void)initFlipMove;
++ (void)initTwistMove;
++ (void)initUDSliceMoveConj;
 
-+(void) initCPermMove;
-+(void) initEPermMove;
-+(void) initMPermMoveConj;
++ (void)initCPermMove;
++ (void)initEPermMove;
++ (void)initMPermMoveConj;
 
-+(void) initSliceTwistPrun;
-+(void) initSliceFlipPrun;
-+(void) initMEPermPrun;
-+(void) initMCPermPrun;
++ (void)initSliceTwistPrun;
++ (void)initSliceFlipPrun;
++ (void)initMEPermPrun;
++ (void)initMCPermPrun;
 
 @end

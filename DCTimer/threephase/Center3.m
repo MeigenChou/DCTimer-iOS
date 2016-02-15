@@ -8,6 +8,14 @@
 
 #import "Center3.h"
 #import "Util4.h"
+/*
+            0	1
+            3	2
+ 4	5		0	1		0	1		4	5
+ 7	6		3	2		3	2		7	6
+            4	5
+            7	6
+ */
 
 @implementation Center3
 unsigned short ctmove[35*35*12*2][20];

@@ -12,4 +12,5 @@
 
 @interface DCTSettingsViewController : UITableViewController <MFMailComposeViewControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property(nonatomic, strong) UILabel *fTime;
+@property(nonatomic, strong) UIPopoverController *popController;
 @end

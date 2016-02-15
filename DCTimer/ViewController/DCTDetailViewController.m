@@ -21,8 +21,6 @@
 @synthesize time;
 @synthesize scramble;
 @synthesize tvComment;
-int resIdx;
-int resPen;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -45,7 +43,7 @@ int resPen;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"title_more.png"] style:UIBarButtonItemStylePlain target:self action:@selector(displayActionSheet)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[DCTUtils getString:@"options"] style:UIBarButtonItemStylePlain target:self action:@selector(displayActionSheet)];
     tvComment = [[UITextField alloc] init];
 }
 
@@ -81,7 +79,7 @@ int resPen;
         }
         case 1:
             cell.textLabel.text = time;
-            cell.textLabel.font = [UIFont systemFontOfSize:24];
+            cell.textLabel.font = [UIFont systemFontOfSize:20];
             cell.detailTextLabel.text = @"";
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             break;
@@ -166,11 +164,11 @@ int resPen;
 */
 
 - (void) displayActionSheet {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc]
-                                  initWithTitle:NSLocalizedString(@"option", @"") delegate:self
-                                  cancelButtonTitle:NSLocalizedString(@"cancel", @"")
-                                  destructiveButtonTitle:NSLocalizedString(@"delete", @"")
-                                  otherButtonTitles:NSLocalizedString(@"nopen", @""), @"+2", @"DNF", NSLocalizedString(@"copyscr", @""), nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:[DCTUtils getString:@"options"]
+                                                             delegate:self
+                                                    cancelButtonTitle:[DCTUtils getString:@"cancel"]
+                                               destructiveButtonTitle:[DCTUtils getString:@"delete"]
+                                                    otherButtonTitles:[DCTUtils getString:@"no_penalty"], @"+2", @"DNF", [DCTUtils getString:@"copy_scramble"], nil];
     if ([DCTUtils isPad]) {
         [actionSheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
     }
@@ -178,7 +176,6 @@ int resPen;
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    //NSLog(@"%d %@", idx, pena);
     switch (buttonIndex) {
         case 0: //delete
             [[DCTData dbh] deleteTimeAtIndex:resIdx];
@@ -188,16 +185,20 @@ int resPen;
         case 1: //no penalty
         case 2: //+2
         case 3: //DNF
-            if(resPen != buttonIndex-1) {
-                [self change:resIdx pen:(int)buttonIndex-1];
-                resPen = (int)buttonIndex-1;
+            if(resPen != buttonIndex - 1) {
+                [self set:resIdx penalty:(int)buttonIndex - 1];
+                resPen = (int)buttonIndex - 1;
             }
             break;
         case 4: //copy scr
         {
             UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
             pasteboard.string = scramble;
-            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"copysuccess", NULL) delegate:self cancelButtonTitle:NSLocalizedString(@"close", @"") otherButtonTitles:nil];
+            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                                message:[DCTUtils getString:@"copy_success"]
+                                                               delegate:self
+                                                      cancelButtonTitle:[DCTUtils getString:@"close"]
+                                                      otherButtonTitles:nil];
             [alertView show];
             break;
         }
@@ -206,9 +207,9 @@ int resPen;
     }
 }
 
-- (void) change:(int)idx pen:(int)pen {
-    [[DCTData dbh] setPenalty:pen atIndex:idx];
-    [[DCTData dbh] updateTime:idx pen:pen];
+- (void)set:(int)idx penalty:(int)penalty {
+    [[DCTData dbh] setPenalty:penalty atIndex:idx];
+    [[DCTData dbh] updateTime:idx pen:penalty];
     self.lbResult.text = [DCTData distimeAtIndex:idx dt:true];
 }
 

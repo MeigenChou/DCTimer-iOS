@@ -16,7 +16,7 @@
 
 #import "CubieCube.h"
 #import "Util.h"
-#import "Im.h"
+#import "Util3.h"
 
 @implementation CubieCube
 
@@ -73,9 +73,9 @@ NSMutableArray *moveCube;
 
 CubieCube *urf1;
 CubieCube *urf2;
-CubieCube *temps = nil;
+CubieCube *temp3 = nil;
 
--(id)init {
+- (id)init {
     if (self = [super init]) {
         for (int x = 0 ; x < 8; x++) {
             self->cp[x] = x;
@@ -91,7 +91,7 @@ CubieCube *temps = nil;
     return self;
 }
 
--(id)initCubie:(int)cperm twist:(int)twist eperm:(int)eperm flip:(int)flip {
+- (id)initCubie:(int)cperm twist:(int)twist eperm:(int)eperm flip:(int)flip {
     if (self = [super init]) {
         [self setCPerm:cperm];
         [self setTwist:twist];
@@ -101,7 +101,7 @@ CubieCube *temps = nil;
     return self;
 }
 
--(void)copyCubieCube:(CubieCube*)c {
+- (void)copyCubieCube:(CubieCube*)c {
     for (int i = 0; i < 8; i++) {
         self->cp[i] = c->cp[i];
         self->co[i] = c->co[i];
@@ -112,26 +112,26 @@ CubieCube *temps = nil;
     }
 }
 
--(void) invCubieCube {
+- (void)invCubieCube {
     for (int edge=0; edge<12; edge++)
-        temps->ep[ep[edge]] = edge;
+        temp3->ep[ep[edge]] = edge;
     for (int edge=0; edge<12; edge++)
-        temps->eo[edge] = eo[temps->ep[edge]];
+        temp3->eo[edge] = eo[temp3->ep[edge]];
     for (int corn=0; corn<8; corn++)
-        temps->cp[cp[corn]] = corn;
+        temp3->cp[cp[corn]] = corn;
     for (int corn=0; corn<8; corn++) {
-        int ori = co[temps->cp[corn]];
-        temps->co[corn] = -ori;
-        if (temps->co[corn] < 0)
-            temps->co[corn] += 3;
+        int ori = co[temp3->cp[corn]];
+        temp3->co[corn] = -ori;
+        if (temp3->co[corn] < 0)
+            temp3->co[corn] += 3;
     }
-    [self copyCubieCube:temps];
+    [self copyCubieCube:temp3];
 }
 
 /**
  * prod = a * b, Corner Only.
  */
-+(void) CornMult:(CubieCube*)a cubeB:(CubieCube*)b cubeProd:(CubieCube*)prod {
++ (void)CornMult:(CubieCube*)a b:(CubieCube*)b prod:(CubieCube*)prod {
     for (int corn=0; corn<8; corn++) {
         prod->cp[corn] = a->cp[b->cp[corn]];
         int oriA = a->co[b->cp[corn]];
@@ -149,7 +149,7 @@ CubieCube *temps = nil;
 /**
  * prod = a * b, Edge Only.
  */
-+(void) EdgeMult:(CubieCube*)a cubeB:(CubieCube*)b cubeProd:(CubieCube*)prod {
++ (void)EdgeMult:(CubieCube*)a b:(CubieCube*)b prod:(CubieCube*)prod {
     for (int ed=0; ed<12; ed++) {
         prod->ep[ed] = a->ep[b->ep[ed]];
         prod->eo[ed] = b->eo[ed] ^ a->eo[b->ep[ed]];
@@ -159,7 +159,7 @@ CubieCube *temps = nil;
 /**
  * b = S_idx^-1 * a * S_idx, Corner Only.
  */
-+(void) CornConjugate:(CubieCube*)a idx:(int)idx cubeB:(CubieCube*)b {
++ (void)CornConjugate:(CubieCube*)a idx:(int)idx b:(CubieCube*)b {
     //CubieCube sinv = CubeSym[SymInv[idx]];
     CubieCube *sinv = [CubeSym objectAtIndex:SymInv[idx]];
     CubieCube *s = [CubeSym objectAtIndex:idx];
@@ -174,7 +174,7 @@ CubieCube *temps = nil;
 /**
  * b = S_idx^-1 * a * S_idx, Edge Only.
  */
-+(void) EdgeConjugate:(CubieCube*)a idx:(int)idx cubeB:(CubieCube*)b {
++ (void)EdgeConjugate:(CubieCube*)a idx:(int)idx b:(CubieCube*)b {
     CubieCube *sinv = [CubeSym objectAtIndex:SymInv[idx]];
     CubieCube *s = [CubeSym objectAtIndex:idx];
     for (int ed=0; ed<12; ed++) {
@@ -186,14 +186,14 @@ CubieCube *temps = nil;
 /**
  * this = S_urf^-1 * this * S_urf.
  */
--(void) URFConjugate {
-    if (temps == nil) {
-        temps = [[CubieCube alloc] init];
+- (void)URFConjugate {
+    if (temp3 == nil) {
+        temp3 = [[CubieCube alloc] init];
     }
-    [CubieCube CornMult:urf2 cubeB:self cubeProd:temps];
-    [CubieCube CornMult:temps cubeB:urf1 cubeProd:self];
-    [CubieCube EdgeMult:urf2 cubeB:self cubeProd: temps];
-    [CubieCube EdgeMult:temps cubeB:urf1 cubeProd: self];
+    [CubieCube CornMult:urf2 b:self prod:temp3];
+    [CubieCube CornMult:temp3 b:urf1 prod:self];
+    [CubieCube EdgeMult:urf2 b:self prod: temp3];
+    [CubieCube EdgeMult:temp3 b:urf1 prod: self];
 }
 
 // ********************** Get and set coordinates ***********************
@@ -204,7 +204,7 @@ CubieCube *temps = nil;
 // Twist : Orientation of 8 Corners. Raw[0, 2187) Sym[0, 324 * 8)
 // UDSlice : Positions of the 4 UDSlice edges, the order is ignored. [0, 495)
 
--(int) getFlip {
+- (int)getFlip {
     int idx = 0;
     for (int i=0; i<11; i++) {
         idx <<= 1;
@@ -213,7 +213,7 @@ CubieCube *temps = nil;
     return idx;
 }
 
--(void) setFlip: (int)idx {
+- (void)setFlip:(int)idx {
     int parity = 0;
     for (int i=10; i>=0; i--) {
         parity ^= eo[i] = idx & 1;
@@ -222,11 +222,11 @@ CubieCube *temps = nil;
     eo[11] = parity;
 }
 
--(int) getFlipSym {
+- (int)getFlipSym {
     return FlipR2S[[self getFlip]];
 }
 
--(int) getTwist {
+- (int)getTwist {
     int idx = 0;
     for (int i=0; i<7; i++) {
         idx *= 3;
@@ -235,7 +235,7 @@ CubieCube *temps = nil;
     return idx;
 }
 
--(void) setTwist:(int)idx {
+- (void)setTwist:(int)idx {
     int twst = 0;
     for (int i=6; i>=0; i--) {
         twst += co[i] = idx % 3;
@@ -244,23 +244,23 @@ CubieCube *temps = nil;
     co[7] = (15 - twst) % 3;
 }
 
--(int) getTwistSym {
+- (int)getTwistSym {
     return TwistR2S[[self getTwist]];
 }
 
--(int) getUDSlice {
+- (int)getUDSlice {
     return [Util getComb:ep m:8];
 }
 
--(void) setUDSlice:(int)idx {
+- (void)setUDSlice:(int)idx {
     [Util setComb:ep i:idx m:8];
 }
 
--(int) getU4Comb {
+- (int)getU4Comb {
     return [Util getComb:ep m:0];
 }
 
--(int) getD4Comb {
+- (int)getD4Comb {
     return [Util getComb:ep m:4];
 }
 
@@ -269,37 +269,37 @@ CubieCube *temps = nil;
 // Cperm : Permutations of 8 Corners. Raw[0, 40320) Sym[0, 2187 * 16)
 // MPerm : Permutations of 4 UDSlice Edges. [0, 24)
 
--(int) getCPerm {
-    return [Im get8Perm:cp];
+- (int)getCPerm {
+    return [Util get8Perm:cp];
 }
 
--(void) setCPerm:(int) idx {
-    [Im set8Perm:cp i:idx];
+- (void)setCPerm:(int)idx {
+    [Util set8Perm:cp i:idx];
 }
 
--(int) getCPermSym {
+- (int)getCPermSym {
     int idx = EPermR2S[[self getCPerm]];
     idx ^= e2c[idx&0x0f];
     return idx;
 }
 
--(int) getEPerm {
-    return [Im get8Perm:ep];
+- (int)getEPerm {
+    return [Util get8Perm:ep];
 }
 
--(void) setEPerm:(int) idx {
-    [Im set8Perm:ep i:idx];
+- (void)setEPerm:(int)idx {
+    [Util set8Perm:ep i:idx];
 }
 
--(int) getEPermSym {
+- (int)getEPermSym {
     return EPermR2S[[self getEPerm]];
 }
 
--(int) getMPerm {
+- (int)getMPerm {
     return [Util getComb:ep m:8] >> 9;
 }
 
--(void) setMPerm:(int) idx {
+- (void)setMPerm:(int)idx {
     [Util setComb:ep i:(idx<<9) m:8];
 }
 
@@ -312,7 +312,7 @@ CubieCube *temps = nil;
  * -5: Twist error: One corner has to be twisted
  * -6: Parity error: Two corners or two edges have to be exchanged
  */
--(int) verify {
+- (int)verify {
     int sum = 0;
     int edgeMask = 0;
     for (int e=0; e<12; e++)
@@ -340,7 +340,7 @@ CubieCube *temps = nil;
 
 // ******************** Initialization functions ********************
 
-+(void) initMove {
++ (void)initMove {
     moveCube = [[NSMutableArray alloc] init];
     [moveCube addObject:[[CubieCube alloc] initCubie:15120 twist:0 eperm:119750400 flip:0]];
     [moveCube addObject:[[CubieCube alloc] initCubie:21021 twist:1494 eperm:323403417 flip:0]];
@@ -352,13 +352,13 @@ CubieCube *temps = nil;
         for (int p=0; p<2; p++) {
             CubieCube *newMove = [[CubieCube alloc] init];
             [moveCube insertObject:newMove atIndex:a+p+1];
-            [CubieCube EdgeMult:[moveCube objectAtIndex:(a+p)] cubeB:[moveCube objectAtIndex:a] cubeProd:[moveCube objectAtIndex:(a+p+1)]];
-            [CubieCube CornMult:[moveCube objectAtIndex:(a+p)] cubeB:[moveCube objectAtIndex:a] cubeProd:[moveCube objectAtIndex:(a+p+1)]];
+            [CubieCube EdgeMult:[moveCube objectAtIndex:(a+p)] b:[moveCube objectAtIndex:a] prod:[moveCube objectAtIndex:(a+p+1)]];
+            [CubieCube CornMult:[moveCube objectAtIndex:(a+p)] b:[moveCube objectAtIndex:a] prod:[moveCube objectAtIndex:(a+p+1)]];
         }
     }
 }
 
-+ (void) initSym {
++ (void)initSym {
     CubieCube *c = [[CubieCube alloc] init];
     CubieCube *d = [[CubieCube alloc] init];
     CubieCube *t = nil;
@@ -373,24 +373,24 @@ CubieCube *temps = nil;
     for (int i=0; i<16; i++) {
         CubieCube *newCube = [[CubieCube alloc] init];
         [newCube copyCubieCube:c];
-        [CubeSym addObject:newCube];// Hopefully redundant rather than a big problem
-        [CubieCube CornMult:c cubeB:u4 cubeProd:d];
-        [CubieCube EdgeMult:c cubeB:u4 cubeProd:d];
+        [CubeSym addObject:newCube];
+        [CubieCube CornMult:c b:u4 prod:d];
+        [CubieCube EdgeMult:c b:u4 prod:d];
         t = d;	d = c;	c = t;
         if (i % 4 == 3) {
-            [CubieCube CornMult:c cubeB:lr2 cubeProd:d];
-            [CubieCube EdgeMult:c cubeB:lr2 cubeProd:d];
+            [CubieCube CornMult:c b:lr2 prod:d];
+            [CubieCube EdgeMult:c b:lr2 prod:d];
             t = d;	d = c;	c = t;
         }
         if (i % 8 == 7) {
-            [CubieCube CornMult:c cubeB:f2 cubeProd:d];
-            [CubieCube EdgeMult:c cubeB:f2 cubeProd:d];
+            [CubieCube CornMult:c b:f2 prod:d];
+            [CubieCube EdgeMult:c b:f2 prod:d];
             t = d;	d = c;	c = t;
         }
     }
     for (int i=0; i<16; i++) {
         for (int j=0; j<16; j++) {
-            [CubieCube CornMult:[CubeSym objectAtIndex:i] cubeB:[CubeSym objectAtIndex:j] cubeProd:c];
+            [CubieCube CornMult:[CubeSym objectAtIndex:i] b:[CubeSym objectAtIndex:j] prod:c];
             for (int k=0; k<16; k++) {
                 CubieCube* workingCube = [CubeSym objectAtIndex:k];
                 if (workingCube->cp[0] == c->cp[0] && workingCube->cp[1] == c->cp[1] && workingCube->cp[2] == c->cp[2]) { //Horribly inefficient
@@ -405,9 +405,9 @@ CubieCube *temps = nil;
     }
     for (int j=0; j<18; j++) {
         for (int s=0; s<16; s++) {
-            [CubieCube CornConjugate:[moveCube objectAtIndex:j] idx:SymInv[s] cubeB:c];
+            [CubieCube CornConjugate:[moveCube objectAtIndex:j] idx:SymInv[s] b:c];
             int m=0, i=0;
-        label: //Let this comment serve as a reminder of my pain while writing this.
+        label:
             for (; m<18; ) {
                 for (i=0; i<8; i+=2) {
                     CubieCube *tempCube = [moveCube objectAtIndex:m];
@@ -440,19 +440,19 @@ CubieCube *temps = nil;
     }
 }
 
-+(void) initFlipSym2Raw {
++ (void)initFlipSym2Raw {
     CubieCube *c = [[CubieCube alloc] init];
     CubieCube *d = [[CubieCube alloc] init];
-    int occ[2048 >> 5]; //Should be 64
+    int occ[64]; //Should be 64
     int count = 0;
     for (int i=0; i<64; occ[i++] = 0);
     //FlipR2S = malloc(2048*sizeof(int));
     for (int i=0; i<2048; i++) {
-        if ((occ[i>>5]&(1<<(i&0x1f))) == 0) { //This shouldn't be called every time. << has been replaced with *2^
+        if ((occ[i>>5]&(1<<(i&0x1f))) == 0) {
             [c setFlip:i];
             for (int s=0; s<16; s+=2) {
-                [CubieCube EdgeConjugate:c idx:s cubeB:d];
-                int idx = [d getFlip]; //idx isn't getting its correct value because d differs
+                [CubieCube EdgeConjugate:c idx:s b:d];
+                int idx = [d getFlip];
                 if (idx == i) {
                     SymStateFlip[count] |= 1 << (s >> 1);
                 }
@@ -464,7 +464,7 @@ CubieCube *temps = nil;
     }
 }
 
-+(void) initTwistSym2Raw {
++ (void)initTwistSym2Raw {
     CubieCube *c = [[CubieCube alloc] init];
     CubieCube *d = [[CubieCube alloc] init];
     int occ[2187/32+1];
@@ -474,12 +474,12 @@ CubieCube *temps = nil;
         if ((occ[i>>5]&(1<<(i&0x1f))) == 0) {
             c.twist = i;
             for (int s=0; s<16; s+=2) {
-                [CubieCube CornConjugate:c idx:s cubeB:d];
+                [CubieCube CornConjugate:c idx:s b:d];
                 int idx = [d getTwist];
                 if (idx == i) {
                     SymStateTwist[count] |= 1 << (s >> 1);
                 }
-                occ[idx>>5] |= 1<<(idx&0x1f); //Problem point
+                occ[idx>>5] |= 1<<(idx&0x1f);
                 TwistR2S[idx] = (count << 3) | (s >> 1);
             }
             TwistS2R[count++] = i;
@@ -487,7 +487,7 @@ CubieCube *temps = nil;
     }
 }
 
-+(void) initPermSym2Raw {
++ (void)initPermSym2Raw {
     CubieCube *c = [[CubieCube alloc] init];
     CubieCube *d = [[CubieCube alloc] init];
     int occ[40320 / 32];
@@ -498,7 +498,7 @@ CubieCube *temps = nil;
         if ((occ[i>>5]&(1<<(i&0x1f))) == 0) {
             [c setEPerm:i];
             for (int s=0; s<16; s++) {
-                [CubieCube EdgeConjugate:c idx:s cubeB:d];
+                [CubieCube EdgeConjugate:c idx:s b:d];
                 int idx = [d getEPerm];
                 if (idx == i) {
                     SymStatePerm[count] |= 1 << s;
@@ -513,5 +513,12 @@ CubieCube *temps = nil;
         }
     }
 }
+
+/*- (void)print {
+    NSLog(@"ep %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d", ep[0], ep[1], ep[2], ep[3], ep[4], ep[5], ep[6], ep[7], ep[8], ep[9], ep[10], ep[11]);
+    NSLog(@"eo %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d", eo[0], eo[1], eo[2], eo[3], eo[4], eo[5], eo[6], eo[7], eo[8], eo[9], eo[10], eo[11]);
+    NSLog(@"cp %d, %d, %d, %d, %d, %d, %d, %d", cp[0], cp[1], cp[2], cp[3], cp[4], cp[5], cp[6], cp[7]);
+    NSLog(@"co %d, %d, %d, %d, %d, %d, %d, %d", co[0], co[1], co[2], co[3], co[4], co[5], co[6], co[7]);
+}*/
 
 @end

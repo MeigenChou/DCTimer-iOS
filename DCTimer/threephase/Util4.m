@@ -9,7 +9,6 @@
 #import "Util4.h"
 
 @implementation Util4
-char colorMap4to3[] = {'U', 'D', 'F', 'B', 'R', 'L'};
 
 +(void) swap:(int[])arr a:(int)a b:(int)b c:(int)c d:(int)d k:(int)key {
     int temp;

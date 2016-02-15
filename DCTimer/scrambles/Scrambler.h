@@ -9,10 +9,10 @@
 #import <Foundation/Foundation.h>
 
 @interface Scrambler : NSObject
-- (NSString *)getScrString: (int)idx;
-- (NSString *)solveCross: (NSString *)scr side:(int)side;
+- (NSString *)getScrString:(int)idx;
+- (NSString *)solveCross:(NSString *)scr side:(int)side;
 - (NSString *)solveXcross:(NSString *)scr side:(int)side;
 - (NSString *)solveEoline:(NSString *)scr side:(int)side;
 - (NSString *)solveSqShape:(NSString *)scr m:(int)metric;
-+ (NSMutableArray *) imageString:(int)size scr:(NSString *)scr;
++ (NSMutableArray *)imageString:(int)size scr:(NSString *)scr;
 @end

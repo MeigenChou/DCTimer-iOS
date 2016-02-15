@@ -18,13 +18,33 @@
 #import "CubieCube.h"
 
 @interface Util : NSObject
-+(void)toCubieCube:(int[])f cc:(CubieCube *)ccRet;
-+(NSString *)toFaceCube:(CubieCube *)cc;
-+(int) binarySearch:(unsigned short[])arr l:(int)length k:(int)key;
-+(int) getNParity:(int)idx n:(int)n;
-+(int) getNPerm:(int[])arr n:(int)n;
-+(void) setNPerm:(int[])arr i:(int)idx n:(int)n;
-+(int) getComb:(int[])arr m:(int)mask;
-+(void) setComb:(int[])arr i:(int)idx m:(int)mask;
-+(void) setupUtil;
++ (void) initCnk;
+
++(void)set8Perm:(int[])arr i:(int)idx;
++(int)get8Perm:(int[])arr;
++(int)getNParity:(int)idx n:(int)n;
++(int)getNPerm:(int[])arr n:(int)n;
++(void)setNPerm:(int[])arr i:(int)idx n:(int)n;
++(int)getComb:(int[])arr m:(int)mask;
++(void)setComb:(int[])arr i:(int)idx m:(int)mask;
+
++(void) cir:(int[])arr a:(int)a b:(int)b c:(int)c d:(int)d;
++(void) cir2:(int[])arr a:(int)a b:(int)b c:(int)c d:(int)d;
++(void) cir:(int[])arr a:(int)a b:(int)b;
++(void) cir3:(int[])arr a:(int)a b:(int)b c:(int)c;
+
++(int) permToIdx:(int[])p l:(int)len;
++(void) idxToPerm:(int[])p i:(int)idx l:(int)l;
+
++(int) evenPermToIdx:(int[])p l:(int)len;
++(void) idxToEvenPerm:(int[])p i:(int)idx l:(int)len;
+
++(int)oriToIdx:(int[])o n:(int)n l:(int)len;
++(void)idxToOri:(int[])o i:(int)idx n:(int)n l:(int)len;
+
++(int) zsOriToIdx:(int[])o n:(int)n l:(int)len;
++(void) idxToZsOri:(int[])o i:(int)idx n:(int)n l:(int)len;
+
++(int) combToIdx:(bool[])comb k:(int)k l:(int)len;
++(void) idxToComb:(bool[])comb i:(int)idx k:(int)k l:(int)len;
 @end

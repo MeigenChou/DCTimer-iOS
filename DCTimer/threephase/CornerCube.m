@@ -7,8 +7,8 @@
 //
 
 #import "CornerCube.h"
-#import "Im.h"
 #import "Util4.h"
+#import "Util.h"
 
 @implementation CornerCube
 
@@ -111,7 +111,7 @@ CornerCube *temp4 = nil;
 }
 
 -(void)setCPerm:(int)idx {
-    [Im set8Perm:cp i:idx];
+    [Util set8Perm:cp i:idx];
 }
 
 -(void)move:(int)idx {

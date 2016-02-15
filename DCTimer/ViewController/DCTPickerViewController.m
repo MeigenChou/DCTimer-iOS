@@ -122,7 +122,7 @@ extern NSDictionary *scrType;
         printString.text = [subsets objectAtIndex:row];
     }
     printString.backgroundColor = [UIColor clearColor];
-    printString.textAlignment = UITextAlignmentCenter;
+    printString.textAlignment = NSTextAlignmentCenter;
     return printString;
 }
 @end

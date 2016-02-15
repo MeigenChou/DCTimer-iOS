@@ -10,8 +10,8 @@
 
 @interface SQ1 : NSObject
 
-- (NSString *) sq1_scramble: (int)type;
-- (NSString *) ssq1t_scramble;
+- (NSString *)sq1_scramble:(int)type;
+- (NSString *)ssq1t_scramble;
 + (NSMutableArray *)imagestr:(NSString *)s;
 
 @end

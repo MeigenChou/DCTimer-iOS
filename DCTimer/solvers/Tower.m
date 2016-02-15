@@ -7,7 +7,7 @@
 //
 
 #import "Tower.h"
-#import "Im.h"
+#import "Util.h"
 #import "stdlib.h"
 #import "time.h"
 
@@ -40,18 +40,18 @@ int twrFaces[] = {3, 1, 1, 3};
     int i, j;
     for(i=0; i<40320; i++) {
         for(j=0; j<4; j++) {
-            [Im set8Perm:arr i:i];
+            [Util set8Perm:arr i:i];
             switch (j) {
                 case 0:
-                    [Im cir:arr a:0 b:3 c:2 d:1]; break;    //U
+                    [Util cir:arr a:0 b:3 c:2 d:1]; break;    //U
                 case 3:
-                    [Im cir:arr a:4 b:5 c:6 d:7]; break;	//D
+                    [Util cir:arr a:4 b:5 c:6 d:7]; break;	//D
                 case 1:
-                    [Im cir2:arr a:1 b:6 c:2 d:5]; break;	//R2
+                    [Util cir2:arr a:1 b:6 c:2 d:5]; break;	//R2
                 case 2:
-                    [Im cir2:arr a:3 b:6 c:2 d:7]; break;	//F2
+                    [Util cir2:arr a:3 b:6 c:2 d:7]; break;	//F2
             }
-            twrCpm[i][j] = [Im get8Perm:arr];
+            twrCpm[i][j] = [Util get8Perm:arr];
         }
     }
     for(i=1; i<40320; i++) twrCpd[i] = -1;
@@ -77,14 +77,14 @@ int twrFaces[] = {3, 1, 1, 3};
     
     for(i=0; i<6; i++) {
         for(j=0; j<4; j++) {
-            [Im idxToPerm:arr i:i l:3];
+            [Util idxToPerm:arr i:i l:3];
             switch (j) {
                 case 1:
-                    [Im cir:arr a:0 b:1]; break;	//R2
+                    [Util cir:arr a:0 b:1]; break;	//R2
                 case 2:
-                    [Im cir:arr a:1 b:2]; break;	//F2
+                    [Util cir:arr a:1 b:2]; break;	//F2
             }
-            twrEpm[i][j] = [Im permToIdx:arr l:3];
+            twrEpm[i][j] = [Util permToIdx:arr l:3];
         }
     }
     

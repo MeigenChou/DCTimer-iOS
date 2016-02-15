@@ -7,7 +7,7 @@
 //
 
 #import "Gear.h"
-#import "Im.h"
+#import "Util.h"
 #import "stdlib.h"
 #import "time.h"
 
@@ -24,28 +24,28 @@
     int arr[4];
     for(int i = 0; i < 24; i++) {
         for(int j = 0; j < 3; j++) {
-            [Im idxToPerm:arr i:i l:4];
-            [Im cir:arr a:3 b:j];
-            cpm[i][j] = [Im permToIdx:arr l:4];
+            [Util idxToPerm:arr i:i l:4];
+            [Util cir:arr a:3 b:j];
+            cpm[i][j] = [Util permToIdx:arr l:4];
         }
     }
     for(int i = 0; i < 24; i++){
         for(int j = 0; j < 3; j++){
-            [Im idxToPerm:arr i:i l:4];
+            [Util idxToPerm:arr i:i l:4];
             switch(j){
-				case 0: [Im cir:arr a:0 b:3 c:2 d:1]; break;
-				case 1: [Im cir:arr a:0 b:1]; break;
-				case 2: [Im cir:arr a:1 b:2]; break;
+				case 0: [Util cir:arr a:0 b:3 c:2 d:1]; break;
+				case 1: [Util cir:arr a:0 b:1]; break;
+				case 2: [Util cir:arr a:1 b:2]; break;
             }
-            epm[i][j] = [Im permToIdx:arr l:4];
+            epm[i][j] = [Util permToIdx:arr l:4];
         }
     }
     //arr = new int[3];
     for(int i = 0; i < 27; i++){
         for(int j = 0; j < 3; j++){
-            [Im idxToOri:arr i:i n:3 l:3];
+            [Util idxToOri:arr i:i n:3 l:3];
             arr[j] = (arr[j] + 1) % 3;
-            eom[i][j] = [Im oriToIdx:arr n:3 l:3];
+            eom[i][j] = [Util oriToIdx:arr n:3 l:3];
         }
     }
     //int n;

@@ -7,7 +7,7 @@
 //
 
 #import "Floppy.h"
-#import "Im.h"
+#import "Util.h"
 #import "stdlib.h"
 #import "time.h"
 
@@ -21,13 +21,13 @@
 - (void) cornMove:(int[])cp m:(int)m {
     switch (m) {
         case 0:
-            [Im cir:cp a:0 b:1]; break;
+            [Util cir:cp a:0 b:1]; break;
         case 1:
-            [Im cir:cp a:1 b:2]; break;
+            [Util cir:cp a:1 b:2]; break;
         case 2:
-            [Im cir:cp a:2 b:3]; break;
+            [Util cir:cp a:2 b:3]; break;
         case 3:
-            [Im cir:cp a:0 b:3]; break;
+            [Util cir:cp a:0 b:3]; break;
     }
 }
 
@@ -46,12 +46,12 @@
             for (int j = 0; j < 16; j++)
                 if (distance[i][j] == depth)
                     for(int k=0; k<4; k++) {
-                        [Im idxToPerm:cp i:i l:4];
-                        [Im idxToOri:eo i:j n:2 l:4];
+                        [Util idxToPerm:cp i:i l:4];
+                        [Util idxToOri:eo i:j n:2 l:4];
                         [self cornMove:cp m:k];
                         eo[k] ^= 1;
-                        int cpi = [Im permToIdx:cp l:4];
-                        int eoi = [Im oriToIdx:eo n:2 l:4];
+                        int cpi = [Util permToIdx:cp l:4];
+                        int eoi = [Util oriToIdx:eo n:2 l:4];
                         if (distance[cpi][eoi] == -1) {
                             distance[cpi][eoi] = depth + 1;
                             nVisited++;
@@ -80,12 +80,12 @@
                 int cp[4];
                 int eo[4];
                 for (int i=0; i<4; i++) {
-                    [Im idxToPerm:cp i:cpi l:4];
-                    [Im idxToOri:eo i:eoi n:2 l:4];
+                    [Util idxToPerm:cp i:cpi l:4];
+                    [Util idxToOri:eo i:eoi n:2 l:4];
                     [self cornMove:cp m:i];
                     eo[i] ^= 1;
-                    int nextCpi = [Im permToIdx:cp l:4];
-                    int nextEoi = [Im oriToIdx:eo n:2 l:4];
+                    int nextCpi = [Util permToIdx:cp l:4];
+                    int nextEoi = [Util oriToIdx:eo n:2 l:4];
                     if (distance[nextCpi][nextEoi] == distance[cpi][eoi] - 1) {
                         [sb insertString:[self.turn objectAtIndex:i] atIndex:0];
                         cpi = nextCpi;

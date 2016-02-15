@@ -40,5 +40,6 @@
 
 +(void)initTable;
 -(NSString *)randomState;
+-(NSString *) solution:(NSString *)facelet;
 
 @end

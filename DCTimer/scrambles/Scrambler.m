@@ -15,6 +15,7 @@
 #import "Tower.h"
 #import "Skewb.h"
 #import "TwoPhaseScrambler.h"
+#import "Search4.h"
 #import "Clock.h"
 #import "SQ1.h"
 #import "Gear.h"
@@ -26,11 +27,6 @@
 #import "stdlib.h"
 #import "time.h"
 #import "DCTUtils.h"
-//#import "Center1.h"
-//#import "Center2.h"
-//#import "Center3.h"
-//#import "Edge3.h"
-//#import "Search4.h"
 
 @interface Scrambler()
 @property (nonatomic, strong) Cube222 *cube2;
@@ -49,7 +45,7 @@
 @property (nonatomic, strong) Floppy *floppy;
 @property (nonatomic, strong) RTower *rtow;
 @property (nonatomic, strong) Sq1Shape *sqShape;
-//@property (nonatomic, strong) Search4 *cube4;
+@property (nonatomic, strong) Search4 *cube4;
 @end
 
 @implementation Scrambler
@@ -59,7 +55,7 @@
 @synthesize tower, skewb, gear;
 @synthesize latch, floppy;
 @synthesize rtow, sqShape;
-//@synthesize cent1;
+@synthesize cube4;
 int cubeSize;
 int viewType;
 NSMutableArray *scrPosit;
@@ -156,10 +152,11 @@ NSMutableArray *flat2posit;
     return [cube3 scramble: type];
 }
 
-/*- (NSString *)scramble444 {
+- (NSString *)scramble444 {
     if(!cube4) cube4 = [[Search4 alloc] init];
     return [cube4 randomState];
-}*/
+    //return [cube4 solution:@"UUURUUUFUUUFUUUFRRRBRRRBRRRBRRRBRRRDFFFDFFFDFFFDDDDBDDDBDDDBDDDLFFFFLLLLLLLLLLLLULLLUBBBUBBBUBBB"];
+}
 
 - (NSString *)scrambleGear {
     if(!self.gear) self.gear = [[Gear alloc] init];
@@ -655,6 +652,9 @@ int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
             turn = [[NSArray alloc] initWithObjects:@"U", @"u", @"R", @"r", nil];
             scr = [self megascramble:turn len:2 suf:cubesuff sql:40];
             viewType=4; break;
+        case 69:
+            scr = [self scramble444];
+            viewType = 4; break;
         /*case 69:
             [Center1 initCent1];
             [Center2 initCent2];
@@ -1068,7 +1068,8 @@ int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
         for(int i=0; i<s.count; i++) {
             int move = 0;
             k=0;
-            if([[s objectAtIndex:i] length]>0) {
+            NSUInteger ilen = [[s objectAtIndex:i] length];
+            if(ilen > 0) {
                 switch ([[s objectAtIndex:i] characterAtIndex:0]) {
                     case '4': k=3; break;
                     case '3': k=2; break;
@@ -1087,7 +1088,7 @@ int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
                     case 'B': move = 8; break;
                     default: break;
                 }
-                if([[s objectAtIndex:i] length]>1) {
+                if(ilen > 1) {
                     switch ([[s objectAtIndex:i] characterAtIndex:1]) {
                         case '\'':
                             move+=2; break;
@@ -1111,13 +1112,19 @@ int bicStart[] = {1,1,2,3,3,2,4,4,0,5,6,7,8,9,10,10,5,6,7,8,9,11,11};
                             //NSLog(@"%hu", [[s objectAtIndex:i] characterAtIndex:1]);
                             break;
                     }
-                    if([[s objectAtIndex:i] length]>2) {
+                    if(ilen > 2) {
                         switch ([[s objectAtIndex:i] characterAtIndex:2]) {
                             case '\'':
                                 move+=2; break;
                             case '2': move++; break;
                             default: break;
-                        } 
+                        }
+                        if(ilen > 3) {
+                            switch ([[s objectAtIndex:i] characterAtIndex:3]) {
+                                case '2': move++; break;
+                                case '\'': move+=2; break;
+                            }
+                        }
                     }
                 }
                 [seq addObject:[NSNumber numberWithInt:move+k*24]];

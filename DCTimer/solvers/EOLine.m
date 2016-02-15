@@ -7,8 +7,8 @@
 //
 
 #import "EOLine.h"
-#import "Im.h"
 #import "DCTUtils.h"
+#import "Util.h"
 
 @interface EOLine ()
 @property (nonatomic, strong) NSArray *faceStr;
@@ -40,27 +40,27 @@
 
 -(int) getEpm:(int)eci epi:(int)epi k:(int)k {
     bool comb[12];
-    [Im idxToComb:comb i:eci k:2 l:12];;
+    [Util idxToComb:comb i:eci k:2 l:12];;
     int perm[2];
-    [Im idxToPerm:perm i:epi l:2];
+    [Util idxToPerm:perm i:epi l:2];
     int selEdges[] = {8, 10};
     int next = 0;
     int ep[] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
     for (int i = 0; i < 12; i++)
         if (comb[i]) ep[i] = selEdges[perm[next++]];
     switch(k){
-		case 0: [Im cir:ep a:4 b:7 c:6 d:5]; break;
-		case 1: [Im cir:ep a:8 b:9 c:10 d:11]; break;
-		case 2: [Im cir:ep a:7 b:3 c:11 d:2]; break;
-		case 3: [Im cir:ep a:5 b:1 c:9 d:0]; break;
-		case 4: [Im cir:ep a:6 b:2 c:10 d:1]; break;
-		case 5: [Im cir:ep a:4 b:0 c:8 d:3]; break;
+		case 0: [Util cir:ep a:4 b:7 c:6 d:5]; break;
+		case 1: [Util cir:ep a:8 b:9 c:10 d:11]; break;
+		case 2: [Util cir:ep a:7 b:3 c:11 d:2]; break;
+		case 3: [Util cir:ep a:5 b:1 c:9 d:0]; break;
+		case 4: [Util cir:ep a:6 b:2 c:10 d:1]; break;
+		case 5: [Util cir:ep a:4 b:0 c:8 d:3]; break;
     }
     int edgesMap[] = {0, 1, 2, 3};
     bool ec[12];
     for (int i = 0; i < 12; i++)
         ec[i] = ep[i] > 0;
-    eci = [Im combToIdx:ec k:2 l:12];
+    eci = [Util combToIdx:ec k:2 l:12];
     int edgesPerm[] = {-1, -1};
     next = 0;
     for (int i = 0; i < 12; i++)
@@ -70,7 +70,7 @@
                 = edgesMap
                 [ep[i]-8];
         }
-    epi = [Im permToIdx:edgesPerm l:2];
+    epi = [Util permToIdx:edgesPerm l:2];
     return eci * 2 + epi;
 }
 
@@ -78,18 +78,18 @@
     int arr[12];
     for(int i=0; i<2048; i++){
         for(int j=0; j<6; j++) {
-            [Im idxToZsOri:arr i:i n:2 l:12];
+            [Util idxToZsOri:arr i:i n:2 l:12];
             switch(j){
-				case 0: [Im cir:arr a:4 b:7 c:6 d:5]; break;
-				case 1: [Im cir:arr a:8 b:9 c:10 d:11]; break;
-				case 2: [Im cir:arr a:7 b:3 c:11 d:2]; break;
-				case 3: [Im cir:arr a:5 b:1 c:9 d:0]; break;
-				case 4: [Im cir:arr a:6 b:2 c:10 d:1];
+				case 0: [Util cir:arr a:4 b:7 c:6 d:5]; break;
+				case 1: [Util cir:arr a:8 b:9 c:10 d:11]; break;
+				case 2: [Util cir:arr a:7 b:3 c:11 d:2]; break;
+				case 3: [Util cir:arr a:5 b:1 c:9 d:0]; break;
+				case 4: [Util cir:arr a:6 b:2 c:10 d:1];
 					arr[6]^=1; arr[2]^=1; arr[10]^=1; arr[1]^=1; break;
-				case 5: [Im cir:arr a:4 b:0 c:8 d:3];
+				case 5: [Util cir:arr a:4 b:0 c:8 d:3];
 					arr[4]^=1; arr[0]^=1; arr[8]^=1; arr[3]^=1; break;
             }
-            eom[i][j] = [Im zsOriToIdx:arr n:2 l:12];
+            eom[i][j] = [Util zsOriToIdx:arr n:2 l:12];
         }
     }
     for(int i=0; i<66; i++){

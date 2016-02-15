@@ -23,11 +23,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.3.1</string>
+	<string>1.4</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>4.3.1</string>
+	<string>5.0.1</string>
 	<key>LSApplicationCategoryType</key>
 	<string>UIInterfaceOrientationPortrait</string>
 	<key>LSRequiresIPhoneOS</key>

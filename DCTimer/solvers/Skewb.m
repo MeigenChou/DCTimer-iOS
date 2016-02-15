@@ -7,8 +7,8 @@
 //
 
 #import "Skewb.h"
-#import "Im.h"
 #import "DCTUtils.h"
+#import "Util.h"
 #import "stdlib.h"
 #import "time.h"
 
@@ -27,53 +27,53 @@
     // move tables
     for (i=0; i<360; i++)
         for (j=0; j<4; j++) {
-            [Im idxToEvenPerm:arr i:i l:6];
+            [Util idxToEvenPerm:arr i:i l:6];
             switch(j){
-				case 0: [Im cir3:arr a:2 b:5 c:3]; break;
-				case 1: [Im cir3:arr a:0 b:3 c:4]; break;
-				case 2: [Im cir3:arr a:1 b:4 c:5]; break;
-				case 3: [Im cir3:arr a:3 b:5 c:4]; break;
+				case 0: [Util cir3:arr a:2 b:5 c:3]; break;
+				case 1: [Util cir3:arr a:0 b:3 c:4]; break;
+				case 2: [Util cir3:arr a:1 b:4 c:5]; break;
+				case 3: [Util cir3:arr a:3 b:5 c:4]; break;
             }
-            ctm[i][j] = [Im evenPermToIdx:arr l:6];
+            ctm[i][j] = [Util evenPermToIdx:arr l:6];
         }
     int arr2[3];
     for (i=0; i<12; i++) {
         for (j=0; j<3; j++) {
             for (k=0; k<4; k++) {
-                [Im idxToEvenPerm:arr i:i l:4];
-                [Im idxToEvenPerm:arr2 i:j l:3];
+                [Util idxToEvenPerm:arr i:i l:4];
+                [Util idxToEvenPerm:arr2 i:j l:3];
                 switch (k) {
                     case 0:
-                        [Im cir3:arr a:1 b:2 c:3]; break;
+                        [Util cir3:arr a:1 b:2 c:3]; break;
                     case 1:
-                        [Im cir3:arr a:0 b:1 c:3]; break;
+                        [Util cir3:arr a:0 b:1 c:3]; break;
                     case 2:
-                        [Im cir3:arr a:2 b:0 c:3]; break;
+                        [Util cir3:arr a:2 b:0 c:3]; break;
                     case 3:
-                        [Im cir3:arr2 a:0 b:2 c:1]; break;
+                        [Util cir3:arr2 a:0 b:2 c:1]; break;
                 }
-                cpm[i*3+j][k] = [Im evenPermToIdx:arr l:4] * 3 + [Im evenPermToIdx:arr2 l:3];
+                cpm[i*3+j][k] = [Util evenPermToIdx:arr l:4] * 3 + [Util evenPermToIdx:arr2 l:3];
             }
         }
     }
     for (i=0; i<2187; i++) {
         for (j=0; j<4; j++) {
-            [Im idxToOri:arr i:i n:3 l:7];
+            [Util idxToOri:arr i:i n:3 l:7];
             switch (j) {
                 case 0:
-                    [Im cir3:arr a:2 b:6 c:3];
+                    [Util cir3:arr a:2 b:6 c:3];
                     arr[2] += 2; arr[3] += 2; arr[5]++; arr[6] += 2; break;
 				case 1:
-                    [Im cir3:arr a:1 b:2 c:3];
+                    [Util cir3:arr a:1 b:2 c:3];
                     arr[0]++; arr[1] += 2; arr[2] += 2; arr[3] += 2; break;
 				case 2:
-                    [Im cir3:arr a:1 b:3 c:6];
+                    [Util cir3:arr a:1 b:3 c:6];
                     arr[1] += 2; arr[3] += 2; arr[4]++; arr[6] += 2; break;
 				case 3:
-                    [Im cir3:arr a:0 b:5 c:4];
+                    [Util cir3:arr a:0 b:5 c:4];
                     arr[0] += 2; arr[3]++; arr[4] += 2; arr[5] += 2; break;
             }
-            com[i][j] = [Im oriToIdx:arr n:3 l:7];
+            com[i][j] = [Util oriToIdx:arr n:3 l:7];
         }
     }
     
@@ -156,7 +156,7 @@
     }
     while (cd[co][cp] < 0);
     self.sol = [NSMutableString string];
-    for (int d = 4; d < 13; d++) {
+    for (int d = 7; d < 13; d++) {
         if([self search:fp cp:cp co:co d:d l:-1]) {
             return self.sol;
         }
@@ -172,32 +172,32 @@
 +(void) move:(int[])arr turn:(int)turn {
     switch (turn) {
         case 0: //R
-            [Im cir3:arr a:17 b:27 c:22];
-            [Im cir3:arr a:19 b:29 c:23];
-            [Im cir3:arr a:1 b:14 c:8];
-            [Im cir3:arr a:20 b:18 c:28];
-            [Im cir3:arr a:16 b:26 c:24];
+            [Util cir3:arr a:17 b:27 c:22];
+            [Util cir3:arr a:19 b:29 c:23];
+            [Util cir3:arr a:1 b:14 c:8];
+            [Util cir3:arr a:20 b:18 c:28];
+            [Util cir3:arr a:16 b:26 c:24];
             break;
         case 1: //U
-            [Im cir3:arr a:2 b:22 c:7];
-            [Im cir3:arr a:0 b:21 c:5];
-            [Im cir3:arr a:3 b:20 c:8];
-            [Im cir3:arr a:10 b:16 c:28];
-            [Im cir3:arr a:6 b:1 c:24];
+            [Util cir3:arr a:2 b:22 c:7];
+            [Util cir3:arr a:0 b:21 c:5];
+            [Util cir3:arr a:3 b:20 c:8];
+            [Util cir3:arr a:10 b:16 c:28];
+            [Util cir3:arr a:6 b:1 c:24];
             break;
         case 2: //L
-            [Im cir3:arr a:12 b:7 c:27];
-            [Im cir3:arr a:13 b:9 c:25];
-            [Im cir3:arr a:3 b:24 c:18];
-            [Im cir3:arr a:10 b:8 c:26];
-            [Im cir3:arr a:6 b:28 c:14];
+            [Util cir3:arr a:12 b:7 c:27];
+            [Util cir3:arr a:13 b:9 c:25];
+            [Util cir3:arr a:3 b:24 c:18];
+            [Util cir3:arr a:10 b:8 c:26];
+            [Util cir3:arr a:6 b:28 c:14];
             break;
         case 3: //B
-            [Im cir3:arr a:22 b:27 c:7];
-            [Im cir3:arr a:24 b:28 c:8];
-            [Im cir3:arr a:0 b:19 c:13];
-            [Im cir3:arr a:5 b:23 c:25];
-            [Im cir3:arr a:21 b:29 c:9];
+            [Util cir3:arr a:22 b:27 c:7];
+            [Util cir3:arr a:24 b:28 c:8];
+            [Util cir3:arr a:0 b:19 c:13];
+            [Util cir3:arr a:5 b:23 c:25];
+            [Util cir3:arr a:21 b:29 c:9];
             break;
     }
 }

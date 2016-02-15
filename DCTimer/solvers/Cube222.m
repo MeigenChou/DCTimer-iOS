@@ -7,7 +7,7 @@
 //
 
 #import "Cube222.h"
-#import "Im.h"
+#import "Util.h"
 #import "stdlib.h"
 #import "time.h"
 
@@ -49,22 +49,22 @@ extern int fact[];
 -(void) permMove:(int[])ps m:(int)m {
     switch (m) {
         case 0: //U
-            [Im cir:ps a:0 b:1 c:3 d:2];
+            [Util cir:ps a:0 b:1 c:3 d:2];
             break;
         case 1: //R
-            [Im cir:ps a:0 b:4 c:5 d:1];
+            [Util cir:ps a:0 b:4 c:5 d:1];
             break;
         case 2: //F
-            [Im cir:ps a:0 b:2 c:6 d:4];
+            [Util cir:ps a:0 b:2 c:6 d:4];
             break;
         case 3: //D
-            [Im cir:ps a:4 b:6 c:7 d:5];
+            [Util cir:ps a:4 b:6 c:7 d:5];
             break;
         case 4: //L
-            [Im cir:ps a:2 b:3 c:7 d:6];
+            [Util cir:ps a:2 b:3 c:7 d:6];
             break;
         case 5: //B
-            [Im cir:ps a:1 b:5 c:7 d:3];
+            [Util cir:ps a:1 b:5 c:7 d:3];
             break;
     }
 }
@@ -73,7 +73,7 @@ extern int fact[];
     int c;
     switch (m) {
         case 0:
-            [Im cir:ps a:0 b:1 c:3 d:2];    //U
+            [Util cir:ps a:0 b:1 c:3 d:2];    //U
             break;
         case 1:
             c=ps[0]; ps[0]=ps[4]+2; ps[4]=ps[5]+1; ps[5]=ps[1]+2; ps[1]=c+1;//R
@@ -82,7 +82,7 @@ extern int fact[];
 			c=ps[0]; ps[0]=ps[2]+1; ps[2]=ps[6]+2; ps[6]=ps[4]+1; ps[4]=c+2;//F
 			break;
         case 3:
-            [Im cir:ps a:4 b:6 c:7 d:5];    //D
+            [Util cir:ps a:4 b:6 c:7 d:5];    //D
             break;
         case 4:
             c=ps[2]; ps[2]=ps[3]+1; ps[3]=ps[7]+2; ps[7]=ps[6]+1; ps[6]=c+2;//L
@@ -129,9 +129,9 @@ extern int fact[];
         return;
     }
     //perm
-    [Im cir:state[0] a:first b:second];
+    [Util cir:state[0] a:first b:second];
     //twist
-    [Im cir:state[1] a:first b:second];
+    [Util cir:state[1] a:first b:second];
 }
 
 -(void) twist:(int)corner v:(int)value {
@@ -186,9 +186,9 @@ extern int fact[];
     for(int i=0; i<4; i++)
         [self swap:i s:i+rand()%(4-i)];
     if([olls isEqualToString:@""])
-        [Im idxToZsOri:state[1] i:(rand()%27) n:3 l:4];
+        [Util idxToZsOri:state[1] i:(rand()%27) n:3 l:4];
     else if([olls isEqualToString:@"X"] || [olls isEqualToString:@"PHUTLSA"])
-        [Im idxToZsOri:state[1] i:(rand()%26)+1 n:3 l:4];
+        [Util idxToZsOri:state[1] i:(rand()%26)+1 n:3 l:4];
     else {
         char oll = [olls characterAtIndex:rand()%[olls length]];
         switch (oll) {
@@ -269,7 +269,7 @@ extern int fact[];
     }
     for(int i=0; i<4; i++)
         [self swap:i s:i+rand()%(4-i)];
-    [Im idxToZsOri:state[1] i:(rand()%27) n:3 l:4];
+    [Util idxToZsOri:state[1] i:(rand()%27) n:3 l:4];
     [self twist:4 v:twst];
     [self twist:(rand()%4) v:(3-twst)];
     [self doMove:0 n:(rand()%4)];
@@ -300,11 +300,11 @@ extern int fact[];
     //given orientation p<729 and move m<3, return new orientation number
     //convert number into array;
     int ps[7];
-    [Im idxToZsOri:ps i:p n:3 l:7];
+    [Util idxToZsOri:ps i:p n:3 l:7];
     //perform move on array
     [self twistMove:ps m:m];
     //convert array back to number
-    return [Im zsOriToIdx:ps n:3 l:7];
+    return [Util zsOriToIdx:ps n:3 l:7];
 }
 
 -(void) calcperm {
@@ -383,7 +383,7 @@ extern int fact[];
 -(NSString *) solve:(int)q t:(int)t {
     sol = [NSMutableString string];
     
-    for (int l=4; l<12; l++) {
+    for (int l=7; l<12; l++) {
         if ([self search:q t:t l:l lm:-1]) {
             return sol;
         }
@@ -413,14 +413,14 @@ extern int fact[];
             break;
     }
     int p = [self prmToIdx:state[0]];
-    int o = [Im zsOriToIdx:state[1] n:3 l:7];
+    int o = [Util zsOriToIdx:state[1] n:3 l:7];
     return [self solve:p t:o];
 }
 
 -(NSString *) scramblePBL {
     [self randomEG:0 o:@"N"];
     int p = [self prmToIdx:state[0]];
-    int o = [Im zsOriToIdx:state[1] n:3 l:7];
+    int o = [Util zsOriToIdx:state[1] n:3 l:7];
     return [self solve:p t:o];
 }
     
@@ -429,7 +429,7 @@ extern int fact[];
     do {
         [self randomTEG:4 t:twst];
         p = [self prmToIdx:state[0]];
-        o = [Im zsOriToIdx:state[1] n:3 l:7];
+        o = [Util zsOriToIdx:state[1] n:3 l:7];
     } while (p==0 && o==0);
     return [self solve:p t:o];
 }

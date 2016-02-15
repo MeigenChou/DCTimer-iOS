@@ -21,22 +21,23 @@
 sqlite3 *database;
 int dbLastId = 0;
 int sesLastId = 0;
-int crntSesId = 0;
+extern int currentSesIdx;
 NSMutableArray *sesData;
 NSMutableArray *resList, *penList, *scrList, *dateList;
 const int MAX_VALUE = 2147483647;
 const int MIN_VALUE = -2147483647;
 int maxIdx, minIdx;
-int sessionMean, sessionSD;
-int sessionAvg, sessionASD;
-int numcube=0, solved=0;
+int sesMean, sesMSD;
+int sesAvg, sesASD;
+int nTotal = 0, nSolved = 0;
 int curAvg[4], bestAvg[4], bestAvgIdx[4];
 int numOfAvg[4] = {5, 12, 50, 100};
 int curMean3, bestMean3, bestMeanIdx;
 extern NSInteger accuracy;
-extern BOOL prntScr;
+BOOL prntScr;
 bool issChange = true;
 extern NSInteger dateForm;
+int defScrType;
 
 - (id)init {
     if(self = [super init]) {
@@ -47,6 +48,8 @@ extern NSInteger dateForm;
             dateList = [[NSMutableArray alloc] init];
         }
         dateForms = [[NSArray alloc] initWithObjects:@"yyyy-MM-dd", @"MM-dd-yyyy", @"dd-MM-yyyy", nil];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        prntScr = [defaults boolForKey:@"printscr"];
     }
     return self;
 }
@@ -68,19 +71,19 @@ extern NSInteger dateForm;
     char *errorMsg;
     int mark = 0;
     if(sqlite3_exec(database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
-        NSLog(@"failed %s", errorMsg);
+        NSLog(@"创建分组表失败 %s", errorMsg);
         mark |= 1;
     }
     createSQL = @"create table if not exists resulttb (id integer, sesid integer, rest integer, resp integer, scr text, date text, note text)";
     if(sqlite3_exec(database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
-        NSLog(@"failed %s", errorMsg);
+        NSLog(@"创建成绩表失败 %s", errorMsg);
         mark |= 2;
     }
-    //createSQL = @"create table if not exists sestypetb (id integer, type integer)";
-    //if(sqlite3_exec(database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
-    //    NSLog(@"failed %s", errorMsg);
-    //    mark |= 4;
-    //}
+    createSQL = @"create table if not exists scrtypetb (sesid integer, type integer)";
+    if(sqlite3_exec(database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
+        NSLog(@"创建打乱表失败 %s", errorMsg);
+        mark |= 4;
+    }
     if(mark != 0) return @"fctb";
     return @"OK";
 }
@@ -88,23 +91,39 @@ extern NSInteger dateForm;
 - (void)getSessions {
     NSString *msg = [self openDB];
     if([msg hasPrefix:@"f"]) {
-        NSLog(@"failed open");
+        NSLog(@"打开数据库失败");
         return;
     }
     NSString *query = @"select rowid, name from sessiontb";
+    sesData = [[NSMutableArray alloc] init];
     sqlite3_stmt *statement;
     if(sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
-        int row = 0;
-        sesData = [[NSMutableArray alloc] init];
+        int row;
         while (sqlite3_step(statement) == SQLITE_ROW) {
             row = sqlite3_column_int(statement, 0);
             char *na = (char *)sqlite3_column_text(statement, 1);
             NSString *name = [[NSString alloc] initWithUTF8String:na];
-            [sesData addObject:[[NSArray alloc] initWithObjects:@(row), name, nil]];
+            int type = -1;
+            NSString *query = [NSString stringWithFormat:@"select * from scrtypetb where sesid=%d", row];
+            sqlite3_stmt *stmt;
+            if(sqlite3_prepare_v2(database, [query UTF8String], -1, &stmt, nil) == SQLITE_OK) {
+                if(sqlite3_step(stmt) == SQLITE_ROW) {
+                    type = sqlite3_column_int(stmt, 1);
+                }
+            }
+            [sesData addObject:[[NSArray alloc] initWithObjects:@(row), name, @(type), nil]];
+            sqlite3_finalize(stmt);
         }
         sesLastId = row;
-        sqlite3_finalize(statement);
     }
+    defScrType = -1;
+    query = @"select * from scrtypetb where sesid=0";
+    if(sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK) {
+        if(sqlite3_step(statement) == SQLITE_ROW) {
+            defScrType = sqlite3_column_int(statement, 1);
+        }
+    }
+    sqlite3_finalize(statement);
 }
 
 - (int)getSessionCount {
@@ -124,7 +143,16 @@ extern NSInteger dateForm;
     return 0;
 }
 
-- (void)getSessionName:(NSMutableArray *)ses {
+- (NSString *)getSessionName:(int)idx {
+    if(idx == 0) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        return [defaults objectForKey:@"defsesname"];
+    }
+    if(idx > sesData.count) return @"";
+    return [[sesData objectAtIndex:idx-1] objectAtIndex:1];
+}
+
+- (void)getSessionNames:(NSMutableArray *)ses {
     if(sesData.count!=0) {
         for(int i=0; i<sesData.count; i++) {
             [ses addObject:[[sesData objectAtIndex:i] objectAtIndex:1]];
@@ -134,7 +162,6 @@ extern NSInteger dateForm;
 
 - (void)query:(int)sesIdx {
     if(sesIdx!=0) sesIdx = [[[sesData objectAtIndex:sesIdx-1] objectAtIndex:0] intValue];
-    crntSesId = sesIdx;
     [self clearTime];
     NSString *query = @"select id, sesid, rest, resp, scr, date from resulttb";
     sqlite3_stmt *statement;
@@ -161,26 +188,77 @@ extern NSInteger dateForm;
     }
 }
 
+- (int)getScrambleType:(int)sesIdx {
+    if(sesIdx == 0) {
+        return defScrType;
+    }
+    return [[[sesData objectAtIndex:sesIdx-1] objectAtIndex:2] intValue];
+}
+
+- (void)changeScrambleType:(int)type {
+    if(currentSesIdx == 0)
+        defScrType = type;
+    else {
+        NSNumber *sesId = [[sesData objectAtIndex:currentSesIdx-1] objectAtIndex:0];
+        NSString *name = [[sesData objectAtIndex:currentSesIdx-1] objectAtIndex:1];
+        [sesData replaceObjectAtIndex:currentSesIdx-1 withObject:[[NSArray alloc] initWithObjects:sesId, name, @(type), nil]];
+    }
+}
+
+- (void)saveScrambleType:(int)type {
+    sqlite3_stmt *stmt;
+    int sesIdx = currentSesIdx;
+    if(sesIdx != 0) sesIdx = [[[sesData objectAtIndex:sesIdx-1] objectAtIndex:0] intValue];
+    int scrType = [self getScrambleType:currentSesIdx];
+    //NSLog(@"打乱类型 %d %d", scrType, type);
+    if(scrType == -1) {
+        [self changeScrambleType:type];
+        char *update = "insert into scrtypetb values (?, ?);";
+        if(sqlite3_prepare_v2(database, update, -1, &stmt, nil) == SQLITE_OK) {
+            sqlite3_bind_int(stmt, 1, sesIdx);
+            sqlite3_bind_int(stmt, 2, type);
+        }
+        if(sqlite3_step(stmt) != SQLITE_DONE) {
+            NSLog(@"插入打乱类型失败");
+        }
+        sqlite3_finalize(stmt);
+    } else if(scrType != type) {
+        [self changeScrambleType:type];
+        char *update = "update scrtypetb set type=? where sesid=?";
+        if(sqlite3_prepare_v2(database, update, -1, &stmt, nil) == SQLITE_OK) {
+            sqlite3_bind_int(stmt, 1, type);
+            sqlite3_bind_int(stmt, 2, sesIdx);
+        }
+        if(sqlite3_step(stmt) != SQLITE_DONE) {
+            NSLog(@"更新打乱类型失败");
+        }
+        sqlite3_finalize(stmt);
+    }
+}
+
 - (void)insertTime:(int)time pen:(int)pen scr:(NSString *)s date:(NSString *)da {
     [self.resultId addObject:[NSNumber numberWithInt:++dbLastId]];
     char *update = "insert into resulttb (id, sesid, rest, resp, scr, date) values (?, ?, ?, ?, ?, ?);";
     sqlite3_stmt *stmt;
     if(sqlite3_prepare_v2(database, update, -1, &stmt, nil) == SQLITE_OK) {
         sqlite3_bind_int(stmt, 1, dbLastId);
-        sqlite3_bind_int(stmt, 2, crntSesId);
+        int session;
+        if(currentSesIdx == 0) session = 0;
+        else session = [[[sesData objectAtIndex:currentSesIdx-1] objectAtIndex:0] intValue];
+        sqlite3_bind_int(stmt, 2, session);
         sqlite3_bind_int(stmt, 3, time);
         sqlite3_bind_int(stmt, 4, pen);
         sqlite3_bind_text(stmt, 5, [s UTF8String], -1, NULL);
         sqlite3_bind_text(stmt, 6, [da UTF8String], -1, NULL);
     }
     if(sqlite3_step(stmt) != SQLITE_DONE) {
-        NSLog(@"failed insert");
+        NSLog(@"插入时间失败");
     }
     sqlite3_finalize(stmt);
 }
 
 - (void)addSession:(NSString *)name {
-    [sesData addObject:[[NSArray alloc] initWithObjects:[NSNumber numberWithInt:++sesLastId], name, nil]];
+    [sesData addObject:[[NSArray alloc] initWithObjects:@(++sesLastId), name, @(-1), nil]];
     char *insert = "insert into sessiontb (rowid, name) values (?, ?);";
     sqlite3_stmt *stmt;
     if(sqlite3_prepare_v2(database, insert, -1, &stmt, nil) == SQLITE_OK) {
@@ -188,7 +266,7 @@ extern NSInteger dateForm;
         sqlite3_bind_text(stmt, 2, [name UTF8String], -1, NULL);
     }
     if(sqlite3_step(stmt) != SQLITE_DONE) {
-        NSLog(@"failed insert");
+        NSLog(@"插入分组失败");
     }
     sqlite3_finalize(stmt);
 }
@@ -235,8 +313,9 @@ extern NSInteger dateForm;
 }
 
 - (void)updateSession:(int)idx name:(NSString *)name {
-    NSArray *temp = [[NSArray alloc] initWithObjects:[[sesData objectAtIndex:idx-1] objectAtIndex:0], name, nil];
-    [sesData replaceObjectAtIndex:idx-1 withObject:temp];
+    NSNumber *sesId = [[sesData objectAtIndex:idx-1] objectAtIndex:0];
+    NSNumber *type = [[sesData objectAtIndex:idx-1] objectAtIndex:2];
+    [sesData replaceObjectAtIndex:idx-1 withObject:[[NSArray alloc] initWithObjects:sesId, name, type, nil]];
     if(idx!=0) idx = [[[sesData objectAtIndex:idx-1] objectAtIndex:0] intValue];
     char *update = "update sessiontb set name=? where rowid=?";
     sqlite3_stmt *stmt;
@@ -303,7 +382,7 @@ extern NSInteger dateForm;
 }
 
 - (int)getSolved {
-    return solved;
+    return nSolved;
 }
 
 - (int)getTimeAt:(int)idx {
@@ -312,7 +391,7 @@ extern NSInteger dateForm;
 }
 
 - (NSString *)cubeSolves {
-    return [NSString stringWithFormat:@"%d/%d", solved, numcube];
+    return [NSString stringWithFormat:@"%d/%d", nSolved, nTotal];
 }
 
 - (int)getPenaltyAtIndex:(int)idx {
@@ -342,137 +421,111 @@ extern NSInteger dateForm;
 }
 
 - (void)getSessionStats {
-    numcube = (int)resList.count;
-    maxIdx = minIdx = sessionSD = -1;
-    solved = 0;
-    if(numcube==0) return;
+    nTotal = (int)resList.count;
+    maxIdx = minIdx = sesMSD = -1;
+    nSolved = 0;
+    if(nTotal==0) return;
     int min = MAX_VALUE;
     int max = MIN_VALUE;
     double sum = 0, sum2 = 0;
-    for(int i=0; i<numcube; i++) {
+    for(int i=0; i<nTotal; i++) {
         int p = [[penList objectAtIndex:i] intValue];
         if(p!=2) {
-            solved++;
+            nSolved++;
             int time = [[resList objectAtIndex:i] intValue] + 2000 * p;
-            if(time<=min) {
+            if(time <= min) {
                 min = time;
                 minIdx = i;
             }
-            if(time>max) {
+            if(time > max) {
                 max = time;
                 maxIdx = i;
             }
-            if(accuracy==0) {
-                sum += time;
-                sum2 += pow(time, 2);
-            } else {
-                sum += time/10;
-                sum2 += pow(time/10, 2);
-            }
+            if(accuracy == 1) time /= 10;
+            sum += time;
+            sum2 += (double)time * time;
         }
     }
-    if(minIdx == -1) minIdx = numcube - 1;
+    if(minIdx == -1) minIdx = nTotal - 1;
     if(maxIdx == -1) maxIdx = 0;
-    sessionMean = (int)(sum/solved+0.5);
-    if(accuracy==1)sessionMean*=10;
-    sessionSD=(int)(sqrt((sum2-sum*sum/solved)/solved));
+    sesMean = round(sum / nSolved);
+    if(accuracy == 1) sesMean *= 10;
+    sesMSD = sqrt((sum2 - sum * sum / nSolved) / nSolved);
 }
 
 - (void)getSessionAvg {
-    if(numcube > 2) {
+    if(nTotal > 2) {
         NSMutableArray *data = [[NSMutableArray alloc] init];
-        for(int i=0; i<numcube; i++) {
+        for(int i=0; i<nTotal; i++) {
             int p = [[penList objectAtIndex:i] intValue];
             if(p!=2) {
                 int r = [[resList objectAtIndex:i] intValue] + 2000 * p;
                 [data addObject:@(r)];
             }
         }
-        int trimmed = ceil(numcube/20.0);
-        if(data.count < numcube - trimmed) {
-            sessionAvg = MAX_VALUE;
+        int trim = ceil(nTotal / 20.0);
+        if(data.count < nTotal - trim) {
+            sesAvg = MAX_VALUE;
         } else {
             double sum = 0, sum2 = 0;
             [data sortUsingSelector:@selector(compare:)];
-            for(int j=trimmed; j<numcube-trimmed; j++) {
+            for(int j=trim; j<nTotal-trim; j++) {
                 int time = [[data objectAtIndex:j] intValue];
-                if(accuracy==0) {
-                    sum+=time;
-                    sum2+=pow(time, 2);
-                } else {
-                    sum+=time/10;
-                    sum2+=pow(time/10, 2);
-                }
+                if(accuracy == 1) time /= 10;
+                sum += time;
+                sum2 += (double)time * time;
             }
-            int num = numcube - 2*trimmed;
-            sessionAvg = (int)(sum/num+0.5);
-            if(accuracy==1)sessionAvg*=10;
-            sessionASD = (int)(sqrt((sum2-sum*sum/num)/num));
+            int num = nTotal - 2 * trim;
+            sesAvg = round(sum / num);
+            if(accuracy==1) sesAvg *= 10;
+            sesASD = sqrt((sum2 - sum * sum / num) / num);
         }
     }
 }
 
 - (void)getAvgs:(int)idx {
     int num = numOfAvg[idx];
-    bestAvgIdx[idx] = numcube-1;
+    bestAvgIdx[idx] = nTotal - 1;
     bestAvg[idx] = MAX_VALUE;
     double sum = 0;
-    if(numcube >= num) {
+    if(nTotal >= num) {
         int cavg;
-        for(int i=numcube-1; i>=num-1; i--) {
-            int nDnf=0;
+        for(int i=nTotal-1; i>=num-1; i--) {
+            int nDnf = 0;
             sum = 0;
             int max = MIN_VALUE;
             int min = MAX_VALUE;
             for(int j = i-num+1; j<=i; j++) {
                 int p = [[penList objectAtIndex:j] intValue];
-                int r = [[resList objectAtIndex:j] intValue]+2000*p;
-                if(p==2) {
+                int r = [[resList objectAtIndex:j] intValue] + 2000 * p;
+                if(p == 2) {
                     nDnf++;
                     max = MAX_VALUE;
-                }
-                else {
+                } else {
                     if(r > max) max = r;
                     if(r < min) min = r;
-                    if(accuracy==0) sum += r;
-                    else sum += r/10;
+                    if(accuracy==1) r /= 10;
+                    sum += r;
                 }
             }
-            if(nDnf>1) cavg = MAX_VALUE;
+            if(nDnf > 1) cavg = MAX_VALUE;
             else {
-                if(nDnf!=0) max = 0;
-                if(accuracy==1) {
+                if(nDnf != 0) max = 0;
+                if(accuracy == 1) {
                     max = max/10;
                     min = min/10;
                 }
-                sum -= min+max;
-                cavg = (int)(sum/(num-2)+0.5);
-                if(accuracy==1) cavg*=10;
+                sum -= min + max;
+                cavg = round(sum / (num - 2));
+                if(accuracy==1) cavg *= 10;
                 if(cavg < bestAvg[idx]) {
-                    bestAvg[idx] = cavg; bestAvgIdx[idx] = i;
+                    bestAvg[idx] = cavg;
+                    bestAvgIdx[idx] = i;
                 }
             }
-            if(i==numcube-1) curAvg[idx] = cavg;
+            if(i == nTotal - 1) curAvg[idx] = cavg;
         }
-        //cavg = (int)(sum/(num-2)+0.5);
-        
-        //bestAvg[idx] = (int)(bestSum[idx]/(num-2)+0.5);
     }
-}
-
-- (void)quickSort:(NSMutableArray *)a l:(int)lo h:(int)hi {
-    if(lo >= hi) return;
-    int i = lo, j = hi;
-    NSNumber *pivot = [a objectAtIndex:lo];
-    while (i < j) {
-        while (i<j && [[a objectAtIndex:j] intValue]>=[pivot intValue]) j--;
-        [a replaceObjectAtIndex:i withObject:[a objectAtIndex:j]];
-        while (i<j && [[a objectAtIndex:i] intValue]<=[pivot intValue]) i++;
-        [a replaceObjectAtIndex:j withObject:[a objectAtIndex:i]];
-    }
-    [a replaceObjectAtIndex:i withObject:pivot];
-    [self quickSort:a l:lo h:i-1];
-    [self quickSort:a l:i+1 h:hi];
 }
 
 - (void)quickSort:(NSMutableArray *)t idx:(NSMutableArray *)i l:(int)lo0 h:(int)hi0 {
@@ -498,39 +551,132 @@ extern NSInteger dateForm;
     [self quickSort:t idx:i l:hi h:hi0];
 }
 
+- (void)addMaxQueue:(int[])data x:(int)x size:(int)size {
+    if(size == 0)
+        data[0] = x;
+    else {
+        int k = size;
+        while (k > 0) {
+            int parent = (k - 1) >> 1;
+            int e = data[parent];
+            if(x >= e) break;
+            data[k] = e;
+            k = parent;
+        }
+        data[k] = x;
+    }
+}
+
+- (void)pollMax:(int[])data size:(int)size {
+    int s = --size;
+    int x = data[s];
+    int half = s >> 1;
+    int k = 0;
+    while (half > k) {
+        int child = (k << 1) + 1;
+        int c = data[child];
+        int right = child + 1;
+        if (right < s && c > data[right])
+            c = data[child = right];
+        if (x <= c) break;
+        data[k] = c;
+        k = child;
+    }
+    data[k] = x;
+}
+
+- (void)addMinQueue:(int[])data x:(int)x size:(int)size {
+    if(size == 0) {
+        data[0] = x;
+    } else {
+        int k = size;
+        while (k > 0) {
+            int parent = (k - 1) >> 1;
+            int e = data[parent];
+            if(x <= e) break;
+            data[k] = e;
+            k = parent;
+        }
+        data[k] = x;
+    }
+}
+
+- (void)pollMin:(int[])data size:(int)size {
+    int s = --size;
+    int x = data[s];
+    int half = s >> 1;
+    int k = 0;
+    while(half > k) {
+        int child = (k << 1) + 1;
+        int c = data[child];
+        int right = child + 1;
+        if (right < s && c < data[right])
+            c = data[child = right];
+        if (x >= c) break;
+        data[k] = c;
+        k = child;
+    }
+    data[k] = x;
+}
+
 - (void)getAvgs20:(int)idx {
     int num = numOfAvg[idx];
     double sum = 0;
-    bestAvgIdx[idx] = numcube-1;
+    bestAvgIdx[idx] = nTotal - 1;
     bestAvg[idx] = MAX_VALUE;
-    int trimmed = ceil(num/20.0);
-    if(numcube >= num) {
+    int trim = ceil(num / 20.0);
+    if(nTotal >= num) {
         int cavg;
-        for(int i=numcube-1; i>=num-1; i--) {
-            int nDnf=0;
+        for(int i=nTotal-1; i>=num-1; i--) {
+            int nDnf = 0;
             sum = 0;
+            int max[5], min[5];
+            int size = 0;
             for(int j = i-num+1; j<=i; j++) {
                 int p = [[penList objectAtIndex:j] intValue];
-                if(p==2)nDnf++;
+                if(p == 2) {
+                    nDnf++;
+                    if(size < trim) {
+                        [self addMinQueue:min x:MAX_VALUE size:size];
+                        [self addMaxQueue:max x:MAX_VALUE size:size++];
+                    } else if(max[0] < MAX_VALUE) {
+                        [self pollMax:max size:trim];
+                        [self addMaxQueue:max x:MAX_VALUE size:trim-1];
+                    }
+                } else {
+                    int time = [[resList objectAtIndex:j] intValue] + 2000 * p;
+                    if(accuracy == 1) time /= 10;
+                    sum += time;
+                    if(size < trim) {
+                        [self addMinQueue:min x:time size:size];
+                        [self addMaxQueue:max x:time size:size++];
+                    } else {
+                        if(time < min[0]) {
+                            [self pollMin:min size:trim];
+                            [self addMinQueue:min x:time size:trim-1];
+                        }
+                        if(time > max[0]) {
+                            [self pollMax:max size:trim];
+                            [self addMaxQueue:max x:time size:trim-1];
+                        }
+                    }
+                }
             }
-            if(nDnf>trimmed) cavg = MAX_VALUE;
+            if(nDnf > trim) cavg = MAX_VALUE;
             else {
-                NSMutableArray *data = [[NSMutableArray alloc]init];
-                for(int j = i-num+1; j<=i; j++) {
-                    int p = [[penList objectAtIndex:j] intValue];
-                    if(p!=2) [data addObject:@([[resList objectAtIndex:j] intValue]+2000*p)];
+                for(int j=0; j<trim; j++) {
+                    sum -= min[j];
+                    int maxj = max[j];
+                    if(maxj != MAX_VALUE) sum -= maxj;
                 }
-                [self quickSort:data l:0 h:(int)data.count-1];
-                //[data sortUsingSelector:@selector(compare:)];
-                for(int j=trimmed; j<num-trimmed; j++) {
-                    sum += [[data objectAtIndex:j] intValue];
-                }
-                cavg = (int)(sum/(num-2*trimmed)+0.5);
+                cavg = round(sum / (num - 2 * trim));
+                if(accuracy==1) cavg *= 10;
                 if(cavg < bestAvg[idx]) {
-                    bestAvg[idx] = cavg; bestAvgIdx[idx] = i;
+                    bestAvg[idx] = cavg;
+                    bestAvgIdx[idx] = i;
                 }
             }
-            if(i==numcube-1) curAvg[idx] = cavg;
+            if(i == nTotal - 1) curAvg[idx] = cavg;
         }
     }
 }
@@ -576,7 +722,7 @@ extern NSInteger dateForm;
 
 - (int) bestAvgIdx:(int)idx {
     int bai = bestAvgIdx[idx];
-    if(bai == -1) return numcube-1;
+    if(bai == -1) return nTotal-1;
     return bai;
 }
 
@@ -587,26 +733,30 @@ extern NSInteger dateForm;
 }
 
 - (int)getSesMean {
-    return sessionMean;
+    return sesMean;
+}
+
+- (NSString *)sessionMean {
+    return [DCTUtils distime:sesMean];
 }
 
 - (NSString *)getSessionMeanSD {
-    if(solved==0) return @"N/A";
-    else return [NSString stringWithFormat:@"%@ (σ = %@)", [DCTUtils distime:sessionMean], [self standDev:sessionSD]];
+    if(nSolved==0) return @"N/A";
+    else return [NSString stringWithFormat:@"%@ (σ = %@)", [DCTUtils distime:sesMean], [self standDev:sesMSD]];
 }
 
 - (NSString *)getSessionAvgSD {
-    if(numcube < 3) return @"N/A";
-    if(sessionAvg == MAX_VALUE) return @"DNF";
-    return [NSString stringWithFormat:@"%@ (σ = %@)", [DCTUtils distime:sessionAvg], [self standDev:sessionASD]];
+    if(nTotal < 3) return @"N/A";
+    if(sesAvg == MAX_VALUE) return @"DNF";
+    return [NSString stringWithFormat:@"%@ (σ = %@)", [DCTUtils distime:sesAvg], [self standDev:sesASD]];
 }
 
 - (void)getMean:(int)num {
     bestMeanIdx = -1;
     bestMean3 = MAX_VALUE;
-    if(numcube >= num) {
+    if(nTotal >= num) {
         int cavg;
-        for(int i=num-1; i<numcube; i++) {
+        for(int i=num-1; i<nTotal; i++) {
             int nDnf=0;
             double sum = 0;
             for(int j = i-num+1; j<=i; j++) {
@@ -622,7 +772,7 @@ extern NSInteger dateForm;
                 cavg = MAX_VALUE;
                 continue;
             }
-            cavg = (int)(sum/num+0.5);
+            cavg = round(sum / num);
             if(accuracy==1)cavg*=10;
             if(i==num-1 || cavg <= bestMean3) {
                 bestMean3 = cavg; bestMeanIdx = i;
@@ -643,7 +793,7 @@ extern NSInteger dateForm;
 }
 
 - (int)getBestMeanIdx {
-    if(bestMeanIdx==-1)return numcube-1;
+    if(bestMeanIdx==-1)return nTotal-1;
     return bestMeanIdx;
 }
 
@@ -697,8 +847,8 @@ extern NSInteger dateForm;
             min = min/10;
         }
         sum -= min+max;
-        sum2 -= pow(min, 2)+pow(max, 2);
-        cavg = sum/(n-2)+0.5;
+        sum2 -= pow(min, 2)+ pow(max, 2);
+        cavg = round(sum / (n - 2));
         if(accuracy==1)cavg*=10;
         csdv = sqrt(sum2/(n-2)-sum*sum/(n-2)/(n-2))+(accuracy?0.5:0);
     }
@@ -760,7 +910,7 @@ extern NSInteger dateForm;
             if(accuracy==0)sum2+=pow([[ts objectAtIndex:j] intValue], 2);
             else sum2+=pow([[ts objectAtIndex:j] intValue]/10, 2);
         }
-        cavg = sum/(n-trim*2)+0.5;
+        cavg = round(sum/(n-trim*2));
         csdv=(int) sqrt(sum2/(n-trim*2)-sum*sum/pow(n-trim*2, 2));
         if(accuracy==1)cavg*=10;
     }
@@ -823,7 +973,7 @@ extern NSInteger dateForm;
         if(mini==-1)mini = idx;
         cavg = csdv = 0;
     } else {
-        cavg = sum/3+0.5;
+        cavg = round(sum / 3);
         if(accuracy==1)cavg*=10;
         csdv = sqrt(sum2/3-sum*sum/9)+(accuracy?0.5:0);
     }
@@ -847,15 +997,15 @@ extern NSInteger dateForm;
     NSString *date = [formatter stringFromDate:[NSDate date]];
     [s appendFormat:@"%@\n%@", date, [DCTUtils getString:@"stat_solve"]];
     [s appendFormat:@"%@\n", [self cubeSolves]];
-    [s appendFormat:@"%@%@\n", [DCTUtils getString:@"ses_mean"], [self getSessionMeanSD]];
-    [s appendFormat:@"%@%@\n", [DCTUtils getString:@"ses_avg"], [self getSessionAvgSD]];
+    [s appendFormat:@"%@%@\n", [DCTUtils getString:@"session_mean"], [self getSessionMeanSD]];
+    [s appendFormat:@"%@%@\n", [DCTUtils getString:@"session_avg"], [self getSessionAvgSD]];
     [s appendFormat:@"%@%@\n", [DCTUtils getString:@"stat_best"], [self bestTime]];
     [s appendFormat:@"%@%@\n%@", [DCTUtils getString:@"stat_worst"], [self worstTime], [DCTUtils getString:@"stat_list"]];
     if(!prntScr)[s appendString:@"\n"];
-    for(int j=0; j<numcube; j++) {
+    for(int j=0; j<nTotal; j++) {
         if(prntScr)[s appendFormat:@"\n%d. ", j+1];
         [s appendString:[DCTData distimeAtIndex:j dt:false]];
-        if(!prntScr && j<numcube-1)[s appendString:@", "];
+        if(!prntScr && j<nTotal-1)[s appendString:@", "];
         if(prntScr) [s appendFormat:@"  %@", [scrList objectAtIndex:j]];
     }
     return s;

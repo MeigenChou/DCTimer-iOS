@@ -86,6 +86,10 @@ extern NSInteger timeForm;
     return [[UIDevice currentDevice].systemVersion floatValue] >= 7.0;
 }
 
++ (float)sysVersion {
+    return [[UIDevice currentDevice].systemVersion floatValue];
+}
+
 + (CGSize)getFrame {
     CGRect frame = [[UIScreen mainScreen] applicationFrame];
     return frame.size;
@@ -121,22 +125,10 @@ extern NSInteger timeForm;
     NSMutableString *time = [NSMutableString string];
     if(hour==0) {
         if(min==0) [time appendFormat:@"%d", sec];
-        else {
-            if(sec<10) [time appendFormat:@"%d:0%d", min, sec];
-            else [time appendFormat:@"%d:%d", min, sec];
-        }
-    }
-    else {
-        [time appendFormat:@"%d%@%d%@%d", hour, min<10?@":0":@":", min, sec<10?@":0":@":", sec];
-    }
-    if(accuracy == 0) {
-        if(msec<10) [time appendFormat:@".00%d", msec];
-        else if(msec<100) [time appendFormat:@".0%d", msec];
-        else [time appendFormat:@".%d", msec];
-    } else {
-        if(msec<10) [time appendFormat:@".0%d", msec];
-        else [time appendFormat:@".%d", msec];
-    }
+        else [time appendFormat:@"%d:%02d", min, sec];
+    } else [time appendFormat:@"%d:%02d:%02d", hour, min, sec];
+    if(accuracy == 0) [time appendFormat:@".%03d", msec];
+    else [time appendFormat:@".%02d", msec];
     return time;
 }
 
@@ -157,6 +149,28 @@ extern NSInteger timeForm;
     }
     NSString *time = [[NSString alloc] initWithFormat:@"%@%@", m?@"-":@"", [DCTUtils contime:hour m:min s:sec ms:msec]];
     return time;
+}
+
++ (NSString *)distimeSec:(int)i {
+    bool m = i < 0;
+    if(m) i = -i;
+    i /= 1000;
+    int sec = i;
+    int min = 0, hour = 0;
+    if(timeForm < 2) {
+        min = sec / 60;
+        sec %= 60;
+        if(timeForm < 1) {
+            hour = min / 60;
+            min %= 60;
+        }
+    }
+    NSMutableString *s = [NSMutableString string];
+    if(hour == 0) {
+        if(min == 0) [s appendFormat:@"%d", sec];
+        else [s appendFormat:@"%d:%02d", min, sec];
+    } else [s appendFormat:@"%d:%02d:%02d", hour, min, sec];
+    return s;
 }
 
 + (NSString *)convStr:(NSString *)s {
@@ -233,4 +247,11 @@ extern NSInteger timeForm;
     //dd-MM-yyyy
     return [NSString stringWithFormat:@"%@-%@-%@%@", [DCTUtils substring:str s:8 e:10], [DCTUtils substring:str s:5 e:7], [str substringToIndex:4], [str substringFromIndex:10]];
 }
+
++ (int)getStringWidth:(NSString *)str font:(UIFont *)font {
+    CGSize size = [str sizeWithFont:font constrainedToSize:CGSizeMake(200, 200)];
+    return (int)size.width;
+}
+
+
 @end

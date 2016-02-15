@@ -7,9 +7,9 @@
 //
 
 #import "Cross.h"
-#import "Im.h"
 #import "CoordCube.h"
 #import "DCTUtils.h"
+#import "Util.h"
 @interface Cross()
 @property (nonatomic, strong) NSArray *side;
 @property (nonatomic, strong) NSArray *moveIdx, *rotIdx;
@@ -27,7 +27,7 @@ int arrc[2][12];
 -(Cross *) init {
     if(self = [super init]) {
         moveIdx = [[NSArray alloc] initWithObjects:@"UDLRFB", @"DURLFB", @"RLUDFB", @"LRDUFB", @"BFLRUD", @"FBLRDU", nil];
-        side = [[NSArray alloc] initWithObjects:@"D:", @"U:", @"L:", @"R:", @"F:", @"B:", nil];
+        side = [[NSArray alloc] initWithObjects:@"D", @"U", @"L", @"R", @"F", @"B", nil];
         rotIdx = [[NSArray alloc] initWithObjects:@"", @" z2", @" z'", @" z", @" x'", @" x", nil];
         turn = [[NSArray alloc] initWithObjects:@"U", @"D", @"L", @"R", @"F", @"B", nil];
         suff = [[NSArray alloc] initWithObjects:@"", @"2", @"'", nil];
@@ -121,7 +121,7 @@ int arrc[2][12];
 
 -(void) initc {
     int i,j,D,y,C;
-    [Im initCnk];
+    [Util initCnk];
     for(i=0;495>i;i++)
         for(j=0;24>j;j++){
             for(int s=0;6>s;s++){
@@ -256,7 +256,7 @@ int arrc[2][12];
     self.sol = [NSMutableString string];
     for(C=0;9>C&&![self idacross:D eo:q d:C lf:-1];C++);
     //[colorCrs objectAtIndex:side]
-    NSString *solveC = [NSString stringWithFormat:@"\n%@%@%@", [self.side objectAtIndex:sd], [rotIdx objectAtIndex:sd], self.sol];
+    NSString *solveC = [NSString stringWithFormat:@"\nCross(%@):%@%@", [self.side objectAtIndex:sd], [rotIdx objectAtIndex:sd], self.sol];
     return solveC;
 }
 
@@ -295,7 +295,7 @@ int arrc[2][12];
     for(int d=0; ; d++) {
         for(int idx=0; idx<4; idx++)
             if([self idaxcross:D eo:q co:co[idx] feo:feo[idx] idx:idx d:d l:-1])
-                return [NSString stringWithFormat:@"\n%@%@%@", [self.side objectAtIndex:sd], [rotIdx objectAtIndex:sd], self.sol];
+                return [NSString stringWithFormat:@"\nXcross(%@):%@%@", [self.side objectAtIndex:sd], [rotIdx objectAtIndex:sd], self.sol];
     }
 }
 

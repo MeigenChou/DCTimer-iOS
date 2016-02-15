@@ -57,7 +57,6 @@ extern int centerFacelet[];
             csym2raw[count++] = i;
         }
     }
-    //NSLog(@"count %d", count);
 }
 
 +(void)createPrun {

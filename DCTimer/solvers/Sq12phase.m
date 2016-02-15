@@ -9,8 +9,8 @@
 #import "Sq12phase.h"
 #import "stdlib.h"
 #import "time.h"
-#import "Im.h"
 #import "DCTUtils.h"
+#import "Util.h"
 
 @implementation Sq12phase
 
@@ -183,18 +183,18 @@ int halflayer[] = {0x00, 0x03, 0x06, 0x0c, 0x0f, 0x18, 0x1b, 0x1e, 0x30, 0x33, 0
 	int temp;
 	for(i=0;i<40320;i++){
 		//twist
-		[Im set8Perm:pos i:i];
+		[Util set8Perm:pos i:i];
 		temp=pos[2]; pos[2]=pos[4]; pos[4]=temp;
 		temp=pos[3]; pos[3]=pos[5]; pos[5]=temp;
-		sqTwistMove[i] = [Im get8Perm:pos];
+		sqTwistMove[i] = [Util get8Perm:pos];
 		//top layer turn
-		[Im set8Perm:pos i:i];
+		[Util set8Perm:pos i:i];
 		temp=pos[0]; pos[0]=pos[1]; pos[1]=pos[2]; pos[2]=pos[3]; pos[3]=temp;
-		sqTopMove[i] = [Im get8Perm:pos];
+		sqTopMove[i] = [Util get8Perm:pos];
 		//bottom layer turn
-		[Im set8Perm:pos i:i];
+		[Util set8Perm:pos i:i];
 		temp=pos[4]; pos[4]=pos[5]; pos[5]=pos[6]; pos[6]=pos[7]; pos[7]=temp;
-		sqBottomMove[i] = [Im get8Perm:pos];
+		sqBottomMove[i] = [Util get8Perm:pos];
 	}	
 	
 	for (i=0; i<40320*2; i++) {
@@ -356,14 +356,14 @@ int prm[8];
 	for (a=0;a<8;a++) {
 		prm[a] = [self pieceAt:a*3+1]>>1;
 	}
-	cornperm = [Im get8Perm:prm];
+	cornperm = [Util get8Perm:prm];
 	topEdgeFirst = [self pieceAt:0]==[self pieceAt:1];
 	a = topEdgeFirst ? 2 : 0;
 	for(b=0; b<4; a+=3, b++) prm[b]=[self pieceAt:a]>>1;
 	botEdgeFirst = [self pieceAt:12]==[self pieceAt:13];
 	a = botEdgeFirst ? 14 : 12;
 	for( ; b<8; a+=3, b++) prm[b]=[self pieceAt:a]>>1;
-	edgeperm = [Im get8Perm:prm];
+	edgeperm = [Util get8Perm:prm];
 	sqml = ml;
 }
 

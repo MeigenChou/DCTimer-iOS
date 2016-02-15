@@ -14,7 +14,6 @@
 "done" = "Done";
 "ok" = "OK";
 "close" = "Close";
-"time" = "Time";
 
 "c2" = "2x2";
 "c3" = "3x3";
@@ -33,78 +32,85 @@
 "bd" = "Bandaged cube";
 "ms" = "Megaminx subsets";
 
-"scramble_view" = "Scramble view";
-"scramble_type" = "Scramble type";
+"time" = "Time";
 "scrambling" = "scrambling...";
-"invalid_in" = "Invalid input.";
+"initing" = "initing...";
+"invalid_input" = "Invalid input.";
+"solving" = "SOLVING";
+"inspecting" = "INSPECTING";
+"eight_second" = "8 seconds";
+"twelve_second" = "12 seconds";
 
 "session" = "Sessions";
 "stats" = "Stats";
 "detail" = "Detail";
 
-"option" = "Options";
+"options" = "Options";
 "delete" = "Delete";
-"nopen" = "No penalty";
-"copyscr" = "Copy scramble";
-"copysuccess" = "Copy to clipboard successfully.";
+"no_penalty" = "No penalty";
+"copy_scramble" = "Copy scramble";
+"copy_success" = "Copy to clipboard successfully.";
 "copy" = "Copy";
 "save" = "Save";
 "comment" = "Comment";
-"deletelast" = "Delete last solve";
-"intime" = "Input time";
-"conf_delses" = "Reset session?";
+"input_time" = "Input time";
+"confirm_clear" = "Clear session?";
 "last_solve" = "Last solve: ";
 
-"solve" = "SOLVING";
-"inspect" = "INSPECTING";
-
-"numbercube" = "Cube solved:";
-"besttime" = "Best time:";
-"worsttime" = "Worst time:";
-"currentavg5" = "Current avg of 5:";
-"bestavg5" = "Best avg of 5:";
-"currentavg12" = "Current avg of 12:";
-"bestavg12" = "Best avg of 12:";
-"currentavg50" = "Current avg of 50:";
-"bestavg50" = "Best aveg of 50:";
-"currentavg100" = "Current avg of 100:";
-"bestavg100" = "Best aveg of 100:";
-"sesmean" = "Session mean:";
-"sesavg" = "Session avg:";
-"currentmean3" = "Current mean of 3:";
-"bestmean3" = "Best mean of 3:";
+"cube_solved" = "Cube solved:";
+"best_time" = "Best time:";
+"worst_time" = "Worst time:";
+"current_avg5" = "Current avg of 5:";
+"best_avg5" = "Best avg of 5:";
+"current_avg12" = "Current avg of 12:";
+"best_avg12" = "Best avg of 12:";
+"current_avg50" = "Current avg of 50:";
+"best_avg50" = "Best aveg of 50:";
+"current_avg100" = "Current avg of 100:";
+"best_avg100" = "Best aveg of 100:";
+"session_mean" = "Session mean: ";
+"session_avg" = "Session avg: ";
+"current_mean" = "Current mean of 3:";
+"best_mean" = "Best mean of 3:";
 "histogram" = "Histogram";
 "graph" = "Graph";
-"calcing" = "Calculating...";
+"calculating" = "Calculating...";
+"share" = "Share";
+"last5" = "Last 5";
+"last12" = "Last 12";
+"last50" = "Last 50";
+"last100" = "Last 100";
+"all" = "All";
 
 "WCAinsp" = "WCA inspection";
 "clockformat" = "Time format";
 "timerupd" = "Timer updating";
 "On" = "On";
-"secondsonly" = "Seconds only";
-"insponly" = "Inspection only";
+"seconds" = "Seconds only";
+"inspection" = "Inspection only";
 "Off" = "Off";
 "accuracy" = "Timer accuracy";
 "0.001sec" = "0.001 sec";
 "0.01sec" = "0.01 sec";
-"pressingtime" = "Timer start delay";
-"input_time" = "Manually enter times";
+"start_delay" = "Start delay";
+"enter_time" = "Manually enter times";
 "drop_stop" = "Drop to stop";
 "sensitivity" = "Sensitivity";
+"say_alerts" = "Say inspection alerts";
 "scramble" = "Scramble";
-"hide_scr" = "Hide scramble while timing";
+"hide_scramble" = "Hide scramble while timing";
 "display_scr" = "Display scramble view";
-"mono_font" = "Monospace scramble font";
+"monospace" = "Monospace scramble font";
 "stt_stats" = "Results and Stats";
 "prompttime" = "Prompt when new time detected";
 "printscr" = "Print scramble(s) in statistics";
 "newest_top" = "Newest times at top";
 "subtitle" = "Subtitle";
-"dateformat" = "Date format";
-
+"date_format" = "Date format";
+"change_session" = "Switch session when scramble type changing";
+"change_scramble" = "Switch scramble when session changing";
 "tools" = "Tools";
-"cross" = "Solve 3x3 cross";
-"3solver" = "3x3 solvers";
+"3x3solver" = "3x3 solver";
 "solcolor" = "Face or color";
 "sq_shape_solver" = "Square-1 shape solver";
 "none" = "None";
@@ -115,7 +121,7 @@
 "fside" = "F(green)";
 "bside" = "B(blue)";
 "color_scheme" = "Color schemes";
-
+"default" = "Default";
 "more" = "More";
 "interface" = "Interface";
 "bgcolor" = "Background color";
@@ -125,9 +131,8 @@
 "show_image" = "Show image";
 "timer_font" = "Timer font";
 "timer_size" = "Timer size";
-"version" = "Version";
-"about" = "About";
 "gesture" = "Gesture manager";
+"reset" = "Reset";
 "rate_app" = "Rate app";
 "email_feedback" = "Email feedback";
 "licenses" = "Licenses";
@@ -137,8 +142,6 @@
 "stat_solve" = "Cubes solved: ";
 "stat_avg" = "Average: ";
 "stat_mean" = "Mean: ";
-"ses_avg" = "Session average: ";
-"ses_mean" = "Session mean: ";
 "stat_best" = "Best time: ";
 "stat_worst" = "Worst time: ";
 "stat_list" = "Individual times: ";
@@ -154,15 +157,26 @@
 "rename" = "Rename";
 "num_of_solve" = "Number of solves: ";
 
-"1fhold" = "One finger long press";
+
+
 "sr" = "Swipe right";
 "sl" = "Swipe left";
-"1f2t" = "One finger Double-tap";
 "su" = "Swipe up";
 "sd" = "Swipe down";
-"1fholddo" = "Start timer";
-"srdo" = "New scramble";
-"sldo" = "Delete last solve";
-"1f2tdo" = "Choose penalty";
-"sudo" = "Penalty of last solve";
-"sddo" = "Clear session";
+"new_scramble" = "New scramble";
+"delete_last" = "Delete last solve";
+"select_penalty" = "Select penalty";
+"delete_all" = "Clear session";
+
+"share_url" = "https://itunes.apple.com/us/app/id794870196";
+"share_cont0" = "I'm using #DCTimer for speedcubing, you can have a try!";
+"share_cont1" = "Speedcubing with %@: %@, you can have a try! #DCTimer";
+"share_cont2" = "%d times %@, best: %@, mean: %@";
+"share_cont3" = ", best ao%d: %@";
+"share_cont4" = ". #DCTimer";
+
+"share_weibo0" = "I'm using #DCTimer# for speedcubing, you can have a try!";
+"share_weibo1" = "I have finished %d times with %@ scramble, single best: %@, ";
+"share_weibo2" = "mean: %@, ";
+"share_weibo3" = "best avg of %d: %@, ";
+"share_weibo4" = "you can have a try! #DCTimer#";

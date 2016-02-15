@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DCTSessionViewController : UITableViewController <UIAlertViewDelegate, UIActionSheetDelegate>
+@interface DCTSessionViewController : UITableViewController <UIAlertViewDelegate, UIActionSheetDelegate> {
+    int selectedSesIdx;
+    bool isDefSes;
+}
 
 @end

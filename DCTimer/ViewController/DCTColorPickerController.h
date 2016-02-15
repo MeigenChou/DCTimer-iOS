@@ -17,10 +17,12 @@
 
 @property (nonatomic) UIColor *sourceColor;
 @property (nonatomic) UIColor *resultColor;
+@property (nonatomic, strong) NSNumber *defColor;
 @property (nonatomic, strong) NSNumber *crntColor;
 @property (nonatomic, strong) NSString *defkey;
 @property (nonatomic, strong) UISegmentedControl *segment;
 @property (nonatomic, strong) NSMutableArray *colorList;
+@property (nonatomic, strong) NSArray *defList;
 
 @property (weak, nonatomic) id <DCTColorPickerControllerDelegate> delegate;
 
@@ -30,9 +32,9 @@
 
 @optional
 
-- (void) colorPickerControllerDidFinish: (DCTColorPickerController *)controller;
+- (void)colorPickerControllerDidFinish:(DCTColorPickerController *)controller;
 // This is only called when the color picker is presented modally.
 
-- (void) colorPickerControllerDidChangeColor: (DCTColorPickerController *)controller;
+- (void)colorPickerControllerDidChangeColor:(DCTColorPickerController *)controller;
 
 @end

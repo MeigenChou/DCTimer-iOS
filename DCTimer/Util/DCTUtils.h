@@ -20,16 +20,20 @@
 + (BOOL)isPad;
 + (BOOL)isPhone;
 + (BOOL)isOS7;
++ (float)sysVersion;
 + (CGSize)getFrame;
 + (CGSize)getBounds;
 + (NSArray *)getScrType;
 + (float)heightForString:(NSString *)value fontSize:(float)fontSize;
 + (NSString *)distime:(int)i;
++ (NSString *)distimeSec:(int)i;
 + (NSString *)convStr:(NSString *)s;
 + (int)convTime:(NSString *)s;
 + (NSString *)getFilePath:(NSString *)file;
 + (NSString *)getDeviceString;
 + (NSString *)getAppVersion;
 + (NSString *)getDateFormat:(NSString *)str ty:(NSInteger)type;
++ (int)getStringWidth:(NSString *)str font:(UIFont *)f;
+//+ (UIImage *)getScreenshot;
 
 @end

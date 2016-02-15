@@ -23,6 +23,6 @@
     int label[6][4];
 }
 
--(NSString *) scramble;
+- (NSString *)scramble;
 
 @end

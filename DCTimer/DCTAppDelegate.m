@@ -18,9 +18,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:@(YES), @"clockform",
+    NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:
+                              @(YES), @"clockform",
                               @(7), @"freezeslide",
                               @(YES), @"printscr",
+                              @(YES), @"hidescr",
                               [DCTUtils getString:@"defsession"], @"defsesname",
                               @(32), @"crntscrtype",
                               @(0x66CCFF), @"bgcolor",
@@ -31,10 +33,10 @@
                               @(YES), @"newtop",
                               @(4), @"tmfont",
                               @(1), @"gestl", @(2), @"gestr", @(3), @"gestu", @(4), @"gestd",
-                              @(0xffffff), @"csn1", @(0xffff00), @"csn2", @(0xff8000), @"csn3", @(0xff0000), @"csn4", @(0x009900), @"csn5", @(0x0000ff), @"csn6",
-                              @(0xffffff), @"csq1", @(0xffff00), @"csq2", @(0xff8000), @"csq3", @(0xff0000), @"csq4", @(0x009900), @"csq5", @(0x0000ff), @"csq6",
-                              @(0xffffff), @"csk1", @(0xffff00), @"csk2", @(0x009900), @"csk3", @(0xff0000), @"csk4", @(0xff8000), @"csk5", @(0x0000ff), @"csk6",
-                              @(0x009900), @"csp1", @(0xff0000), @"csp2", @(0x0000ff), @"csp3", @(0xffff00), @"csp4",
+                              @(0xffffff), @"csn1", @(0xffff00), @"csn2", @(0xff8800), @"csn3", @(0xff0000), @"csn4", @(0x008800), @"csn5", @(0x0000ff), @"csn6",
+                              @(0xffffff), @"csq1", @(0xffff00), @"csq2", @(0xff8800), @"csq3", @(0xff0000), @"csq4", @(0x008800), @"csq5", @(0x0000ff), @"csq6",
+                              @(0xffffff), @"csk1", @(0xffff00), @"csk2", @(0x008800), @"csk3", @(0xff0000), @"csk4", @(0xff8800), @"csk5", @(0x0000ff), @"csk6",
+                              @(0x008800), @"csp1", @(0xff0000), @"csp2", @(0x0000ff), @"csp3", @(0xffff00), @"csp4",
                               nil];
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

@@ -33,6 +33,8 @@
 @property (nonatomic, strong) NSArray *move2str;
 
 -(id)initFullcube:(FullCube *)c;
+-(id)initWithFacelet:(int[])f;
+-(id)initWithMove:(int[])moveseq len:(int)movelen;
 -(id)initRandomCube;
 -(void)copy:(FullCube *)c;
 -(void)move:(int)m;

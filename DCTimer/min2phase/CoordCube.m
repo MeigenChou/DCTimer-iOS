@@ -65,25 +65,25 @@ extern unsigned short SymStateFlip[336];
 extern unsigned short SymStatePerm[2768];
 extern int e2c[];
 
-+(void) setPruning:(int[])table i:(int)index v:(int)value {
++ (void)setPruning:(int[])table i:(int)index v:(int)value {
     table[index >> 3] ^= (15 ^ value) << ((index & 7) << 2);
 }
 
-+(int) getPruning:(int[])table i:(int)index {
++ (int)getPruning:(int[])table i:(int)index {
     return (table[index >> 3] >> ((index & 7) << 2)) & 15;
 }
 
-+(void) initUDSliceMoveConj {
++ (void)initUDSliceMoveConj {
     CubieCube *c = [[CubieCube alloc] init];
     CubieCube *d = [[CubieCube alloc] init];
     for (int i=0; i<N_SLICE; i++) {
         [c setUDSlice:i];
         for (int j=0; j<N_MOVES; j+=3) {
-            [CubieCube EdgeMult:c cubeB:[[CubieCube moveCube] objectAtIndex:j] cubeProd:d];
+            [CubieCube EdgeMult:c b:[[CubieCube moveCube] objectAtIndex:j] prod:d];
             UDSliceMove[i][j] = [d getUDSlice];
         }
         for (int j=0; j<16; j+=2) {
-            [CubieCube EdgeConjugate:c idx:SymInv[j] cubeB:d];
+            [CubieCube EdgeConjugate:c idx:SymInv[j] b:d];
             UDSliceConj[i][(j >> 1)] = [d getUDSlice] & 0x1ff;
         }
     }
@@ -99,79 +99,79 @@ extern int e2c[];
     }
 }
 
-+(void) initFlipMove {
++ (void)initFlipMove {
     CubieCube *c = [[CubieCube alloc] init];
     CubieCube *d = [[CubieCube alloc] init];
     for (int i=0; i<N_FLIP_SYM; i++) {
         [c setFlip:FlipS2R[i]];
         for (int j=0; j<N_MOVES; j++) {
-            [CubieCube EdgeMult:c cubeB:[[CubieCube moveCube] objectAtIndex:j] cubeProd:d];
+            [CubieCube EdgeMult:c b:[[CubieCube moveCube] objectAtIndex:j] prod:d];
             FlipMove[i][j] = [d getFlipSym];
         }
     }
 }
 
-+(void) initTwistMove {
++ (void)initTwistMove {
     CubieCube *c = [[CubieCube alloc] init];
     CubieCube *d = [[CubieCube alloc] init];
     for (int i=0; i<N_TWIST_SYM; i++) {
         [c setTwist:TwistS2R[i]];
         for (int j=0; j<N_MOVES; j++) {
-            [CubieCube CornMult:c cubeB:[[CubieCube moveCube] objectAtIndex:j] cubeProd:d];
+            [CubieCube CornMult:c b:[[CubieCube moveCube] objectAtIndex:j] prod:d];
             TwistMove[i][j] = [d getTwistSym];
         }
     }
 }
 
-+(void) initCPermMove {
++ (void)initCPermMove {
     CubieCube *c = [[CubieCube alloc] init];
     CubieCube *d = [[CubieCube alloc] init];
     for (int i=0; i<N_PERM_SYM; i++) {
         [c setCPerm:EPermS2R[i]];
         for (int j=0; j<N_MOVES; j++) {
-            [CubieCube CornMult:c cubeB:[[CubieCube moveCube] objectAtIndex:j] cubeProd:d];
+            [CubieCube CornMult:c b:[[CubieCube moveCube] objectAtIndex:j] prod:d];
             CPermMove[i][j] = [d getCPermSym];
         }
     }
 }
 
-+(void) initEPermMove {
++ (void)initEPermMove {
     CubieCube *c = [[CubieCube alloc] init];
     CubieCube *d = [[CubieCube alloc] init];
     for (int i=0; i<N_PERM_SYM; i++) {
         [c setEPerm: EPermS2R[i]];
         for (int j=0; j<N_MOVES2; j++) {
-            [CubieCube EdgeMult:c cubeB:[[CubieCube moveCube] objectAtIndex:ud2std[j]] cubeProd:d];
+            [CubieCube EdgeMult:c b:[[CubieCube moveCube] objectAtIndex:ud2std[j]] prod:d];
             EPermMove[i][j] = [d getEPermSym];
         }
     }
 }
 
-+(void) initMPermMoveConj {
++ (void)initMPermMoveConj {
     CubieCube *c = [[CubieCube alloc] init];
     CubieCube *d = [[CubieCube alloc] init];
     for (int i=0; i<N_MPERM; i++) {
         [c setMPerm:i];
         for (int j=0; j<N_MOVES2; j++) {
-            [CubieCube EdgeMult:c cubeB:[[CubieCube moveCube] objectAtIndex:ud2std[j]] cubeProd:d];
+            [CubieCube EdgeMult:c b:[[CubieCube moveCube] objectAtIndex:ud2std[j]] prod:d];
             MPermMove[i][j] = [d getMPerm];
         }
         for (int j=0; j<16; j++) {
-            [CubieCube EdgeConjugate:c idx:SymInv[j] cubeB:d];
+            [CubieCube EdgeConjugate:c idx:SymInv[j] b:d];
             MPermConj[i][j] = [d getMPerm];
         }
     }
 }
 
-+(void) initRawSymPrun:(int[])PrunTable id:(int)INV_DEPTH
++ (void)initRawSymPrun:(int[])PrunTable id:(int)INV_DEPTH
                     rm:(unsigned short*)RawMove rc:(unsigned short*)RawConj
                     sm:(unsigned short *)SymMove ss:(unsigned short*)SymState
                    ssw:(int*)SymSwitch mm:(int*)moveMap ssh:(int)SYM_SHIFT
-                    nr:(int)N_RAW ns:(int)N_SYM nm:(int) N_MOVES nsy:(int)N_SYMMOVES rcs:(int)RawConjSize {
+                    nr:(int)nRaw ns:(int)nSym nm:(int) N_MOVES nsy:(int)N_SYMMOVES rcs:(int)RawConjSize {
     int SYM_MASK = (1 << SYM_SHIFT) - 1;
-    int N_SIZE = N_RAW * N_SYM;
+    int N_SIZE = nRaw * nSym;
     
-    for (int i=0; i<(N_RAW*N_SYM+7)/8; i++) {
+    for (int i=0; i<(nRaw*nSym+7)/8; i++) {
         PrunTable[i] = -1;
     }
     [CoordCube setPruning:PrunTable i:0 v:0];
@@ -192,15 +192,15 @@ extern int e2c[];
             }
             for (int end=MIN(i+8, N_SIZE); i<end; i++, val>>=4) {
                 if ((val & 0x0f)/*getPruning(PrunTable, i)*/ == select) {
-                    int raw = i % N_RAW;
-                    int sym = i / N_RAW;
+                    int raw = i % nRaw;
+                    int sym = i / nRaw;
                     for (int m=0; m<N_MOVES; m++) {
                         int index = (moveMap == NULL ? m : moveMap[m]);
                         int symx = SymMove[sym * N_SYMMOVES + index]; //Watch out for this
                         int rawIndex1 = RawMove[raw * N_MOVES + m] & 0x1ff;
                         int rawx = RawConj[rawIndex1 * RawConjSize + (symx & SYM_MASK)];
                         symx >>= (unsigned)SYM_SHIFT;
-                        int idx = symx * N_RAW + rawx;
+                        int idx = symx * nRaw + rawx;
                         if ([CoordCube getPruning:PrunTable i:idx] == check) {
                             done++;
                             if (inv) {
@@ -210,7 +210,7 @@ extern int e2c[];
                                 [CoordCube setPruning:PrunTable i:idx v:depth];
                                 for (int j=1, symState = SymState[symx]; (symState >>= 1) != 0; j++) {
                                     if ((symState & 1) == 1) {
-                                        int idxx = symx * N_RAW + RawConj[rawx * RawConjSize + (j ^ (SymSwitch == NULL ? 0 : SymSwitch[j]))]; //Null?
+                                        int idxx = symx * nRaw + RawConj[rawx * RawConjSize + (j ^ (SymSwitch == NULL ? 0 : SymSwitch[j]))]; //Null?
                                         if ([CoordCube getPruning:PrunTable i:idxx] == 0x0f) {
                                             [CoordCube setPruning:PrunTable i:idxx v:depth];
                                             done++;
@@ -223,32 +223,32 @@ extern int e2c[];
                 }
             }
         }
-        //NSLog(@"%2d%8d", depth, done);
+        //NSLog(@"%2d %d", depth, done);
     }
 }
 
-+(void) initSliceTwistPrun {
++ (void)initSliceTwistPrun {
     [CoordCube initRawSymPrun:UDSliceTwistPrun id:6
                            rm:(unsigned short*)UDSliceMove rc:(unsigned short*)UDSliceConj
                            sm:(unsigned short*)TwistMove ss:(unsigned short*)SymStateTwist
                           ssw:NULL mm:NULL ssh:3 nr:495 ns:324 nm:18 nsy:18 rcs:8];
 }
 
-+(void) initSliceFlipPrun {
++ (void)initSliceFlipPrun {
     [CoordCube initRawSymPrun:UDSliceFlipPrun id:6
                            rm:(unsigned short*)UDSliceMove rc:(unsigned short*)UDSliceConj
                            sm:(unsigned short*)FlipMove ss:(unsigned short*)SymStateFlip
                           ssw:NULL mm:NULL ssh:3 nr:495 ns:336 nm:18 nsy:18 rcs:8];
 }
 
-+(void) initMEPermPrun {
++ (void)initMEPermPrun {
     [CoordCube initRawSymPrun:MEPermPrun id:7
                            rm:(unsigned short*)MPermMove rc:(unsigned short*)MPermConj
                            sm:(unsigned short*)EPermMove ss:(unsigned short*)SymStatePerm
                           ssw:NULL mm:NULL ssh:4 nr:24 ns:2768 nm:10 nsy:10 rcs:16];
 }
 
-+(void) initMCPermPrun {
++ (void)initMCPermPrun {
     [CoordCube initRawSymPrun:MCPermPrun id:10
                            rm:(unsigned short*)MPermMove rc:(unsigned short*)MPermConj
                            sm:(unsigned short*)CPermMove ss:(unsigned short*)SymStatePerm

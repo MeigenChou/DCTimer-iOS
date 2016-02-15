@@ -13,8 +13,11 @@
 - (void)getSessions;
 - (int)getSessionCount;
 - (int)getSessionCount:(int)sesIdx;
-- (void)getSessionName:(NSMutableArray *)ses;
+- (NSString *)getSessionName:(int)idx;
+- (void)getSessionNames:(NSMutableArray *)ses;
 - (void)query:(int)sesIdx;
+- (int)getScrambleType:(int)sesIdx;
+- (void)saveScrambleType:(int)type;
 - (void)insertTime:(int)time pen:(int)pen scr:(NSString *)s date:(NSString *)da;
 - (void)addSession:(NSString *)name;
 - (void)deleteTime:(int)idx;
@@ -38,6 +41,7 @@
 - (void)getSessionStats;
 - (NSString *)cubeSolves;
 - (int)getSesMean;
+- (NSString *)sessionMean;
 - (NSString *)getSessionMeanSD;
 - (NSString *)bestTime;
 - (NSString *)worstTime;

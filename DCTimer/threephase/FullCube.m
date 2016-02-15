@@ -275,6 +275,16 @@ int move2rot[] = {35, 1, 34, 2, 4, 6, 22, 5, 19};
     return self;
 }
 
+-(id)initWithMove:(int[])moveseq len:(int)movelen {
+    if (self = [super init]) {
+        [self initVars];
+        for(int i=0; i<movelen; i++) {
+            [self doMove:moveseq[i]];
+        }
+    }
+    return self;
+}
+
 -(id)initRandomCube {
     if (self = [super init]) {
         [self initVars];

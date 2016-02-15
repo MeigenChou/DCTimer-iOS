@@ -14,8 +14,7 @@
 @synthesize array;
 @synthesize selIndex;
 @synthesize key;
-extern bool tfChanged;
-extern bool esChanged;
+extern BOOL tfChanged, esChanged;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -48,7 +47,7 @@ extern bool esChanged;
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:row forKey:key];
         if([key isEqualToString:@"accuracy"]) {
-            tfChanged = true;
+            tfChanged = YES;
         }
         if([key isEqualToString:@"cxe"] || [key isEqualToString:@"cside"] || [key isEqualToString:@"sqshape"] ) {
             esChanged = true;

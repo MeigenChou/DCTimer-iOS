@@ -17,18 +17,14 @@
 #import "Search.h"
 #import "CubieCube.h"
 #import "CoordCube.h"
-#import "Util.h"
+#import "Util3.h"
+#import "DCTUtils.h"
 #import "Sys/time.h"
 
 @implementation Search
-int prun[6];
-int twist[6];
-int flip[6];
-int slice[6];
-NSString* solution;
-CubieCube *cc;
+@synthesize move2str;
+@synthesize cc;
 
-NSArray *move2str;
 int urfMove[6][18] = {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17},
     {6, 7, 8, 0, 1, 2, 3, 4, 5,15,16,17, 9,10,11,12,13,14},
     {3, 4, 5, 6, 7, 8, 0, 1, 2,12,13,14,15,16,17, 9,10,11},
@@ -60,7 +56,7 @@ extern int MEPermPrun[];
 
 extern int std2ud[18];
 extern int ud2std[];
-extern bool ckmv2[11][10];
+extern bool ckmov2[11][10];
 
 - (id)init {
     if (self = [super init]) {
@@ -68,6 +64,62 @@ extern bool ckmv2[11][10];
         move2str = [[NSArray alloc] initWithObjects:@"U", @"U2", @"U'", @"R", @"R2", @"R'", @"F", @"F2", @"F'", @"D", @"D2", @"D'", @"L", @"L2", @"L'", @"B", @"B2", @"B'", nil];
     }
     return self;
+}
+
+static bool inited3 = false;
++ (void)initTable {
+    if (inited3) return;
+    NSLog(@"init 3x3...");
+    [CubieCube initMove];
+    [CubieCube initSym];
+    [CubieCube initFlipSym2Raw];
+    [CubieCube initTwistSym2Raw];
+    [CubieCube initPermSym2Raw];
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    NSString *path = [DCTUtils getFilePath:@"twophase.dat"];
+    if ([fileMgr fileExistsAtPath:path]) {
+        NSData *reader = [NSData dataWithContentsOfFile:path];
+        [reader getBytes:&TwistMove length:11664];
+        [reader getBytes:&FlipMove range:NSMakeRange(11664, 12096)];
+        [reader getBytes:&UDSliceMove range:NSMakeRange(23760, 17820)];
+        [reader getBytes:&UDSliceConj range:NSMakeRange(41580, 7920)];
+        [reader getBytes:&CPermMove range:NSMakeRange(49500, 99648)];
+        [reader getBytes:&EPermMove range:NSMakeRange(149148, 55360)];
+        [reader getBytes:&MPermMove range:NSMakeRange(204508, 480)];
+        [reader getBytes:&MPermConj range:NSMakeRange(204988, 768)];
+        [reader getBytes:&UDSliceTwistPrun range:NSMakeRange(205756, 80192)];
+        [reader getBytes:&UDSliceFlipPrun range:NSMakeRange(285948, 83160)];
+        [reader getBytes:&MCPermPrun range:NSMakeRange(369108, 33216)];
+        [reader getBytes:&MEPermPrun range:NSMakeRange(402324, 33216)];
+    } else {
+        NSLog(@"init coord...");
+        [CoordCube initFlipMove];
+        [CoordCube initTwistMove];
+        [CoordCube initUDSliceMoveConj];
+        [CoordCube initCPermMove];
+        [CoordCube initEPermMove];
+        [CoordCube initMPermMoveConj];
+        [CoordCube initSliceTwistPrun];
+        [CoordCube initSliceFlipPrun];
+        [CoordCube initMEPermPrun];
+        [CoordCube initMCPermPrun];
+        NSMutableData *writer = [[NSMutableData alloc] init];
+        [writer appendBytes:&TwistMove length:11664];
+        [writer appendBytes:&FlipMove length:12096];
+        [writer appendBytes:&UDSliceMove length:17820];
+        [writer appendBytes:&UDSliceConj length:7920];
+        [writer appendBytes:&CPermMove length:99648];
+        [writer appendBytes:&EPermMove length:55360];
+        [writer appendBytes:&MPermMove length:480];
+        [writer appendBytes:&MPermConj length:768];
+        [writer appendBytes:&UDSliceTwistPrun length:80192];
+        [writer appendBytes:&UDSliceFlipPrun length:83160];
+        [writer appendBytes:&MCPermPrun length:33216];
+        [writer appendBytes:&MEPermPrun length:33216];
+        [writer writeToFile:path atomically:YES];
+    }
+    NSLog(@"init done");
+    inited3 = true;
 }
 
 static unsigned long currentTimeMillis() {
@@ -93,8 +145,8 @@ static const int INVERSE_SOLUTION = 0x2;
  */
 static const int APPEND_LENGTH = 0x4;
 
--(int) verify:(char[])facelets {
-    int count = 0x000000;
+- (int)verify:(char*)facelets {
+    int count = 0;
     char center[6] = {
         facelets[4],
         facelets[13],
@@ -115,16 +167,16 @@ static const int APPEND_LENGTH = 0x4;
     if (count != 0x999999) {
         return -1;
     }
-    [Util toCubieCube:f cc:cc];
+    [Util3 toCubieCube:f cc:cc];
     return [cc verify];
 }
 
--(bool) phase2:(int)eidx es:(int)esym ci:(int)cidx cs:(int)csym mid:(int)mid m:(int)maxl d:(int)depth l:(int)lm {
+- (bool)phase2:(int)eidx es:(int)esym ci:(int)cidx cs:(int)csym mid:(int)mid m:(int)maxl d:(int)depth l:(int)lm {
     if (eidx==0 && cidx==0 && mid==0) {
         return true;
     }
     for (int m=0; m<10; m++) {
-        if (ckmv2[lm][m]) {
+        if (ckmov2[lm][m]) {
             continue;
         }
         int midx = MPermMove[mid][m];
@@ -148,7 +200,7 @@ static const int APPEND_LENGTH = 0x4;
     return false;
 }
 
--(NSString *) solutionToString {
+- (NSString *)solutionToString {
     NSMutableString *solution = [NSMutableString string];
     int urf = (verbose & INVERSE_SOLUTION) != 0 ? (urfIdx + 3) % 6 : urfIdx;
     if (urf < 3) {
@@ -185,8 +237,8 @@ static const int APPEND_LENGTH = 0x4;
  * 		1: Try Next Power
  * 		2: Try Next Axis
  */
--(int) initPhase2 {
-    if (currentTimeMillis() >= (solution == nil ? timeOut : timeMin)) {
+- (int)initPhase2 {
+    if (currentTimeMillis() >= (solStr == nil ? timeOut : timeMin)) {
         return 0;
     }
     valid2 = MIN(valid2, valid1);
@@ -204,9 +256,9 @@ static const int APPEND_LENGTH = 0x4;
     }
     valid1 = depth1;
     int mid = mid4[depth1]>>9;
-    int prun = [CoordCube getPruning:MCPermPrun i:cidx * 24 + MPermConj[mid][csym]];
-    if (prun >= maxDep2) {
-        return prun > maxDep2 ? 2 : 1;
+    int prn = [CoordCube getPruning:MCPermPrun i:cidx * 24 + MPermConj[mid][csym]];
+    if (prn >= maxDep2) {
+        return prn > maxDep2 ? 2 : 1;
     }
     
     int u4e = ud8e[valid2] >> 16;
@@ -228,17 +280,18 @@ static const int APPEND_LENGTH = 0x4;
     int esym = edge & 15;
     edge >>= 4;
     
-    prun = MAX([CoordCube getPruning:MEPermPrun i:edge * 24 + MPermConj[mid][esym]], prun);
-    if (prun >= maxDep2) {
-        return prun > maxDep2 ? 2 : 1;
+    prn = MAX([CoordCube getPruning:MEPermPrun i:edge * 24 + MPermConj[mid][esym]], prn);
+    if (prn >= maxDep2) {
+        return prn > maxDep2 ? 2 : 1;
     }
     
     int lm = depth1==0 ? 10 : std2ud[move[depth1-1]/3*3+1];
-    for (int depth2=prun; depth2<maxDep2; depth2++) {
+    for (int depth2=prn; depth2<maxDep2; depth2++) {
         if ([self phase2:edge es:esym ci:cidx cs:csym mid:mid m:depth2 d:depth1 l:lm]) {
+            //NSLog(@"d %d", depth2);
             sol = depth1 + depth2;
             maxDep2 = MIN(12, sol-depth1);
-            solution = [self solutionToString];
+            solStr = [self solutionToString];
             return currentTimeMillis() >= timeMin ? 0 : 1;
         }
     }
@@ -251,8 +304,8 @@ static const int APPEND_LENGTH = 0x4;
  * 		1: Try Next Power
  * 		2: Try Next Axis
  */
--(int) phase1:(int)twist ts:(int)tsym f:(int)flip fs:(int)fsym s:(int)slice m:(int)maxl l:(int)lm {
-    if (twist==0 && flip==0 && slice==0 && maxl<5) {
+- (int)phase1:(int)twst ts:(int)tsym f:(int)flp fs:(int)fsym s:(int)slc m:(int)maxl l:(int)lm {
+    if (twst==0 && flp==0 && slc==0 && maxl<5) {
         return maxl==0 ? [self initPhase2] : 1;
     }
     for (int axis=0; axis<18; axis+=3) {
@@ -262,24 +315,24 @@ static const int APPEND_LENGTH = 0x4;
         for (int power=0; power<3; power++) {
             int m = axis + power;
             
-            int slicex = UDSliceMove[slice][m] & 0x1ff;
-            int twistx = TwistMove[twist][Sym8Move[tsym][m]];
+            int slicex = UDSliceMove[slc][m] & 0x1ff;
+            int twistx = TwistMove[twst][Sym8Move[tsym][m]];
             int tsymx = Sym8Mult[twistx & 7][tsym];
             twistx >>= 3;
-            int prun = [CoordCube getPruning:UDSliceTwistPrun i:twistx * 495 + UDSliceConj[slicex][tsymx]];
-            if (prun > maxl) {
+            int prn = [CoordCube getPruning:UDSliceTwistPrun i:twistx * 495 + UDSliceConj[slicex][tsymx]];
+            if (prn > maxl) {
                 break;
-            } else if (prun == maxl) {
+            } else if (prn == maxl) {
                 continue;
             }
-            int flipx = FlipMove[flip][Sym8Move[fsym][m]];
+            int flipx = FlipMove[flp][Sym8Move[fsym][m]];
             int fsymx = Sym8Mult[flipx & 7][fsym];
             flipx >>= 3;
             
-            prun = [CoordCube getPruning:UDSliceFlipPrun i:flipx * 495 + UDSliceConj[slicex][fsymx]];
-            if (prun > maxl) {
+            prn = [CoordCube getPruning:UDSliceFlipPrun i:flipx * 495 + UDSliceConj[slicex][fsymx]];
+            if (prn > maxl) {
                 break;
-            } else if (prun == maxl) {
+            } else if (prn == maxl) {
                 continue;
             }
             move[depth1-maxl] = m;
@@ -293,7 +346,8 @@ static const int APPEND_LENGTH = 0x4;
     return 1;
 }
 
--(NSString *) solve:(CubieCube *)c {
+- (NSString *)solve:(CubieCube *)c {
+    //[c print];
     int conjMask = 0;
     for (int i=0; i<6; i++) {
         twist[i] = [c getTwistSym];
@@ -318,6 +372,7 @@ static const int APPEND_LENGTH = 0x4;
         }
     }
     for (depth1=0; depth1<sol; depth1++) {
+        //NSLog(@"3x3 d:%d", depth1);
         maxDep2 = MIN(12, sol-depth1);
         for (urfIdx=0; urfIdx<6; urfIdx++) {
             if ((conjMask & (1 << urfIdx)) != 0) {
@@ -329,11 +384,11 @@ static const int APPEND_LENGTH = 0x4;
             valid1 = 0;
             if ((prun[urfIdx] <= depth1)
                 && [self phase1:twist[urfIdx]>>3 ts:twist[urfIdx]&7 f:flip[urfIdx]>>3 fs:flip[urfIdx]&7 s:slice[urfIdx]&0x1ff m:depth1 l:-1] == 0) {
-                return solution == nil ? @"Error 8" : solution;
+                return solStr == nil ? @"Error 8" : solStr;
             }
         }
     }
-    return solution == nil ? @"Error 7" : solution;
+    return solStr == nil ? @"Error 7" : solStr;
 }
 
 /**
@@ -396,7 +451,8 @@ static const int APPEND_LENGTH = 0x4;
  * 		Error 7: No solution exists for the given maxDepth<br>
  * 		Error 8: Timeout, no solution within given time
  */
--(NSString *) solutionForFacelets:(NSString *)facelets md:(int)maxDepth nt:(long)newTimeOut tm:(long)newTimeMin v:(int)newVerbose {
+- (NSString *)solutionForFacelets:(NSString *)facelets md:(int)maxDepth nt:(long)newTimeOut tm:(long)newTimeMin v:(int)newVerbose {
+    [Search initTable];
     //NSLog(@"%@", facelets);
     int check = [self verify:(char*)[facelets UTF8String]];
     if (check != 0) {
@@ -406,7 +462,7 @@ static const int APPEND_LENGTH = 0x4;
     timeOut = currentTimeMillis() + newTimeOut;
     timeMin = timeOut + MIN(newTimeMin - newTimeOut, 0);
     verbose = newVerbose;
-    solution = nil;
+    solStr = nil;
     return [self solve:cc];
 }
 @end

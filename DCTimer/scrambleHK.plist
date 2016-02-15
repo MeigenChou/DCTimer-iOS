@@ -62,7 +62,7 @@
 		<string>對棱訓練</string>
 		<string>WCA</string>
 	</array>
-	<key>五扭計骰</key>
+	<key>Megaminx</key>
 	<array>
 		<string>WCA</string>
 		<string>傳統</string>
@@ -70,23 +70,23 @@
 	<key>金字塔</key>
 	<array>
 		<string>隨機狀態</string>
-		<string>隨機步驟</string>
+		<string>隨機轉動</string>
 	</array>
-	<key>Square One</key>
+	<key>Square-1</key>
 	<array>
 		<string>隨機狀態</string>
 		<string>face turn metric</string>
 		<string>twist metric</string>
 		<string>立方體形狀</string>
 	</array>
-	<key>魔表</key>
+	<key>魔錶</key>
 	<array>
 		<string>WCA</string>
 		<string>Jaap順序</string>
 		<string>concise</string>
 		<string>高效順序</string>
 	</array>
-	<key>Skewb</key>
+	<key>斜轉方塊</key>
 	<array>
 		<string>隨機狀態</string>
 		<string>R U L B</string>
@@ -110,7 +110,7 @@
 		<string>normal</string>
 		<string>mini</string>
 	</array>
-	<key>齒輪扭計骰</key>
+	<key>齒輪方塊</key>
 	<array>
 		<string>隨機狀態</string>
 		<string>3-gen</string>
@@ -128,7 +128,7 @@
 	</array>
 	<key>其他</key>
 	<array>
-		<string>插銷扭計骰</string>
+		<string>插銷方塊</string>
 		<string>直升機</string>
 		<string>Square-2</string>
 		<string>Super SQ1</string>
@@ -146,12 +146,12 @@
 		<string>half turns only</string>
 		<string>LSLL(old)</string>
 	</array>
-	<key>捆綁扭計骰</key>
+	<key>捆綁方塊</key>
 	<array>
 		<string>Bicube</string>
 		<string>SQ1 /,(1,0)</string>
 	</array>
-	<key>五扭計骰子集</key>
+	<key>Megaminx子集</key>
 	<array>
 		<string>2-gen R, U</string>
 		<string>LSLL</string>

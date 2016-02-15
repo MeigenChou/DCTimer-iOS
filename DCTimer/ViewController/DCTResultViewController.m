@@ -24,11 +24,12 @@ BOOL newestTop;
 int numberSolves;
 extern NSInteger subTitle;
 extern NSInteger dateForm;
+extern int currentSesIdx;
 
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = NSLocalizedString(@"results", @"");
+        self.title = [DCTUtils getString:@"results"];
         self.tabBarItem.image = [UIImage imageNamed:@"img2"];
     }
     return self;
@@ -38,9 +39,9 @@ extern NSInteger dateForm;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = NSLocalizedString(@"results", @"");
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"session", @"") style:UIBarButtonItemStylePlain target:self action:@selector(selSessionView)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"stats", @"") style:UIBarButtonItemStylePlain target:self action:@selector(statsView)];
+    //self.navigationItem.title = [DCTUtils getString:@"results"];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:[DCTUtils getString:@"session"] style:UIBarButtonItemStylePlain target:self action:@selector(selSessionView)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:[DCTUtils getString:@"stats"] style:UIBarButtonItemStylePlain target:self action:@selector(statsView)];
 }
 
 - (void)viewDidUnload {
@@ -51,13 +52,15 @@ extern NSInteger dateForm;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    //NSLog(@"will appear");
     [super viewWillAppear:animated];
+    NSString *name = [[DCTData dbh] getSessionName:currentSesIdx];
+    if([name isEqualToString:@""])
+        self.navigationItem.title = [DCTUtils getString:@"results"];
+    else self.navigationItem.title = name;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    //NSLog(@"did appear");
     numberSolves = [[DCTData dbh] numberOfSolves];
     [self.tableView reloadData];
     [super viewDidAppear:animated];
@@ -107,7 +110,7 @@ extern NSInteger dateForm;
 #pragma mark Table View Delegate Methods
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     detailController = [[DCTDetailViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    detailController.title = NSLocalizedString(@"detail", @"");
+    detailController.title = [DCTUtils getString:@"detail"];
     NSUInteger row = [indexPath row];
     if(row >= numberSolves) row = numberSolves-1;
     if(newestTop) row = numberSolves-1-row;

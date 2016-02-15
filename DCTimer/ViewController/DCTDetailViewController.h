@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "DCTData.h"
 
-@interface DCTDetailViewController : UITableViewController <UIActionSheetDelegate>
+@interface DCTDetailViewController : UITableViewController <UIActionSheetDelegate> {
+    int resIdx;
+    int resPen;
+}
 
 @property (copy, nonatomic) NSString *rest, *time, *scramble;
 

@@ -13,9 +13,9 @@
 #import "Edge3.h"
 #import "Util4.h"
 #import "Moves.h"
-#import "Im.h"
 #import "PriorityQueue.h"
 #import "DCTUtils.h"
+#import "Util.h"
 
 @implementation Search4
 @synthesize c, c1, c2;
@@ -32,8 +32,9 @@ const int PHASE2_SOLUTIONS = 50;
 const int PHASE3_ATTEMPTS = 50;
 static bool inited4 = false;
 
-extern int ckmv2[29][28];
-extern int ckmv3[21][20];
+extern int ckmv[][36];
+extern int ckmv2[][28];
+extern int ckmv3[][20];
 extern int skipAxis2[28];
 extern int skipAxis3[20];
 extern unsigned short ctmove[][20];
@@ -73,21 +74,46 @@ extern int craw2sym[];
 
 +(void)initTable {
     if (inited4) return;
-    [Im initCnk];
+    [Util initCnk];
     [Moves initMoves];
     [CornerCube initMove];
+    
     NSFileManager *fileMgr = [NSFileManager defaultManager];
-    //NSString *pathc = [DCTUtils getFilePath:@"center.dat"];
+    NSLog(@"init center1...");
     [Center1 initSym];
-    [Center1 initSym2Raw];
-    [Center1 createMoveTable];
+    NSString *pathc = [DCTUtils getFilePath:@"center.dat"];
+    if ([fileMgr fileExistsAtPath:pathc]) {
+        NSData *reader = [NSData dataWithContentsOfFile:pathc];
+        [reader getBytes:&csym2raw length:62328];
+        [reader getBytes:&craw2sym range:NSMakeRange(62328, 2941884)];
+        [reader getBytes:&ctsmv range:NSMakeRange(3004212, 2243808)];
+    } else {
+        NSLog(@"init sym2raw...");
+        [Center1 initSym2Raw];
+        NSLog(@"init move...");
+        [Center1 createMoveTable];
+        NSMutableData *writer = [[NSMutableData alloc] init];
+        [writer appendBytes:&csym2raw length:62328];
+        [writer appendBytes:&craw2sym length:2941884];
+        [writer appendBytes:&ctsmv length:2243808];
+        [writer writeToFile:pathc atomically:YES];
+    }
     [Center1 createPrun];
+    
+    NSLog(@"init center2...");
     [Center2 initRL];
+    //NSLog(@"init move...");
     [Center2 initMove];
+    //NSLog(@"init prun...");
     [Center2 initPrun];
+    
+    NSLog(@"init center3...");
     [Center3 initCent3];
     [Center3 initMove];
+    //NSLog(@"init prun...");
     [Center3 initPrun];
+    
+    NSLog(@"init edge3...");
     [Edge3 initMvrot];
     [Edge3 initRaw2Sym];
     NSString *pathe = [DCTUtils getFilePath:@"edge.dat"];
@@ -104,9 +130,39 @@ extern int craw2sym[];
     inited4 = true;
 }
 
+-(NSString *)randomMove {
+    int moveseq[40];
+    int lm = 36;
+    for (int i=0; i<40; ) {
+        int m = rand() % 27;
+        if (!ckmv2[lm][m]) {
+            moveseq[i++] = m;
+            lm = m;
+        }
+    }
+    return [self solve:moveseq len:40];
+}
+
 -(NSString *)randomState {
     c = [[FullCube alloc] initRandomCube];
     //[c print];
+    [self doSearch];
+    return solution;
+}
+
+-(NSString *) solution:(NSString *)facelet {
+    int f[96];
+    NSString *ts = @"URFDLB";
+    for (int i=0; i<96; i++) {
+        f[i] = [DCTUtils indexOf:ts c:[facelet characterAtIndex:i]];
+    }
+    c = [[FullCube alloc] initWithFacelet:f];
+    [self doSearch];
+    return solution;
+}
+
+-(NSString *)solve:(int[])moveseq len:(int)movelen {
+    c = [[FullCube alloc] initWithMove:moveseq len:movelen];
     [self doSearch];
     return solution;
 }
@@ -203,20 +259,18 @@ extern int craw2sym[];
         [solcube move:move3std[move3[i]]];
     }
     NSString *facelet = [solcube to333Facelet];
-    //NSLog(@"cube %@", facelet);
-    NSString *sol = [cube3 solutionForFacelets:facelet md:21 nt:5000 tm:100 v:0];
-    //NSLog(@"%@", sol);
-    if ([sol hasPrefix:@"Error"]) {
-        //NSLog(@"%@", sol);
+    NSLog(@"cube 3x3: %@", facelet);
+    NSString *sol333 = [cube3 solutionForFacelets:facelet md:21 nt:5000 tm:100 v:0];
+    //NSLog(@"%@", sol333);
+    if ([sol333 hasPrefix:@"Error"]) {
         solution = @"Error";
     } else {
-        NSMutableArray *sol3 = [Util4 tomove:sol];
+        NSMutableArray *sol3 = [Util4 tomove:sol333];
         for (int i=0; i<sol3.count; i++) {
             [solcube move:[[sol3 objectAtIndex:i] intValue]];
         }
         solution = [solcube getMoveString:true rot:false];
     }
-    //NSLog(@"done.");
 }
 
 -(bool)search1:(int)ct sym:(int)sym maxl:(int)maxl lm:(int)lm d:(int)depth {

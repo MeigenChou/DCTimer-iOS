@@ -14,6 +14,7 @@
 
 int divisions[] = {100, 200, 500, 1000, 2000, 5000, 10000, 20000, 30000, 60000, 90000, 120000, 300000, 600000, 1200000, 1800000, 3600000};
 extern int graphType;
+extern int graphLength;
 
 - (id)initWithCoder:(NSCoder *)coder
 {
@@ -40,17 +41,17 @@ extern int graphType;
     int dlt = [DCTUtils isOS7] ? 64 : 0;
     //if ([DCTUtils isOS7])
     hei -= 44;
-    DCTData * rest = [DCTData dbh];
+    DCTData *rest = [DCTData dbh];
     int max = [rest getWorstTime];
     int min = [rest getBestTime];
     //int wBase = 75;
-    UIFont *font = [UIFont systemFontOfSize:16];
-    if (graphType == 0) {
+    int wBar = 30;
+    UIFont *font = [UIFont systemFontOfSize:[DCTUtils isPad] ? 16 : 14];
+    if (graphType == 0) {   //直方图
         int bins[32];
         int start, end;
-        int wBar = 30;
-        int len = (int)(hei * 1.0 / wBar - 0.5);
-        int divi = [self getDivision:(max-min)/len];
+        int len = hei * 1.0 / wBar - 0.5;
+        int divi = [self getDivision:(max - min) / len];
         int mean = (min & max) + ((min ^ max) >> 1);
         mean = (mean + divi / 2) / divi * divi;
         if ((len & 1) == 1) mean += divi / 2;
@@ -60,9 +61,9 @@ extern int graphType;
             bins[i] = 0;
         }
         for (int i=0; i<[rest numberOfSolves]; i++) {
-            int res = [rest getTimeAt:i];
-            if (res != 0) {
-                int bin = (int)(len * (res - start) / (end - start));
+            int time = [rest getTimeAt:i];
+            if (time != 0) {
+                int bin = (int)(len * (time - start) / (end - start));
                 if (bin >= 0 && bin < len)
                     bins[bin]++;
             }
@@ -71,20 +72,20 @@ extern int graphType;
         int binInterval = (end - start) / len;
         int temp = start + len * binInterval;
         NSString *text = [self distime:temp];
-        int wBase = [self getStringWid:text font:font] + 23;
+        int wBase = [DCTUtils getStringWidth:text font:font] + 20;
         
         CGContextMoveToPoint(context, wBase, dlt);
         CGContextAddLineToPoint(context, wBase, dlt+hei);
         CGContextStrokePath(context);
         
         for (int i=0; i<=len; i++) {
-            int y = (int)((i + 0.5) * wBar);
+            int y = (i + 0.5) * wBar;
             CGContextMoveToPoint(context, wBase - 4, y + dlt);
             CGContextAddLineToPoint(context, wBase + 4, y + dlt);
             CGContextStrokePath(context);
             int value = start + i * binInterval;
             text = [self distime:value];
-            int tw = [self getStringWid:text font:font];
+            int tw = [DCTUtils getStringWidth:text font:font];
             [text drawAtPoint:CGPointMake(wBase - 5 - tw, y + dlt - 10) withFont:font];
         }
         int maxValue = 0;
@@ -96,17 +97,25 @@ extern int graphType;
             for (int i=0; i<len; i++) {
                 int y = (int)((i + 0.5) * wBar) + dlt;
                 //int y2 = (int)((i + 1.5) * wBar) + dlt;
-                int height = bins[i] * (wid - wBase - 20) / maxValue;
+                float height = bins[i] * (wid - wBase - 20.0) / maxValue;
                 CGContextAddRect(context, CGRectMake(wBase, y, height, wBar));
                 CGContextDrawPath(context, kCGPathStroke);
+                if(bins[i] != 0) {
+                    text = [NSString stringWithFormat:@"%d", bins[i]];
+                    int tw = [DCTUtils getStringWidth:text font:font];
+                    if (height < tw + 10) {
+                        [text drawAtPoint:CGPointMake(wBase + height + 5, y + 6) withFont:font];
+                    } else [text drawAtPoint:CGPointMake(wBase + height - tw - 5, y + 6) withFont:font];
+                }
+                
             }
         }
-    } else {
-        int wBar = 30;
-        int len = (int)(hei * 1.0 / wBar - 0.5);
+    } else {    //折线图
+        int len = (hei - 40.0) / wBar - 0.5;
         int divi = [self getDivision:(max-min)/len];
         int mean = (min & max) + ((min ^ max) >> 1);
         mean = ((mean + divi / 2) / divi) * divi;
+        //NSLog(@"%d, %d, %d", len, divi, mean);
         int up = mean, down = mean;
         while (up < max) {
             up += divi;
@@ -116,53 +125,56 @@ extern int graphType;
         }
         mean = [rest getSesMean];
         int blk = (up - down) / divi;
-        wBar = (hei - 40) / blk;
+        wBar = (hei - 80) / blk;
         NSString *text = [self distime:up];
-        int wBase = [self getStringWid:text font:font] + 14;
+        int wBase = [DCTUtils getStringWidth:text font:font] + 14;
         int right = 14;
         
         CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:0.7 green:0.7 blue:0.7 alpha:1].CGColor);
         for (int i = 1; i < blk; i++) {
-            int y = i * wBar + 20;
+            int y = i * wBar + 60;
             CGContextMoveToPoint(context, wBase, y + dlt);
             CGContextAddLineToPoint(context, wid - right, y + dlt);
             CGContextStrokePath(context);
         }
-        CGContextAddRect(context, CGRectMake(wBase, 20 + dlt, wid - right - wBase, wBar * blk));
+        CGContextAddRect(context, CGRectMake(wBase, 60 + dlt, wid - right - wBase, wBar * blk));
         CGContextDrawPath(context, kCGPathStroke);
         CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
-        float y = (up * 1.0 - mean) / divi * wBar + 20;
+        float y = (up * 1.0 - mean) / divi * wBar + 60;
         CGContextMoveToPoint(context, wBase, y + dlt);
         CGContextAddLineToPoint(context, wid - right, y + dlt);
         CGContextStrokePath(context);
-        CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7].CGColor);
+        CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
         for (int i=0; i<=blk; i++) {
             int value = up - i * divi;
-            y = i * wBar + 20;
+            y = i * wBar + 60;
             text = [self distime:value];
-            int tw = [self getStringWid:text font:font];
+            int tw = [DCTUtils getStringWidth:text font:font];
             [text drawAtPoint:CGPointMake(wBase - 5 - tw, y + dlt - 10) withFont:font];
         }
+        //int count = 0;
+        //for (int i=0; i<[rest numberOfSolves]; i++) {
+        //    if ([rest getTimeAt:i] != 0) count++;
+        //}
+        float rsp = (wid - 21.0 - wBase) / (graphLength-1);
         int count = 0;
-        for (int i=0; i<[rest numberOfSolves]; i++) {
-            if ([rest getTimeAt:i] != 0) count++;
-        }
-        float rsp = (wid - 21.0 - wBase) / (count-1);
-        count = 0;
-        float lastx = -1, lasty = -1;
-        for (int i=0; i<[rest numberOfSolves]; i++) {
+        float lastX = -1, lastY = -1;
+        CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:0.1 green:0.2 blue:0.8 alpha:0.7].CGColor);
+        //CGContextSetFillColorWithColor(context, [UIColor colorWithWhite:0 alpha:0.8].CGColor);
+        for (int i=[rest numberOfSolves]-1; i>=0; i--) {
             int time = [rest getTimeAt:i];
             if (time != 0) {
-                float x = (float)(wBase + 3.0 + (count++) * rsp);
-                y = (float) ((up * 1.0 - time) / divi * wBar + 20);
-                CGContextAddEllipseInRect(context, CGRectMake(x-1.5, y-1.5+dlt, 3, 3));
+                float x = (float)(wid - 18.0 - (count++) * rsp);
+                y = (float) ((up * 1.0 - time) / divi * wBar + 60);
+                //CGContextAddEllipseInRect(context, CGRectMake(x-1.5, y-1.5+dlt, 3, 3));
                 CGContextDrawPath(context, kCGPathFillStroke);
-                if (lastx != -1) {
-                    CGContextMoveToPoint(context, lastx, lasty + dlt);
+                if (lastX != -1) {
+                    CGContextMoveToPoint(context, lastX, lastY + dlt);
                     CGContextAddLineToPoint(context, x, y + dlt);
                     CGContextStrokePath(context);
                 }
-                lastx = x; lasty = y;
+                lastX = x; lastY = y;
+                if(count >= graphLength) break;
             }
         }
     }
@@ -186,21 +198,10 @@ extern int graphType;
     if (m) [time appendString:@"-"];
     if(h==0) {
         if(mi==0) [time appendFormat:@"%d", s];
-        else {
-            if(s<10) [time appendFormat:@"%d:0%d", mi, s];
-            else [time appendFormat:@"%d:%d", mi, s];
-        }
-    }
-    else {
-        [time appendFormat:@"%d%@%d%@%d", h, mi<10?@":0":@":", mi, s<10?@":0":@":", s];
-    }
+        else [time appendFormat:@"%d:%02d", mi, s];
+    } else [time appendFormat:@"%d:%02d:%02d", h, mi, s];
     [time appendFormat:@".%d", ms];
     return time;
-}
-
-- (int)getStringWid:(NSString *)str font:(UIFont *)f {
-    CGSize size = [str sizeWithFont:f constrainedToSize:CGSizeMake(200, 200)];
-    return (int)size.width;
 }
 
 @end

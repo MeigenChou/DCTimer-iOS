@@ -107,7 +107,10 @@ float rotatx[5], rotaty[5];
         {
             float edgeFrac = (1+sqrt(5))/4;
             float centerFrac = 0.5;
-            NSArray *colmx = [[NSArray alloc] initWithObjects:[UIColor whiteColor], [UIColor redColor],[UIColor colorWithRed:0 green:0.62 blue:0 alpha:1], [UIColor colorWithRed:0.48 green:0 blue:0.48 alpha:1], [UIColor yellowColor], [UIColor blueColor], [UIColor colorWithRed:1 green:1 blue:0.52 alpha:1], [UIColor colorWithRed:0.26 green:0.86 blue:1 alpha:1], [UIColor colorWithRed:1 green:0.5 blue:0.15 alpha:1], [UIColor greenColor], [UIColor colorWithRed:1 green:0.5 blue:1 alpha:1], [UIColor grayColor], nil];
+            NSArray *colmx;
+            if([defaults integerForKey:@"minxcs"] == 1)
+            colmx = [[NSArray alloc] initWithObjects:[UIColor whiteColor], [UIColor redColor],[UIColor colorWithRed:0 green:0.53 blue:0 alpha:1], [UIColor colorWithRed:0.53 green:0 blue:0.53 alpha:1], [UIColor yellowColor], [UIColor blueColor], [UIColor colorWithRed:1 green:1 blue:0.53 alpha:1], [UIColor colorWithRed:0.53 green:0.87 blue:1 alpha:1], [UIColor colorWithRed:1 green:0.53 blue:0 alpha:1], [UIColor greenColor], [UIColor colorWithRed:1 green:0.27 blue:1 alpha:1], [UIColor grayColor], nil];
+            else colmx = [[NSArray alloc] initWithObjects:[UIColor whiteColor], [UIColor colorWithRed:0.53 green:0 blue:0.53 alpha:1], [UIColor colorWithRed:0 green:0.53 blue:0 alpha:1], [UIColor colorWithRed:0.53 green:0.87 blue:1 alpha:1], [UIColor colorWithRed:0.53 green:0.13 blue:0.13 alpha:1], [UIColor blueColor], [UIColor redColor], [UIColor colorWithRed:1 green:0.53 blue:0 alpha:1], [UIColor greenColor], [UIColor colorWithRed:1 green:0.27 blue:1 alpha:1], [UIColor colorWithRed:0 green:0 blue:0.53 alpha:1], [UIColor yellowColor], nil];
             float scale = wid / 350.;
             int dx = (wid - 350 * scale) / 2;
 			int dy = (wid * 0.75 - 180 * scale) / 2;
@@ -158,6 +161,14 @@ float rotatx[5], rotaty[5];
                 [self change:a b:b x:aryx y:aryy i:trans[side][0] l:5];
                 [self drawPolygon:context cl:[colmx objectAtIndex:[[scrImg objectAtIndex:d++] intValue]] x:rotatx y:rotaty len:5 stoke:true];
             }
+            /* NSString *text = @"U";
+            UIFont *font = [UIFont systemFontOfSize:wid * 0.065];
+            CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+            int textWid = [DCTUtils getStringWidth:text font:font] / 2;
+            [text drawAtPoint:CGPointMake(wid * 0.26 - textWid, wid * 0.305) withFont:font];
+            text = @"F";
+            textWid = [DCTUtils getStringWidth:text font:font] / 2;
+            [text drawAtPoint:CGPointMake(wid * 0.26 - textWid, wid * 0.47) withFont:font]; */
             break;
         }
         case 10:    //SQ1

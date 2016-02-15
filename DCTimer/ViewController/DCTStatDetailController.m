@@ -47,7 +47,7 @@
     [textView setEditable:NO];
     [textView setText:sdContent];
     //[textView setBackgroundColor:[UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:1.0]];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"copy", @"") style:UIBarButtonItemStylePlain target:self action:@selector(copyStats)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:[DCTUtils getString:@"copy"] style:UIBarButtonItemStylePlain target:self action:@selector(copyStats)];
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,7 +59,7 @@
 - (void)copyStats {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = sdContent;
-    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"" message:NSLocalizedString(@"copysuccess", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"close", @"") otherButtonTitles:nil];
+    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"" message:[DCTUtils getString:@"copy_success"] delegate:nil cancelButtonTitle:[DCTUtils getString:@"close"] otherButtonTitles:nil];
     [alertView show];
 }
 

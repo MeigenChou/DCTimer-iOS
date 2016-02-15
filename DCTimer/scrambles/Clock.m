@@ -46,7 +46,7 @@ int movesOld[][18] = {
 int clkPosit[18];
 int clkPegs[4];
 
-- (id) init {
+- (id)init {
     if(self = [super init]) {
         self.turns = [[NSArray alloc] initWithObjects:@"UR", @"DR", @"DL", @"UL", @"U", @"R", @"D", @"L", @"ALL", nil];
         srand((unsigned)time(0));
@@ -54,7 +54,7 @@ int clkPegs[4];
     return self;
 }
 
-- (NSString *) scramble {
+- (NSString *)scramble {
     int x;
     int positCopy[18];
     for(x=0; x<18; x++) clkPosit[x] = positCopy[x] = 0;

@@ -15,6 +15,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CubieCube.h"
 
 @interface Search : NSObject {
     int move[31];
@@ -38,8 +39,18 @@
     long timeOut;
     long timeMin;
     int verbose;
+    
+    int prun[6];
+    int twist[6];
+    int flip[6];
+    int slice[6];
+    NSString* solStr;
 }
 
--(NSString *) solutionForFacelets:(NSString *)facelets md:(int)maxDepth nt:(long)newTimeOut tm:(long)newTimeMin v:(int)newVerbose;
+@property(nonatomic, strong) NSArray *move2str;
+@property(nonatomic, strong) CubieCube *cc;
+
++ (void)initTable;
+- (NSString *)solutionForFacelets:(NSString *)facelets md:(int)maxDepth nt:(long)newTimeOut tm:(long)newTimeMin v:(int)newVerbose;
 
 @end

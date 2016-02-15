@@ -7,8 +7,8 @@
 //
 
 #import "Pyraminx.h"
-#import "Im.h"
 #import "DCTUtils.h"
+#import "Util.h"
 #import "stdlib.h"
 #import "time.h"
 
@@ -25,25 +25,25 @@ int colmap[91];
 
 -(int) getprmmv: (int)p m:(int)m  {
     int ps[6];
-    [Im idxToEvenPerm:ps i:p l:6];
+    [Util idxToEvenPerm:ps i:p l:6];
     if (m == 0) {
-        [Im cir3:ps a:1 b:5 c:2];
+        [Util cir3:ps a:1 b:5 c:2];
     }
     else if (m == 1) {
-        [Im cir3:ps a:0 b:2 c:4];
+        [Util cir3:ps a:0 b:2 c:4];
     }
     else if (m == 2) {
-        [Im cir3:ps a:3 b:4 c:5];
+        [Util cir3:ps a:3 b:4 c:5];
     }
     else if (m == 3) {
-        [Im cir3:ps a:0 b:3 c:1];
+        [Util cir3:ps a:0 b:3 c:1];
     }    
-    return [Im evenPermToIdx:ps l:6];
+    return [Util evenPermToIdx:ps l:6];
 }
 
 -(int) gettwsmv: (int)p m:(int)m {
     int ps[4];
-    [Im idxToOri:ps i:p n:3 l:4];
+    [Util idxToOri:ps i:p n:3 l:4];
     if (m == 0) {
         ps[1]++; if (ps[1] == 3) ps[1] = 0;
     }
@@ -56,7 +56,7 @@ int colmap[91];
     else if (m == 3) {
         ps[0]++; if (ps[0] == 3) ps[0] = 0;
     }
-    return [Im oriToIdx:ps n:3 l:4];
+    return [Util oriToIdx:ps n:3 l:4];
 }
 
 -(int) getflpmv:(int)p m:(int)m {
@@ -71,19 +71,19 @@ int colmap[91];
     ps[5] = d;
     switch (m) {
 		case 0:	//L
-			[Im cir3:ps a:0 b:3 c:1];
+			[Util cir3:ps a:0 b:3 c:1];
             ps[1] ^= 1; ps[3] ^= 1;
 			break;
 		case 1:	//R
-			[Im cir3:ps a:1 b:5 c:2];
+			[Util cir3:ps a:1 b:5 c:2];
             ps[2] ^= 1; ps[5] ^= 1;
 			break;
 		case 2:	//B
-			[Im cir3:ps a:0 b:2 c:4];
+			[Util cir3:ps a:0 b:2 c:4];
             ps[0] ^= 1; ps[2] ^= 1;
 			break;
 		case 3:	//U
-			[Im cir3:ps a:3 b:4 c:5];
+			[Util cir3:ps a:3 b:4 c:5];
             ps[3] ^= 1; ps[4] ^= 1;
 			break;
     }
@@ -182,7 +182,7 @@ int colmap[91];
 -(NSString *) scramble {
     int t = rand()%2592, q = rand()%360, l;
     self.sol = [NSMutableString string];
-    for(l=0; l<12; l++) {
+    for(l=6; l<12; l++) {
         if([self search:q t:t l:l lm:-1]){
             for (int i = 0; i < 4; i++) {
                 int j = rand() % 3;
@@ -197,8 +197,8 @@ int colmap[91];
 
 +(void) rotate3:(int)v1 v2:(int)v2 v3:(int)v3 c:(int)clockwise {
     if(clockwise == 2)
-        [Im cir3:colmap a:v3 b:v2 c:v1];
-    else [Im cir3:colmap a:v1 b:v2 c:v3];
+        [Util cir3:colmap a:v3 b:v2 c:v1];
+    else [Util cir3:colmap a:v1 b:v2 c:v3];
 }
 
 +(void) picmove:(int)type d:(int)direction {

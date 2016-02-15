@@ -21,39 +21,41 @@
     int eo[12], ep[12], co[8], cp[8];
 }
 
-+(NSMutableArray *)moveCube;
++ (NSMutableArray *)moveCube;
 
-+(void) CornMult:(CubieCube*)a cubeB:(CubieCube*)b cubeProd:(CubieCube*)prod;
-+(void) EdgeMult:(CubieCube*)a cubeB:(CubieCube*)b cubeProd:(CubieCube*)prod;
++ (void)CornMult:(CubieCube*)a b:(CubieCube*)b prod:(CubieCube*)prod;
++ (void)EdgeMult:(CubieCube*)a b:(CubieCube*)b prod:(CubieCube*)prod;
 
-+(void) CornConjugate:(CubieCube*)a idx:(int)idx cubeB:(CubieCube*)b;
-+(void) EdgeConjugate:(CubieCube*)a idx:(int)idx cubeB:(CubieCube*)b;
++ (void)CornConjugate:(CubieCube*)a idx:(int)idx b:(CubieCube*)b;
++ (void)EdgeConjugate:(CubieCube*)a idx:(int)idx b:(CubieCube*)b;
 
--(id)initCubie:(int)cperm twist:(int)twist eperm:(int)eperm flip:(int)flip;
--(int) verify;
--(void)URFConjugate;
--(void) invCubieCube;
+- (id)initCubie:(int)cperm twist:(int)twist eperm:(int)eperm flip:(int)flip;
+- (int)verify;
+- (void)URFConjugate;
+- (void)invCubieCube;
 
--(void) setFlip: (int)idx;
--(int) getFlipSym;
--(void) setTwist:(int)idx;
--(int) getTwistSym;
--(int) getUDSlice;
--(void) setUDSlice:(int)idx;
--(int) getU4Comb;
--(int) getD4Comb;
+- (void)setFlip:(int)idx;
+- (int)getFlipSym;
+- (void)setTwist:(int)idx;
+- (int)getTwistSym;
+- (int)getUDSlice;
+- (void)setUDSlice:(int)idx;
+- (int)getU4Comb;
+- (int)getD4Comb;
 
--(void) setCPerm:(int) idx;
--(int) getCPermSym;
--(void) setEPerm:(int) idx;
--(int) getEPermSym;
--(int) getMPerm;
--(void) setMPerm:(int) idx;
+- (void)setCPerm:(int)idx;
+- (int)getCPermSym;
+- (void)setEPerm:(int)idx;
+- (int)getEPermSym;
+- (int)getMPerm;
+- (void)setMPerm:(int)idx;
 
-+(void) initMove;
-+(void) initSym;
-+(void) initFlipSym2Raw;
-+(void) initTwistSym2Raw;
-+(void) initPermSym2Raw;
++ (void)initMove;
++ (void)initSym;
++ (void)initFlipSym2Raw;
++ (void)initTwistSym2Raw;
++ (void)initPermSym2Raw;
+
+//- (void)print;
 
 @end

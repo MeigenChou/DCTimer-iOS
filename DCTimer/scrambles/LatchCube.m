@@ -18,7 +18,7 @@
 @implementation LatchCube
 @synthesize turn, suff;
 
-- (id) init {
+- (id)init {
     if(self = [super init]) {
         self.turn = [[NSArray alloc] initWithObjects:@"U", @"D", @"L", @"R", @"F", @"B", nil];
         self.suff = [[NSArray alloc] initWithObjects:@"", @"2", @"3", @"'", @"2'", @"3'", nil];

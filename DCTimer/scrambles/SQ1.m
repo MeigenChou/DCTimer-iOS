@@ -14,7 +14,7 @@
 @implementation SQ1
 int sqPosit[24];
 
-- (id) init {
+- (id)init {
     if(self = [super init]) {
         srand((unsigned)time(0));
     }

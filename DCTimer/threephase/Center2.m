@@ -8,6 +8,14 @@
 
 #import "Center2.h"
 #import "Util4.h"
+/*
+            0	1
+            3	2
+ 4	5		8	9		0	1		12	13
+ 7	6		11	10		3	2		15	14
+            4	5
+            7	6
+ */
 
 @implementation Center2
 int rlmv[70][28];

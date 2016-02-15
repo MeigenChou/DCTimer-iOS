@@ -9,5 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface TwoPhaseScrambler : NSObject
--(NSString*)scramble: (int) type;
+
+- (NSString*)scramble:(int)type;
+
 @end

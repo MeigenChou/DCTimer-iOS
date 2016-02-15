@@ -11,6 +11,7 @@
 #import "FPPopoverController.h"
 #import "ARCMacros.h"
 #import "FPPopoverController.h"
+#import <AVFoundation/AVFoundation.h>
 
 typedef enum timerState {
     STOP = 0,
@@ -26,7 +27,7 @@ typedef enum timerState {
     int time1;
     uint64_t timeStart;
     NSInteger swipeType;
-    bool isChange;
+    bool isSwipe;
     bool canStart, isNextScr;
     int bgcolor, textcolor;
     bool isExts;
@@ -36,15 +37,22 @@ typedef enum timerState {
     bool canScr;
     NSInteger opacity;
     BOOL monoFont;
+    int cWid;
+    double lowZ;
+    NSArray *fonts;
+    BOOL is8Sec, is12Sec;
 }
 @property (strong, nonatomic) IBOutlet UILabel *scrLabel;
 @property (strong, nonatomic) IBOutlet UILabel *timerLabel;
 @property (strong, nonatomic) IBOutlet UIButton *btnScrType;
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
+
 @property CGPoint gestureStartPoint;
 @property (strong, nonatomic) CMMotionManager *motionMag;
-- (IBAction)selScrambleType:(id)sender;
 
+//@property (nonatomic, strong) AVSpeechSynthesizer *synth;
+
+- (IBAction)selScrambleType:(id)sender;
 //- (void)selectedTableRow: (NSUInteger)rowNum;
 - (void)setScr: (NSString *)scr;
 @end

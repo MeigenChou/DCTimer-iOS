@@ -47,6 +47,7 @@ static void HSVFromUIColor(UIColor* color, float* h, float* s, float* v)
 @property (nonatomic) IBOutlet UIView *resultColorView;
 @property (nonatomic) IBOutlet UILabel *rgbLabel;
 @property (nonatomic) IBOutlet UILabel *hsbLabel;
+@property (nonatomic) IBOutlet UIButton *btnReset;
 @property (nonatomic, strong) UIView *colorView;
 @property (nonatomic, strong) UIView *barStroke;
 @property (nonatomic, strong) UIView *squareStroke;
@@ -59,19 +60,20 @@ static void HSVFromUIColor(UIColor* color, float* h, float* s, float* v)
 	float _brightness;
     NSInteger segSelect;
 }
-@synthesize crntColor;
+@synthesize defColor, crntColor;
 @synthesize defkey;
-@synthesize barStroke, squareStroke,colorView;
+@synthesize barStroke, squareStroke, colorView;
 @synthesize segment;
-@synthesize colorList;
+@synthesize btnReset;
+@synthesize colorList, defList;
 int rcolor, gcolor, bcolor;
-extern bool svChanged;
+extern BOOL svChanged;
 
 + (DCTColorPickerController *)colorPickerViewController {
     return [[self alloc] init];
 }
 
-+ (CGSize) idealSizeForViewInPopover
++ (CGSize)idealSizeForViewInPopover
 {
 	return CGSizeMake(256 + (1 + 20) * 2, 420);
 }
@@ -108,11 +110,11 @@ extern bool svChanged;
     _rgbLabel = [[UILabel alloc] init];
     _hsbLabel = [[UILabel alloc] init];
     _rgbLabel.numberOfLines = 3;
-    _rgbLabel.font = [UIFont systemFontOfSize:([DCTUtils isPad] ? 28 : 15)];
+    _rgbLabel.font = [UIFont systemFontOfSize:([DCTUtils isPad] ? 26 : 15)];
     _rgbLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
     [self.view addSubview:_rgbLabel];
     _hsbLabel.numberOfLines = 3;
-    _hsbLabel.font = [UIFont systemFontOfSize:([DCTUtils isPad] ? 28 : 15)];
+    _hsbLabel.font = [UIFont systemFontOfSize:([DCTUtils isPad] ? 26 : 15)];
     _hsbLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
     [self.view addSubview:_hsbLabel];
     
@@ -142,9 +144,16 @@ extern bool svChanged;
     [self.view addSubview:_squarePicker];
     [_squarePicker addTarget:self action:@selector(takeSquareValue:) forControlEvents:UIControlEventTouchDown | UIControlEventTouchDragInside];
     
+    btnReset = [[UIButton alloc] init];
+    [btnReset setTitle:[DCTUtils getString:@"reset"] forState:UIControlStateNormal];
+    [btnReset setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [btnReset setBackgroundColor:[UIColor grayColor]];
+    [btnReset addTarget:self action:@selector(setDefColor) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btnReset];
+    
     [self setComponent];
-    [self setLabelText];
     [self setColor];
+    [self setLabelText];
     
 	[self.view setBackgroundColor:[UIColor colorWithRed:0.92 green:0.93 blue:0.95 alpha:1]];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:[DCTUtils getString:@"done"] style:UIBarButtonItemStylePlain target:self action:@selector(changeColor)];
@@ -163,10 +172,10 @@ extern bool svChanged;
     //NSLog(@"%d %d %d", rcolor, gcolor, bcolor);
     if(colorList != nil) {
         [colorList replaceObjectAtIndex:segSelect withObject:crntColor];
-        for(int i=0; i<colorList.count; i++) {
-            [defaults setInteger:[[colorList objectAtIndex:i] intValue] forKey:[NSString stringWithFormat:@"%@%d", defkey, i+1]];
+        for (int i=0; i<colorList.count; i++) {
+            [defaults setInteger:[[colorList objectAtIndex:i] intValue] forKey:[NSString stringWithFormat:@"%@%d", defkey, i + 1]];
         }
-        svChanged = true;
+        svChanged = YES;
     } else [defaults setInteger:[crntColor intValue] forKey:defkey];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
@@ -175,6 +184,7 @@ extern bool svChanged;
     _rgbLabel.text = [NSString stringWithFormat:@"R: %d\nG: %d\nB: %d", rcolor, gcolor, bcolor];
     _hsbLabel.text = [NSString stringWithFormat:@"H: %d\nS: %.2f\nB: %.2f", (int)(_hue*360), _saturation, _brightness];
 }
+
 - (void)informDelegateDidChangeColor
 {
 	if (self.delegate && [(id) self.delegate respondsToSelector: @selector(colorPickerControllerDidChangeColor:)])
@@ -191,7 +201,7 @@ extern bool svChanged;
 	
     [self hsbToRgb:_hue s:_saturation b:_brightness];
     [self setLabelText];
-    crntColor = [NSNumber numberWithInt:((rcolor<<16)|(gcolor<<8)|bcolor)];
+    crntColor = [NSNumber numberWithInt:(rcolor<<16)|(gcolor<<8)|bcolor];
     
 	_resultColor = [UIColor colorWithHue: _hue
 							  saturation: _saturation
@@ -205,7 +215,7 @@ extern bool svChanged;
 	[self informDelegateDidChangeColor];
 }
 
-- (IBAction) takeBarValue: (InfColorBarPicker*) sender
+- (IBAction)takeBarValue:(InfColorBarPicker*)sender
 {
 	_hue = sender.value;
 	
@@ -215,7 +225,7 @@ extern bool svChanged;
 	[self updateResultColor];
 }
 
-- (IBAction) takeSquareValue: (InfColorSquarePicker*) sender
+- (IBAction)takeSquareValue:(InfColorSquarePicker*)sender
 {
 	_saturation = sender.value.x;
 	_brightness = sender.value.y;
@@ -223,10 +233,23 @@ extern bool svChanged;
 	[self updateResultColor];
 }
 
-- (void) setColor {
-    rcolor = ([crntColor intValue]>>16)&0xff;
-    gcolor = ([crntColor intValue]>>8)&0xff;
-    bcolor = [crntColor intValue]&0xff;
+- (void)setDefColor {   //TODO
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if(colorList != nil) {
+        [defaults removeObjectForKey:[NSString stringWithFormat:@"%@%d", defkey, (int)segSelect + 1]];
+        crntColor = [defList objectAtIndex:segSelect];
+    } else {
+        [defaults removeObjectForKey:defkey];
+        crntColor = defColor;
+    }
+    [self setColor];
+    [self setLabelText];
+}
+
+- (void)setColor {
+    rcolor = ([crntColor intValue] >> 16) & 0xff;
+    gcolor = ([crntColor intValue] >> 8) & 0xff;
+    bcolor = [crntColor intValue] & 0xff;
     _sourceColor = _resultColor = [UIColor colorWithRed:rcolor/255.0 green:gcolor/255.0 blue:bcolor/255.0 alpha:1.0];
     HSVFromUIColor(_sourceColor, &_hue, &_saturation, &_brightness);
     _barPicker.value = _hue;
@@ -242,39 +265,39 @@ extern bool svChanged;
     int hei = [DCTUtils getFrame].height;
     //NSLog(@"%d x %d", wid, hei);
     int ios7delta = [DCTUtils isOS7] ? 64 : 0;
-    int width = [DCTUtils isPad] ? 510 : wid - 90;
-    int stx = [DCTUtils isPad] ? (hei==1004 ? 60 : 98) : 20;
-    int sty = [DCTUtils isPad] ? (hei==1004 ? 80 : 72) : (hei==460 ? 50 : (hei==548 ? 70 : (hei==647 ? 80 : 90)));
-    int barx = [DCTUtils isPad] ? (hei==1004 ? 630 : 668) : wid - 50;
-    int sqry = [DCTUtils isPad] ? (hei==1004 ? 279 : 72) : (hei==460 ? 122 : (hei==548 ? 162 : (hei==647 ? 182 : 202)));
-    int barwid = [DCTUtils isPad] ? (hei==1004 ? 78 : 79) : 30;
-    int bgwid = [DCTUtils isPad] ? 119 : 59;
-    int bgx = [DCTUtils isPad] ? (hei==1004 ? 589 : 807) : wid - 79;
+    int startX = [DCTUtils isPad] ? (hei==1004 ? 80 : 208) : 20;
+    int startY = [DCTUtils isPad] ? (hei==1004 ? 135 : 56) : (hei==460 ? 50 : (hei==548 ? 70 : (hei==647 ? 80 : 90)));
+    int sqY = [DCTUtils isPad] ? (hei==1004 ? 316 : 181) : (hei==460 ? 122 : (hei==548 ? 162 : (hei==647 ? 182 : 202)));
+    int sqWid = [DCTUtils isPad] ? 460 : wid - 90;
+    int barX = [DCTUtils isPad] ? (hei==1004 ? 610 : 738) : wid - 50;
+    int barWid = [DCTUtils isPad] ? 78 : 30;
+    //int colX = [DCTUtils isPad] ? (hei==1004 ? 589 : 837) : wid - 79;
+    int colWid = [DCTUtils isPad] ? 111 : 59;
     
-    if(hei==1024 || hei==748) { //ios 8
-        _rgbLabel.frame = CGRectMake(bgx, 310+ios7delta, bgwid, bgwid);
-        _hsbLabel.frame = CGRectMake(bgx, 470+ios7delta, bgwid, bgwid);
-    } else {
-        _rgbLabel.frame = CGRectMake(stx, sty-4+ios7delta, bgwid+4, bgwid+4);
-        _hsbLabel.frame = CGRectMake(stx+bgwid/2*3, sty-4+ios7delta, bgwid+4, bgwid+4);
-    }
+    _rgbLabel.frame = CGRectMake(startX+colWid+20, startY-4+ios7delta, colWid+4, colWid+4);
+    _hsbLabel.frame = CGRectMake(startX+colWid*2+20, startY-4+ios7delta, colWid+4, colWid+4);
     
-    colorView.frame = CGRectMake(bgx-1, sty-1+ios7delta, bgwid+2, bgwid+2);
-    _sourceColorView.frame = CGRectMake(bgx, sty+1+bgwid/2+ios7delta, bgwid, bgwid/2);
-    _resultColorView.frame = CGRectMake(bgx, sty+ios7delta, bgwid, bgwid/2);
+    colorView.frame = CGRectMake(startX-1, startY-1+ios7delta, colWid+2, colWid+2);
+    _sourceColorView.frame = CGRectMake(startX, startY+1+colWid/2+ios7delta, colWid, colWid/2);
+    _resultColorView.frame = CGRectMake(startX, startY+ios7delta, colWid, colWid/2);
     
-    barStroke.frame = CGRectMake(barx-1, sqry-1+ios7delta, barwid+2, width+2);
-    _barView.frame = CGRectMake(barx, sqry+ios7delta, barwid, width);
-    _barPicker.frame = CGRectMake(barx, sqry-15+ios7delta, barwid, width+30);
+    barStroke.frame = CGRectMake(barX-1, sqY-1+ios7delta, barWid+2, sqWid+2);
+    _barView.frame = CGRectMake(barX, sqY+ios7delta, barWid, sqWid);
+    _barPicker.frame = CGRectMake(barX, sqY-15+ios7delta, barWid, sqWid+30);
     
-    squareStroke.frame = CGRectMake(stx-1, sqry-1+ios7delta, width+2, width+2);
-    _squareView.frame = CGRectMake(stx, sqry+ios7delta, width, width);
-    _squarePicker.frame = CGRectMake(stx-15, sqry-15+ios7delta, width+30, width+30);
+    squareStroke.frame = CGRectMake(startX-1, sqY-1+ios7delta, sqWid+2, sqWid+2);
+    _squareView.frame = CGRectMake(startX, sqY+ios7delta, sqWid, sqWid);
+    _squarePicker.frame = CGRectMake(startX-15, sqY-15+ios7delta, sqWid+30, sqWid+30);
+    
+    int btX = hei==1024 ? 944-startX : wid-startX-80;
+    btnReset.frame = CGRectMake(btX, startY+ios7delta, 80, 35);
     
     if (colorList != nil) {
-        int segWid = [DCTUtils isPad] ? (hei==1004 ? 728 : 984) : wid - 40;
+        int segWid = [DCTUtils isPad] ? 610 : wid - 40;
         int segHei = [DCTUtils isOS7] ? 29 : 34;
-        segment.frame = CGRectMake(20, ios7delta+10, segWid, segHei);
+        int segX = [DCTUtils isPad] ? (hei==1004 ? 79 : 207) : 20;
+        int segY = [DCTUtils isPad] && hei==1004 ? 20 : 10;
+        segment.frame = CGRectMake(segX, ios7delta+segY, segWid, segHei);
     }
 }
 

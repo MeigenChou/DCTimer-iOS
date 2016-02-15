@@ -18,7 +18,7 @@ const int R = 4;
 const int L = 5;
 int EdgeColor[][2] = {{F, U}, {L, U}, {B, U}, {R, U}, {B, D}, {L, D}, {F, D}, {R, D}, {F, L}, {B, L}, {B, R}, {F, R}};
 int EdgeMap[] = {19, 37, 46, 10, 52, 43, 25, 16, 21, 50, 48, 23, 7, 3, 1, 5, 34, 30, 28, 32, 41, 39, 14, 12};
-extern char colorMap4to3[];
+char colorMap4to3[] = {'U', 'D', 'F', 'B', 'R', 'L'};
 
 -(id) init {
     if (self = [super init]) {
